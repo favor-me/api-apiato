@@ -14,13 +14,11 @@
 
 namespace App\Containers\AppSection\User\Tasks;
 
-use App\Containers\AppSection\Profile\Dto\ProfileDto;
 use App\Containers\AppSection\User\Dto\RegisterUserDto;
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Exceptions\CreateResourceFailedException;
 use Exception;
 use Prettus\Validator\Exceptions\ValidatorException;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class CreateUserByCredentialsTask extends UserTask
 {
@@ -41,26 +39,12 @@ class CreateUserByCredentialsTask extends UserTask
     /**
      * @param RegisterUserDto $dto
      * @return User
-     * @throws UnknownProperties
      * @throws ValidatorException
      */
     protected function createUser(RegisterUserDto $dto): User
     {
         $dto->hashPassword();
-        $user = $this->repository->create($dto->getData());
-        $this->createUserProfile($user, $dto);
-        return $user;
-    }
-
-    /**
-     * @param User $user
-     * @param RegisterUserDto $dto
-     * @throws UnknownProperties
-     */
-    protected function createUserProfile(User $user, RegisterUserDto $dto): void
-    {
-        $dto = new ProfileDto(array_merge($dto->profile));
-        $user->profile()->create($dto->toArray(true));
+        return $this->repository->create($dto->getData());
     }
 
     /**

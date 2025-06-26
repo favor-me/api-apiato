@@ -33,7 +33,6 @@ class UpdateUserTask extends UserTask
     public function run(UpdateUserDto $dto): User
     {
         try {
-            $dto->checkCanDo();
             return $this->updateUser($dto);
         } catch (ModelNotFoundException $exception) {
             throw new NotFoundException(__('appSection@user::user.not_found'));
@@ -50,15 +49,6 @@ class UpdateUserTask extends UserTask
     protected function updateUser(UpdateUserDto $dto): User
     {
         $dto->hashPassword();
-        $user = $this->repository->update($dto->getData(), $dto->id);
-        $this->updateUserProfile($user, $dto);
-        return $user;
-    }
-
-    protected function updateUserProfile(User $user, UpdateUserDto $dto): void
-    {
-        if (count($dto->profile)) {
-            $user->profile()->update($dto->profile);
-        }
+        return $this->repository->update($dto->getData(), $dto->id);
     }
 }

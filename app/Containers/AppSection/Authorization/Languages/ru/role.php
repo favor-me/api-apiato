@@ -19,15 +19,8 @@ return [
     'client' => [
         'display_name' => 'Клиент',
     ],
-    'login_failed_exception' => 'Ошибка аутентификации.',
-    'page_title' => 'Вход в систему',
-    'placeholder' => [
-        'email' => 'Email адресс',
-        'password' => 'Ваш пароль',
+    'worker' => [
+        'display_name' => 'Рабочий',
     ],
-    'remember_me' => 'Запомнить меня',
-    'sing_in' => 'Войти',
-    'specialist' => [
-        'display_name' => 'Специалист',
-    ],
+    'login_failed_exception' => 'Ошибка аутентификации.'
 ];

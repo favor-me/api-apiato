@@ -14,7 +14,6 @@
 
 namespace App\Containers\AppSection\User\Requests;
 
-use App\Containers\AppSection\Profile\Traits\HasProfileValidationRules;
 use App\Containers\AppSection\User\Traits\HasUserValidationRules;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
 use App\Ship\Contracts\GettableTransformer;
@@ -26,11 +25,6 @@ use AppSection\User\UI\API\Transformers\AdminUserTransformer;
 abstract class UserApiRequest extends ApiRequest implements GettableTransformer
 {
     use HasUserValidationRules;
-    use HasProfileValidationRules;
-
-    protected array $stripTagsFields = [
-        'about_me'
-    ];
 
     public function messages(): array
     {
@@ -46,33 +40,6 @@ abstract class UserApiRequest extends ApiRequest implements GettableTransformer
     public function getTransformer(): Transformer
     {
         return $this->isAdminUser() ? new AdminUserTransformer() : new UserTransformer();
-    }
-
-    protected function createProfileData(): void
-    {
-        $profileData = [];
-        $profileFields = array_keys($this->getUserProfileRules());
-
-        foreach ($profileFields as $profileField) {
-            if ($this->has($profileField)) {
-                $profileData[$profileField] = $this->$profileField;
-                $this->offsetUnset($profileField);
-            }
-        }
-
-        $this->merge([
-            'profile' => $profileData
-        ]);
-    }
-
-    protected function getUserProfileRules(): array
-    {
-        return [
-            'about_me' => $this->getUserProfileAboutMeRules(),
-            'address' => $this->getUserProfileAddressRules(),
-            'latitude' => $this->getUserProfileLatitudeRules(),
-            'longitude' => $this->getUserProfileLongitudeRules()
-        ];
     }
 
     protected function getUserRules(): array
@@ -93,7 +60,6 @@ abstract class UserApiRequest extends ApiRequest implements GettableTransformer
 
     protected function prepareForValidation(): void
     {
-        $this->stripTagsInDataFields();
         $this->clearPhoneNumber();
     }
 
@@ -104,21 +70,5 @@ abstract class UserApiRequest extends ApiRequest implements GettableTransformer
                 'phone_number' => Str::toPhoneNumber($this->get('phone_number'))
             ]);
         }
-    }
-
-    protected function stripTagsInDataFields(): void
-    {
-        foreach ($this->stripTagsFields as $stripTagsField) {
-            if ($this->has($stripTagsField)) {
-                $this->merge([
-                    $stripTagsField => strip_tags($this->get($stripTagsField))
-                ]);
-            }
-        }
-    }
-
-    protected function passedValidation(): void
-    {
-        $this->createProfileData();
     }
 }

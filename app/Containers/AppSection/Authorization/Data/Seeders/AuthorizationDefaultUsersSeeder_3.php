@@ -46,6 +46,7 @@ class AuthorizationDefaultUsersSeeder_3 extends Seeder
             'patronymic' => 'Михайлович',
             'surname' => 'Калистратов',
             'login' => 'admin',
+            'phone_number' => 79272236974,
             'email' => config('appSection-user.super-admin-email'),
             'is_admin' => true
         ]);
@@ -53,8 +54,7 @@ class AuthorizationDefaultUsersSeeder_3 extends Seeder
         $admin = app(CreateUserByCredentialsTask::class)->run($dto);
 
         $admin->assignRole([
-            Role::ADMIN,
-            Role::SPECIALIST
+            Role::ADMIN
         ]);
 
         $admin->setAttribute('email_verified_at', now());

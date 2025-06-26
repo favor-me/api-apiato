@@ -16,8 +16,8 @@ namespace App\Containers\AppSection\User\UI\API\Transformers;
 
 use App\Containers\AppSection\Authorization\UI\API\Transformers\RoleTransformer;
 use App\Containers\AppSection\User\Facades\Container;
-use App\Containers\AppSection\User\Foundation\User as BaseUser;
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\UserDevice\UI\API\Transformers\UserDeviceTransformer;
 use App\Ship\Dto\CurrencyDto;
 use App\Ship\Parents\Transformers\Transformer;
@@ -32,11 +32,7 @@ class UserTransformer extends Transformer
         'devices'
     ];
 
-    protected array $defaultIncludes = [
-        'profile'
-    ];
-
-    public function transform(User $user): array
+    public function transform(UserModel $user): array
     {
         $object = $user->getResourceKey();
 
@@ -52,51 +48,23 @@ class UserTransformer extends Transformer
             'avatar' => $user->avatar,
             'email' => $user->email,
             'phone_number' => $user->phone_number,
+            User::IS_ORGANIZATION_OWNER => $user->is_organization_owner,
             PARAMS => $user->params,
             'email_verified_at' => $this->nullOrTimestamp($user->email_verified_at),
             'phone_number_verified_at' => $user->phone_number_verified_at,
-            'country_id' => $user->getHashedKey('country_id'),
-            'region_id' => $user->getHashedKey('region_id'),
-            'city_id' => $user->getHashedKey('city_id'),
+            User::ORGANIZATION_ID => $user->getHashedKey(User::ORGANIZATION_ID),
             'created_at' => $user->created_at->getTimestamp(),
-            'updated_at' => $user->updated_at->getTimestamp(),
-            'readable_created_at' => $user->created_at->diffForHumans(),
-            'readable_updated_at' => $user->updated_at->diffForHumans()
+            'updated_at' => $user->updated_at->getTimestamp()
         ];
     }
 
-    protected function includeRoles(User $user): Collection
+    protected function includeRoles(UserModel $user): Collection
     {
         return $this->collection($user->roles, new RoleTransformer());
     }
 
-    protected function includeDevices(User $user): Collection
+    protected function includeDevices(UserModel $user): Collection
     {
         return $this->collection($user->devices(), new UserDeviceTransformer());
-    }
-
-    /**
-     * @param User $user
-     * @return array
-     * @throws UnknownProperties
-     */
-    protected function getCurrencyParamSchema(User $user): array
-    {
-        $currencyOptions = Money::getAllowedCurrencies()
-            ->map(function (CurrencyDto $currency) {
-                return [
-                    'title' => $currency->title,
-                    'value' => $currency->code
-                ];
-            });
-
-        return [
-            'key' => BaseUser::PARAM_CURRENCY,
-            'title' => Container::trans('params.' . BaseUser::PARAM_CURRENCY . '.title'),
-            'hint' => Container::trans('params.' . BaseUser::PARAM_CURRENCY . '.hint'),
-            'type' => 'list',
-            'value' => $user->params->get(BaseUser::PARAM_CURRENCY, config('money.default_currency')),
-            'options' => $currencyOptions->toArray()
-        ];
     }
 }

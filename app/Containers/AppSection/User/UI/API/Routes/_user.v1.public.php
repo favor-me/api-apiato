@@ -32,28 +32,11 @@ HTTP/1.1 200 OK
         "region_id": "",
         "city_id": "",
         "created_at": 1661435217,
-        "updated_at": 1661435217,
-        "readable_created_at": "1 секунду назад",
-        "readable_updated_at": "1 секунду назад",
-        "profile": {
-            "data": {
-                "object": "Profile",
-                "login": "profile-2",
-                "about_me": null,
-                "address": "Moscow CITY",
-                "latitude": null,
-                "longitude": null
-            }
-        }
+        "updated_at": 1661435217
     },
     "meta": {
         "include": [
-            "city",
             "roles",
-            "region",
-            "profile",
-            "country",
-            "contact",
             "devices"
         ],
         "custom": []

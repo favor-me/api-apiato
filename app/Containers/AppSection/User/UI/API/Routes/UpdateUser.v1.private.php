@@ -40,7 +40,6 @@
  *
  * @apiBody             {String=public,specialist} [role=public] Роль нового пользователя.
  *
- * @apiUse              UserProfileFields
  * @apiUse              UserSuccessSingleResponse
  */
 

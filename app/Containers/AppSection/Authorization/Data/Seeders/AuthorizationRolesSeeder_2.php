@@ -31,15 +31,17 @@ class AuthorizationRolesSeeder_2 extends Seeder
     public function run(): void
     {
         $roles = collect([
-            999 => Role::ADMIN
+            999 => Role::ADMIN,
+            20 => Role::CLIENT,
+            10 => Role::WORKER
         ]);
 
         $apiGuard = config('auth.defaults.guard');
 
         $roles
             ->each(function ($name, $level) use ($apiGuard) {
-                $description = Container::trans('role.' . $name . '.description');
-                $displayName = Container::trans('role.' . $name . '.display_name');
+                $description = Container::transFullKey('role.' . $name . '.description');
+                $displayName = Container::transFullKey('role.' . $name . '.display_name');
                 app(CreateRoleTask::class)->run($name, $description, $displayName, $level, $apiGuard);
             });
     }

@@ -43,6 +43,7 @@ class Role extends SpatieRole
 
     public const ADMIN = 'admin';
     public const CLIENT = 'client';
+    public const WORKER = 'worker';
     public const SPECIALIST = 'specialist';
 
     protected string $guard_name = 'api';

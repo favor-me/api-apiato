@@ -12,6 +12,8 @@
  * @link        https://kalistratov.ru
  */
 
+use App\Containers\AppSection\User\Foundation\User;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -73,6 +75,7 @@ return [
         */
 
         'attributes' => [
+            User::PHONE_NUMBER => ['numeric'],
             'email' => ['email'],
             'login' => ['string']
         ],

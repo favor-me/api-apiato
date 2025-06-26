@@ -33,8 +33,7 @@ return [
 
     'registration' => [
         'allowed-roles' => [
-            Role::CLIENT,
-            Role::SPECIALIST
+            Role::CLIENT
         ],
         'default-role' => Role::CLIENT
     ],

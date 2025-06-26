@@ -35,6 +35,8 @@ final class User extends SectionContainer
     public const EMAIL = 'email';
     public const EMAIL_VERIFIED_AT = 'email_verified_at';
     public const REMEMBER_TOKEN = 'remember_token';
+    public const ORGANIZATION_ID = 'organization_id';
+    public const IS_ORGANIZATION_OWNER = 'is_organization_owner';
     public const NAME_MAX_LENGTH = 30;
     public const PHONE_NUMBER_MAX_LENGTH = 14;
     public const NAME_MIN_LENGTH = 2;

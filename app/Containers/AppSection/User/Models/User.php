@@ -47,6 +47,7 @@ use JBZoo\Data\JSON as JsonData;
  * @property-read Carbon $email_verified_at
  * @property-read Carbon $phone_number_verified_at
  * @property-read bool $is_admin
+ * @property-read bool $is_organization_owner
  * @property-read string $remember_token
  * @property-read string $password
  * @property-read JsonData $params Дополнительные параметры.
@@ -86,9 +87,10 @@ class User extends UserModel implements HasResourceKey
         BaseUser::SURNAME,
         BaseUser::PASSWORD,
         BaseUser::IS_ADMIN,
+        BaseUser::IS_ORGANIZATION_OWNER,
+        BaseUser::ORGANIZATION_ID,
         BaseUser::PATRONYMIC,
         BaseUser::PHONE_NUMBER,
-        BaseUser::TELEGRAM_USER_NAME,
         PARAMS
     ];
 
@@ -101,8 +103,9 @@ class User extends UserModel implements HasResourceKey
         PARAMS => JSON::class,
         BaseUser::BIRTH => 'date',
         BaseUser::GENDER => 'boolean',
-        BaseUser::PHONE_NUMBER => 'string',
+        BaseUser::PHONE_NUMBER => 'int',
         BaseUser::IS_ADMIN => 'boolean',
+        BaseUser::IS_ORGANIZATION_OWNER => 'boolean',
         BaseUser::EMAIL_VERIFIED_AT => 'datetime',
         BaseUser::PHONE_NUMBER_VERIFIED_AT => 'datetime'
     ];

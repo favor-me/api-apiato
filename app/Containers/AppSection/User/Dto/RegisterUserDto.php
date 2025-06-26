@@ -33,8 +33,9 @@ class RegisterUserDto extends Dto
     public ?string $phone_number;
     public ?string $password;
     public ?bool $is_admin = false;
+    public ?bool $is_organization_owner = false;
+    public ?int $organization_id = null;
     public ?string $role;
-    public array $profile = [];
 
     /**
      * @inheritDoc
