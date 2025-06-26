@@ -14,7 +14,14 @@
 
 namespace App\Ship\Support;
 
+use App\Ship\Validation\Rules\PhoneNumber as PhoneNumberValidationRule;
+
 class PhoneNumber
 {
     public const MAX_LENGTH = 14;
+
+    public static function getValidationRule(): PhoneNumberValidationRule
+    {
+        return new PhoneNumberValidationRule();
+    }
 }
