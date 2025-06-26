@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static mixed trans(?string $key = null, array $replace = [], ?string $locale = null)
+ * @method static string transFullKey(?string $key = null)
  * @method static string getApiBaseUrl()
  * @method static string getApiUri(?string $uri = null)
  * @method static mixed getConfig(?string $key = null)

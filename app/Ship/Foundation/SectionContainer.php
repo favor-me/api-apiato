@@ -110,10 +110,15 @@ abstract class SectionContainer
         array $replace = [],
         ?string $locale = null
     ): array|Application|Translator|string|null {
-        return __(implode(self::TRANSLATOR_NS_SEPARATOR, [
+        return __($this->transFullKey($key), $replace, $locale);
+    }
+
+    public function transFullKey(?string $key = null): string
+    {
+        return implode(self::TRANSLATOR_NS_SEPARATOR, [
             $this->getBaseTranslatorNamespace(),
             $key
-        ]), $replace, $locale);
+        ]);
     }
 
     public function transMultipleDeleted(int $count): string
