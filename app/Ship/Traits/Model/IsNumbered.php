@@ -14,7 +14,7 @@
 
 namespace App\Ship\Traits\Model;
 
-trait HasNumber
+trait IsNumbered
 {
     public function getNumber(): string|int
     {

@@ -61,7 +61,7 @@ abstract class Transformer extends AbstractTransformer
         return $this->item($data, $transformer, $resourceKey);
     }
 
-    public function timestampOrNull(?Carbon $carbon): ?int
+    public function nullOrTimestamp(?Carbon $carbon): ?int
     {
         return $carbon instanceof Carbon ? $carbon->getTimestamp() : null;
     }

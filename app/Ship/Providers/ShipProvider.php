@@ -23,6 +23,7 @@ class ShipProvider extends MainServiceProvider
     public array $serviceProviders = [
         QueryLoggerServiceProvider::class,
         RouteServiceProvider::class,
+        DevelopmentLoaderProvider::class,
         SimpleTypeServiceProvider::class
     ];
 
