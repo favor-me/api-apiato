@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Events\Handlers;
+
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Containers\{{section-name}}\{{container-name}}\Events\Events\{{model}};
+
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\Events\Handlers
+ */
+class {{class-name}} implements ShouldQueue
+{
+    /**
+     * {{class-name}} constructor.
+     */
+    public function __construct()
+    {
+    }
+
+    /**
+     * Event handle.
+     *
+     * @param   {{model}} $event
+     *
+     * @return  void
+     */
+    public function handle({{model}} $event): void
+    {
+    }
+}

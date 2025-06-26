@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Events\Events;
+
+use App\Ship\Parents\Events\Event;
+use Illuminate\Queue\SerializesModels;
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\Events\Events
+ */
+class {{class-name}} extends Event
+{
+    use SerializesModels;
+
+    /**
+     * Hold model.
+     *
+     * @var {{model}}
+     */
+    public {{model}} $entity;
+
+    /**
+     * {{class-name}} constructor.
+     *
+     * @param $entity
+     */
+    public function __construct($entity)
+    {
+        $this->entity = $entity;
+    }
+
+    /**
+     * Get the channels the event should be broadcast on.
+     */
+    public function broadcastOn(): array
+    {
+        return [];
+    }
+}

@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Values;
+
+use App\Ship\Parents\Values\Value;
+
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\UI\API\Transformers
+ */
+class {{class-name}} extends Value
+{
+    /**
+     * A resource key to be used by the the JSON API Serializer responses.
+     */
+    protected string $resourceKey = '{{resource-key}}';
+}

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Jobs;
+
+use App\Ship\Parents\Jobs\Job;
+
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\Jobs
+ */
+class {{class-name}} extends Job
+{
+    /**
+     * Hold recipients.
+     *
+     * @var array
+     */
+    private $recipients;
+
+    /**
+     * {{class-name}} constructor.
+     */
+    public function __construct(array $recipients)
+    {
+        $this->recipients = $recipients;
+    }
+
+    /**
+     * Job handle.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        foreach ($this->recipients as $recipient) {
+            // do whatever you like
+        }
+    }
+}

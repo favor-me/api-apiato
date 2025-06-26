@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
+
+use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Requests\Request;
+use Apiato\Core\Exceptions\CoreInternalErrorException;
+use Prettus\Repository\Exceptions\RepositoryException;
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\GetAll{{models}}Task;
+
+/**
+ * Class GetAll{{models}}Action
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\Actions
+ */
+class GetAll{{models}}Action extends Action
+{
+    /**
+     * Run action.
+     *
+     * @param   Request $request
+     *
+     * @return  mixed
+     *
+     * @throws  RepositoryException
+     * @throws  CoreInternalErrorException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function run(Request $request)
+    {
+        return app(GetAll{{models}}Task::class)->addRequestCriteria()->run();
+    }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="Application standard">
+    <description>The application coding standard (PSR-12 + PHP Compatibility)</description>
+
+    <arg name="report-width" value="160"/>
+    <arg name="encoding" value="utf-8"/>
+    <config name="installed_paths" value="vendor/phpcompatibility/php-compatibility"/>
+    <config name="testVersion" value="8.1-"/>
+
+    <rule ref="PHPCompatibility"/>
+    <rule ref="PSR12"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <exclude-pattern>*/Containers/Vendor/*</exclude-pattern>
+</ruleset>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+    <!--<coverage includeUncoveredFiles="true" cacheDirectory="./build/phpunit/cache">
+        <include>
+            <directory suffix=".php">./app</directory>
+        </include>
+        <exclude>
+            <directory suffix=".php">./app/Containers/*/UI/*/Routes</directory>
+            <directory suffix=".php">./app/Containers/*/Data/Factories</directory>
+        </exclude>
+    </coverage>-->
+    <testsuites>
+        <testsuite name="Containers Tests">
+            <directory suffix="Test.php">./app/Containers</directory>
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="API_FULL_URL" value="http://api.apiato.test"/>
+        <env name="PATH_SRC" value="app"/>
+        <server name="APP_ENV" value="testing"/>
+        <server name="BCRYPT_ROUNDS" value="4"/>
+        <server name="CACHE_DRIVER" value="array"/>
+        <server name="DB_CONNECTION" value="test_mysql"/>
+        <server name="MAIL_DRIVER" value="array"/>
+        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="SESSION_DRIVER" value="array"/>
+    </php>
+</phpunit>

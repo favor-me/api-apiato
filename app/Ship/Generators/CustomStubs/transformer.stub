@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Transformers;
+
+use App\Ship\Parents\Transformers\Transformer;
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\UI\API\Transformers
+ */
+class {{class-name}} extends Transformer
+{
+    /**
+     * Include resources without needing it to be requested.
+     *
+     * @var  array
+     */
+    protected $defaultIncludes = [
+
+    ];
+
+    /**
+     * Resources that can be included if requested.
+     *
+     * @var  array
+     */
+    protected $availableIncludes = [
+
+    ];
+
+    /**
+     * Transform data.
+     *
+     * @param   {{model}} ${{_model}}
+     *
+     * @return  array
+     */
+    public function transform({{model}} ${{_model}}): array
+    {
+        $response = [
+            'object' => ${{_model}}->getResourceKey(),
+            'id' => ${{_model}}->getHashedKey(),
+        ];
+
+        return $response = $this->ifAdmin([
+            'real_id' => ${{_model}}->id,
+        ], $response);
+    }
+}

@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Ship\Traits\Factory;
+
+use Illuminate\Support\Carbon;
+
+trait HasTrashedState
+{
+    public function trashed(): self
+    {
+        return $this->state(function () {
+            return [
+                DELETED_AT => Carbon::now()
+            ];
+        });
+    }
+}

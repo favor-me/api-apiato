@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
+
+use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Requests\Request;
+use App\Ship\Exceptions\DeleteResourceFailedException;
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\Delete{{model}}Task;
+
+/**
+ * Class Delete{{model}}Action
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\Actions
+ */
+class Delete{{model}}Action extends Action
+{
+    /**
+     * Run action.
+     *
+     * @param   Request $request
+     *
+     * @return  int|null
+     *
+     * @throws  DeleteResourceFailedException
+     */
+    public function run(Request $request)
+    {
+        return app(Delete{{model}}Task::class)->run($request->id);
+    }
+}

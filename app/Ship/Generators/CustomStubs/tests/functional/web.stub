@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\Functional;
+
+use App\Containers\{{section-name}}\{{container-name}}\Tests\WebTestCase;
+
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\Functional
+ */
+class {{class-name}} extends WebTestCase
+{
+    protected string $endpoint = 'method@endpoint';
+
+    protected array $access = [
+        'permissions' => '',
+        'roles'       => '',
+    ];
+
+    public function test(): void
+    {
+        $data = [];
+
+        $response = $this->makeCall($data);
+        $response->assertStatus(200);
+    }
+}

@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
+
+use Exception;
+use App\Ship\Parents\Tasks\Task;
+use App\Ship\Exceptions\UpdateResourceFailedException;
+use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
+
+/**
+ * Class Update{{model}}Task
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\Tasks
+ */
+class Update{{model}}Task extends Task
+{
+    /**
+     * Hold repository.
+     *
+     * @var {{model}}Repository
+     */
+    protected {{model}}Repository $repository;
+
+    /**
+     * Update{{model}}Task constructor.
+     *
+     * @param {{model}}Repository $repository
+     */
+    public function __construct({{model}}Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Run action.
+     *
+     * @param   int|string $id
+     * @param   array $data
+     *
+     * @return  mixed
+     *
+     * @throws  UpdateResourceFailedException
+     */
+    public function run($id, array $data)
+    {
+        try {
+            return $this->repository->update($data, $id);
+        } catch (Exception $exception) {
+            throw new UpdateResourceFailedException();
+        }
+    }
+}

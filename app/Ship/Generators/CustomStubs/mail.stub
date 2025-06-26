@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Mails;
+
+use Illuminate\Bus\Queueable;
+use App\Ship\Parents\Mails\Mail;
+use App\Containers\User\Models\User;
+
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\Jobs
+ */
+class {{class-name}} extends Mail
+{
+    use Queueable;
+
+    /**
+     * Hold recipients.
+     *
+     * @var array
+     */
+    protected $recipient;
+
+    /**
+     * {{class-name}} constructor.
+     *
+     * @param $recipient
+     */
+    public function __construct(User $recipient)
+    {
+        $this->recipient = $recipient;
+    }
+
+    /**
+     * Build action.
+     *
+     * @return mixed
+     */
+    public function build()
+    {
+        return $this->view('{{_container-name}}::{{view}}')
+            ->to($this->recipient->email, $this->recipient->name)
+            ->with([
+                // place your replacement variables here...
+                //'name' => $this->recipient->name,
+            ]);
+    }
+}

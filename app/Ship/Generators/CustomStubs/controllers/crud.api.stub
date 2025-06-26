@@ -1,0 +1,124 @@
+<?php
+
+/**
+ * Beauty application system
+ *
+ * This file is part of the Beauty application system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license     Proprietary
+ * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
+ * @link        https://kalistratov.ru
+ */
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Parents\Controllers\{{base-controller}};
+use Apiato\Core\Exceptions\CoreInternalErrorException;
+use App\Ship\Exceptions\CreateResourceFailedException;
+use App\Ship\Exceptions\UpdateResourceFailedException;
+use Prettus\Repository\Exceptions\RepositoryException;
+use App\Ship\Exceptions\DeleteResourceFailedException;
+use Apiato\Core\Exceptions\InvalidTransformerException;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\Find{{model}}ByIdAction;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\GetAll{{models}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\Update{{model}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Find{{model}}ByIdRequest;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers
+ */
+class {{class-name}} extends {{base-controller}}
+{
+    /**
+     * Create {{entity}} action.
+     *
+     * @param   Create{{model}}Request $request
+     *
+     * @return  JsonResponse
+     *
+     * @throws  InvalidTransformerException
+     * @throws  CreateResourceFailedException
+     */
+    public function create{{model}}(Create{{model}}Request $request): JsonResponse
+    {
+        ${{entity}} = app(Create{{model}}Action::class)->run($request);
+        return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
+    }
+
+    /**
+     * Find {{entity}} by id action.
+     *
+     * @param   Find{{model}}ByIdRequest $request
+     *
+     * @return  array
+     *
+     * @throws  NotFoundException
+     * @throws  InvalidTransformerException
+     */
+    public function find{{model}}ById(Find{{model}}ByIdRequest $request): array
+    {
+        ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
+        return $this->transform(${{entity}}, {{model}}Transformer::class);
+    }
+
+    /**
+     * Get all {{entities}}.
+     *
+     * @param   GetAll{{models}}Request $request
+     *
+     * @return  array
+     *
+     * @throws  RepositoryException
+     * @throws  CoreInternalErrorException
+     * @throws  InvalidTransformerException
+     */
+    public function getAll{{models}}(GetAll{{models}}Request $request): array
+    {
+        ${{entities}} = app(GetAll{{models}}Action::class)->run($request);
+        return $this->transform(${{entities}}, {{model}}Transformer::class);
+    }
+
+    /**
+     * Update {{entity}} action.
+     *
+     * @param   Update{{model}}Request $request
+     *
+     * @return  array
+     *
+     * @throws  InvalidTransformerException
+     * @throws  UpdateResourceFailedException
+     */
+    public function update{{model}}(Update{{model}}Request $request): array
+    {
+        ${{entity}} = app(Update{{model}}Action::class)->run($request);
+        return $this->transform(${{entity}}, {{model}}Transformer::class);
+    }
+
+    /**
+     * Delete {{entity}} action.
+     *
+     * @param   Delete{{model}}Request $request
+     *
+     * @return  JsonResponse
+     *
+     * @throws  DeleteResourceFailedException
+     */
+    public function delete{{model}}(Delete{{model}}Request $request): JsonResponse
+    {
+        app(Delete{{model}}Action::class)->run($request);
+        return $this->noContent();
+    }
+}
