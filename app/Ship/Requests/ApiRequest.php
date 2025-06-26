@@ -27,6 +27,8 @@ use Illuminate\Validation\Rules\Exists;
 
 abstract class ApiRequest extends Request
 {
+    public const TITLE_AS = 'title-as';
+    public const VALUE_AS = 'value-as';
     public const TO_LIST_VALUE = 'list';
 
     protected array $access = [
