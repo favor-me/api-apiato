@@ -62,6 +62,7 @@ class Organization extends Model
     ];
 
     protected $casts = [
+        BaseOrganization::INN => 'int',
         BaseOrganization::PHONE_NUMBER => 'int',
         PARAMS => JsonCast::class,
         CREATED_AT => 'datetime',
