@@ -14,10 +14,12 @@
 
 namespace App\Containers\CommunitySection\Organization\Tests\Functional\API;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Foundation\User;
-use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\Organization\Tests\Functional\ApiTestCase;
 use App\Ship\Utils\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -86,6 +88,7 @@ final class RegistrationOrganizationTest extends ApiTestCase
         $this->makeCall($data);
 
         $organizationId = $this->getResponseContentObject()->data->id;
+        $userOwnerId = $this->getResponseContentObject()->data->user_owner->data->id;
 
         $this->response
             ->assertCreated()
@@ -114,5 +117,10 @@ final class RegistrationOrganizationTest extends ApiTestCase
                     )
                     ->etc()
             );
+
+        /** @var UserModel $userOwner */
+        $userOwner = UserModel::find(hash_decode($userOwnerId));
+
+        $this->assertTrue($userOwner->hasRole(RoleModel::ORGANIZATION_OWNER));
     }
 }

@@ -14,6 +14,7 @@
 
 namespace App\Containers\CommunitySection\Organization\Actions;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Dto\UpdateUserDto;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
@@ -99,7 +100,9 @@ class RegistrationOrganizationAction extends Action
     protected function createOrganizationUserOwner(RegistrationOrganizationDto $dto): UserModel
     {
         try {
-            return app(CreateUserByCredentialsTask::class)->run($dto->toRegisterUserDto());
+            $user = app(CreateUserByCredentialsTask::class)->run($dto->toRegisterUserDto());
+            $user->assignRole(RoleModel::ORGANIZATION_OWNER);
+            return $user;
         } catch (Exception $e) {
             throw new CreateResourceFailedException();
         }
