@@ -21,10 +21,12 @@ use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Foundation\User as BaseUser;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Ship\Database\Casts\JSON;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\UserModel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -54,6 +56,7 @@ use JBZoo\Data\JSON as JsonData;
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon $deleted_at
+ * @property-read null|OrganizationModel $organization
  * @property-read Collection $roles
  * @property-read Collection $contacts
  * @property-read Collection $devices Список устройств.
@@ -109,6 +112,11 @@ class User extends UserModel implements HasResourceKey
         BaseUser::EMAIL_VERIFIED_AT => 'datetime',
         BaseUser::PHONE_NUMBER_VERIFIED_AT => 'datetime'
     ];
+
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationModel::class, BaseUser::ORGANIZATION_ID, ID);
+    }
 
     public function getDefaultLogin(): string
     {

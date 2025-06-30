@@ -14,19 +14,15 @@
 
 namespace App\Containers\AppSection\User\Tests\Unit\Models;
 
-use App\Containers\AppSection\Profile\Models\Profile;
-use App\Containers\AppSection\User\Foundation\User as BaseUser;
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
-use App\Containers\LocationSection\City\Models\City;
-use App\Containers\LocationSection\Country\Models\Country;
-use App\Containers\LocationSection\Region\Models\Region;
-use App\Containers\TelegramSection\Bot\Models\TelegraphBot;
 use App\Ship\Database\Eloquent\Collection;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -35,32 +31,30 @@ use Illuminate\Support\Facades\DB;
  */
 final class UserTest extends UnitTestCase
 {
-    protected User $model;
+    protected UserModel $model;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = app(User::class);
+        $this->model = app(UserModel::class);
     }
 
     public function testFillable(): void
     {
         $fields = [
-            'name',
-            'login',
-            'birth',
-            'email',
-            'avatar',
-            'gender',
-            'surname',
-            'city_id',
-            'password',
-            'is_admin',
-            'region_id',
-            'patronymic',
-            'country_id',
-            'phone_number',
-            BaseUser::TELEGRAM_USER_NAME,
+            User::NAME,
+            User::LOGIN,
+            User::BIRTH,
+            User::EMAIL,
+            User::AVATAR,
+            User::GENDER,
+            User::SURNAME,
+            User::PASSWORD,
+            User::IS_ADMIN,
+            User::IS_ORGANIZATION_OWNER,
+            User::ORGANIZATION_ID,
+            User::PATRONYMIC,
+            User::PHONE_NUMBER,
             PARAMS
         ];
 
@@ -79,31 +73,16 @@ final class UserTest extends UnitTestCase
 
     public function testProperties(): void
     {
-        $user = User::factory()->city()->create();
+        $user = UserModel::factory()->create();
 
         $this->assertIsString($user->phone_number);
         $this->assertIsBool($user->gender);
-        $this->assertIsInt($user->city_id);
-        $this->assertIsInt($user->region_id);
-        $this->assertIsInt($user->country_id);
         $this->assertIsBool($user->is_admin);
         $this->assertInstanceOf(Carbon::class, $user->birth);
         $this->assertInstanceOf(Carbon::class, $user->created_at);
         $this->assertInstanceOf(Carbon::class, $user->updated_at);
         $this->assertInstanceOf(Carbon::class, $user->email_verified_at);
         $this->assertInstanceOf(Carbon::class, $user->phone_number_verified_at);
-        $this->assertInstanceOf(Country::class, $user->country);
-        $this->assertInstanceOf(Region::class, $user->region);
-        $this->assertInstanceOf(City::class, $user->city);
-    }
-
-    public function testUserProfileRelationship(): void
-    {
-        $user = User::factory()->create();
-        $this->assertInstanceOf(HasOne::class, $user->profile());
-
-        Profile::factory()->create(['user_id' => $user->id]);
-        $this->assertInstanceOf(Profile::class, $user->profile);
     }
 
     public function testCollection(): void
@@ -113,34 +92,25 @@ final class UserTest extends UnitTestCase
 
     public function testGetLogin(): void
     {
-        $user = User::factory()->create();
+        $user = UserModel::factory()->create();
         $this->assertSame('profile-' . $user->id, $user->getDefaultLogin());
-    }
-
-    public function testHasManyContacts(): void
-    {
-        $totalContacts = 3;
-        $user = User::factory()->contacts($totalContacts)->create();
-
-        $this->assertInstanceOf(HasMany::class, $user->contacts());
-        $this->assertInstanceOf(Collection::class, $user->contacts);
-        $this->assertCount($totalContacts, $user->contacts);
     }
 
     public function testGetFullName(): void
     {
-        $user = User::factory()->create([
-            'patronymic' => 'Michailovich',
-            'name' => 'Sergey',
-            'surname' => 'Kalistratov',
-        ]);
+        $user = UserModel::factory()
+            ->create([
+                'patronymic' => 'Michailovich',
+                'name' => 'Sergey',
+                'surname' => 'Kalistratov',
+            ]);
 
         $this->assertSame('Kalistratov Sergey Michailovich', $user->getFullName());
     }
 
     public function testHasManyDevices(): void
     {
-        $user = User::factory()
+        $user = UserModel::factory()
             ->has(UserDevice::factory()->count(2), 'devices')
             ->create();
 
@@ -151,16 +121,16 @@ final class UserTest extends UnitTestCase
 
     public function testHasManyActualDevices(): void
     {
-        $user = User::factory()
+        $user = UserModel::factory()
             ->has(UserDevice::factory()->count(2), 'devices')
             ->create();
 
         $userDeviceNotActualData = UserDevice::factory()->make();
-        $notActualDate = Carbon::now()->subWeeks(User::WEEK_LAST_ACTIVE_DEVICES + 1);
+        $notActualDate = Carbon::now()->subWeeks(UserModel::WEEK_LAST_ACTIVE_DEVICES + 1);
 
         DB::table(UserDevice::TABLE)
             ->insert([
-                BaseUser::ID => $user->id,
+                User::ID => $user->id,
                 BaseUserDevice::MODEL => $userDeviceNotActualData->model,
                 BaseUserDevice::TOKEN => $userDeviceNotActualData->token,
                 UPDATED_AT => $notActualDate->toDateTimeString(),
@@ -173,37 +143,18 @@ final class UserTest extends UnitTestCase
         $this->assertCount(3, $user->devices);
     }
 
-    public function testRouteNotificationForFcm(): void
+    public function testBelongsToOrganization(): void
     {
-        $user = User::factory()->create();
+        $organization = OrganizationModel::factory()->create();
 
-        UserDevice::factory()
+        $user = UserModel::factory()
             ->create([
-                BaseUser::ID => $user->id
+                User::ORGANIZATION_ID => $organization->id
             ]);
 
-        sleep(2);
-
-        UserDevice::factory()
-            ->create([
-                BaseUser::ID => $user->id
-            ]);
-
-        $this->assertCount(2, $user->devices);
-
-        $this->assertCount(2, $user->routeNotificationForFcm());
-    }
-
-    public function testTelegramBots(): void
-    {
-        $user = User::factory()->create();
-
-        TelegraphBot::factory()
-            ->createdFor($user)
-            ->create();
-
-        $this->assertInstanceOf(HasMany::class, $user->telegramBots());
-        $this->assertInstanceOf(Collection::class, $user->telegramBots);
-        $this->assertCount(1, $user->telegramBots);
+        $this->assertInstanceOf(BelongsTo::class, $user->organization());
+        $this->assertInstanceOf(OrganizationModel::class, $user->organization()->getModel());
+        $this->assertInstanceOf(OrganizationModel::class, $user->organization);
+        $this->assertSame($organization->id, $user->organization->id);
     }
 }

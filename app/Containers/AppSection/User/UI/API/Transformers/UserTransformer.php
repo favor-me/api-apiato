@@ -19,25 +19,27 @@ use App\Containers\AppSection\User\Facades\Container;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\UserDevice\UI\API\Transformers\UserDeviceTransformer;
+use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
 use App\Ship\Dto\CurrencyDto;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\SimpleTypes\Config\Money;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Primitive;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class UserTransformer extends Transformer
 {
     protected array $availableIncludes = [
         'roles',
-        'devices'
+        'devices',
+        'organization'
     ];
 
     public function transform(UserModel $user): array
     {
-        $object = $user->getResourceKey();
-
         return [
-            OBJECT => $object,
+            OBJECT => $user->getResourceKey(),
             ID => $user->getHashedKey(),
             'login' => $user->login,
             'name' => $user->name,
@@ -61,6 +63,11 @@ class UserTransformer extends Transformer
     protected function includeRoles(UserModel $user): Collection
     {
         return $this->collection($user->roles, new RoleTransformer());
+    }
+
+    protected function includeOrganization(UserModel $user): Item|Primitive
+    {
+        return $this->primitiveNullOrItem($user->organization, new OrganizationTransformer());
     }
 
     protected function includeDevices(UserModel $user): Collection

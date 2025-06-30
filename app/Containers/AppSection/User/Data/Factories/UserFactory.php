@@ -14,11 +14,7 @@
 
 namespace App\Containers\AppSection\User\Data\Factories;
 
-use App\Containers\AppSection\Client\Models\Client;
 use App\Containers\AppSection\User\Models\User;
-use App\Containers\LocationSection\City\Models\City;
-use App\Containers\LocationSection\Country\Models\Country;
-use App\Containers\LocationSection\Region\Models\Region;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,48 +36,6 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'is_admin' => true
-            ];
-        });
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function city(): UserFactory
-    {
-        return $this->state(function (array $attributes) {
-            $country = Country::factory()->create();
-
-            $region = Region::factory()->create([
-                'country_id' => $country->id
-            ]);
-
-            $city = City::factory()->create([
-                'region_id' => $region->id
-            ]);
-
-            return [
-                'country_id' => $country->id,
-                'region_id' => $region->id,
-                'city_id' => $city->id
-            ];
-        });
-    }
-
-    public function contacts(int $count = 1): UserFactory
-    {
-        return $this->has(Client::factory()->count($count), 'contacts');
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function country(): UserFactory
-    {
-        return $this->state(function (array $attributes) {
-            $country = Country::factory()->create();
-            return [
-                'country_id' => $country->id
             ];
         });
     }
@@ -109,25 +63,6 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'is_admin' => false
         ];
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function region(): UserFactory
-    {
-        return $this->state(function (array $attributes) {
-            $country = Country::factory()->create();
-
-            $region = Region::factory()->create([
-                'country_id' => $country->id
-            ]);
-
-            return [
-                'country_id' => $country->id,
-                'region_id' => $region->id
-            ];
-        });
     }
 
     /**
