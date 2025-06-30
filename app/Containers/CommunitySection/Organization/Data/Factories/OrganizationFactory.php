@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\Organization\Data\Factories;
 
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Ship\Database\Eloquent\Collection;
@@ -38,8 +39,9 @@ final class OrganizationFactory extends Factory
             Organization::EMAIL => $this->faker->email,
             Organization::INN => $this->faker->numberBetween(),
             Organization::NAME => $this->faker->title,
-            PARAMS => [],
-            Organization::PHONE_NUMBER => $this->faker->e164PhoneNumber
+            Organization::PHONE_NUMBER => $this->faker->e164PhoneNumber,
+            Organization::USER_OWNER_ID => UserModel::factory(),
+            PARAMS => []
         ];
     }
 }
