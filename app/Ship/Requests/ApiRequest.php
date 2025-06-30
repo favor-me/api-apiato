@@ -42,9 +42,7 @@ abstract class ApiRequest extends Request
 
     public function authorize(): bool
     {
-        return $this->check([
-            'hasAccess'
-        ]);
+        return $this->check($this->getCheckAuthorizeMethods());
     }
 
     public function takeWithTrashed(): bool
@@ -156,5 +154,12 @@ abstract class ApiRequest extends Request
         } catch (IncorrectIdException $exception) {
             return [];
         }
+    }
+
+    protected function getCheckAuthorizeMethods(): array
+    {
+        return [
+            'hasAccess'
+        ];
     }
 }
