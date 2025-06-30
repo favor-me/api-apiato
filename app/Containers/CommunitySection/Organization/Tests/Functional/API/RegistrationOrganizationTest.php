@@ -43,8 +43,8 @@ final class RegistrationOrganizationTest extends ApiTestCase
                         Organization::PHONE_NUMBER => [
                             Container::trans('validation.phone_number.required')
                         ],
-                        'client_name' => [
-                            Container::trans('validation.client_name.required')
+                        Organization::OWNER_NAME => [
+                            Container::trans('validation.owner_name.required')
                         ],
                         User::PASSWORD => [
                             __('validation.custom.password.required')
@@ -79,7 +79,7 @@ final class RegistrationOrganizationTest extends ApiTestCase
         $data = [
             Organization::NAME => 'Test Organization',
             Organization::PHONE_NUMBER => '+79272236975',
-            'client_name' => 'Ivanov Ivan',
+            Organization::OWNER_NAME => 'Ivanov Ivan',
             User::PASSWORD => 25644578
         ];
 
@@ -98,7 +98,7 @@ final class RegistrationOrganizationTest extends ApiTestCase
                     ->where('data.' . Organization::PHONE_NUMBER, Str::toPhoneNumber($data[Organization::PHONE_NUMBER]))
                     ->where(
                         'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::NAME,
-                        $data['client_name']
+                        $data[Organization::OWNER_NAME]
                     )
                     ->where(
                         'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::PHONE_NUMBER,

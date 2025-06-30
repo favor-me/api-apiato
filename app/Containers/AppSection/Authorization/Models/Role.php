@@ -42,7 +42,7 @@ class Role extends SpatieRole
     }
 
     public const ADMIN = 'admin';
-    public const CLIENT = 'client';
+    public const ORGANIZATION_OWNER = 'organization_owner';
     public const WORKER = 'worker';
     public const SPECIALIST = 'specialist';
 

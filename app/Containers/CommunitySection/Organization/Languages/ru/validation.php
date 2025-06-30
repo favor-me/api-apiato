@@ -19,7 +19,7 @@ return [
     'phone_number' => [
         'required' => 'Необходимо указать контактный номер телефона'
     ],
-    'client_name' => [
+    'owner_name' => [
         'required' => 'Укажите имя'
     ]
 ];

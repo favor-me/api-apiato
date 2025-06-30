@@ -29,7 +29,7 @@ class RegisterUserActionTest extends UnitTestCase
         $result = app(RegisterUserAction::class)->run($dto);
 
         $this->assertInstanceOf(User::class, $result);
-        $result->hasRole(Role::CLIENT);
+        $result->hasRole(Role::ORGANIZATION_OWNER);
         $this->assertDatabaseHas($result, ['id' => $result->id]);
     }
 

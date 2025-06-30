@@ -16,7 +16,6 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Traits\HasUserValidationRules;
-use App\Containers\CommunitySection\Organization\Dto\CreateOrganizationDto;
 use App\Containers\CommunitySection\Organization\Dto\RegistrationOrganizationDto;
 use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
@@ -38,7 +37,7 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
     {
         return parent::rules() +
             [
-                'client_name' => $this->getClientValidationRules(),
+                Organization::OWNER_NAME => $this->getClientValidationRules(),
                 User::PASSWORD => $this->getUserPasswordValidationRules()
             ];
     }
@@ -47,7 +46,7 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
     {
         return parent::messages() +
             [
-                'client_name' => Container::trans('validation.client_name.required')
+                Organization::OWNER_NAME => Container::trans('validation.owner_name.required')
             ];
     }
 

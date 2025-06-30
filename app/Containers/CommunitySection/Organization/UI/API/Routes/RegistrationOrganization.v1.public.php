@@ -22,7 +22,7 @@
  *
  * @apiBody {String} name Название компании.
  * @apiBody {String} phone_number Контактный номер телефона.
- * @apiBody {String} client_name Имя (ФИО) собственника.
+ * @apiBody {String} owner_name Имя (ФИО) собственника.
  * @apiBody {String} password Пароль для входа.
  * @apiBody {String} [inn] ИНН.
  * @apiBody {String} [email] Контактный адрес электронной почты.

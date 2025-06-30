@@ -19,14 +19,14 @@ use App\Containers\AppSection\User\Foundation\User;
 
 class RegistrationOrganizationDto extends CreateOrganizationDto
 {
-    public string $client_name;
+    public string $owner_name;
     public string $password;
 
     public function toRegisterUserDto(): RegisterUserDto
     {
         return new RegisterUserDto([
             User::PASSWORD => $this->password,
-            User::NAME => $this->client_name,
+            User::NAME => $this->owner_name,
             User::PHONE_NUMBER => $this->phone_number
         ]);
     }

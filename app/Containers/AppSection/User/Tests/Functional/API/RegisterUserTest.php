@@ -245,7 +245,7 @@ class RegisterUserTest extends ApiTestCase
             User::GENDER => true,
             User::LOGIN => 'test-login',
             User::BIRTH => '12.11.2022',
-            'role' => Role::CLIENT,
+            'role' => Role::ORGANIZATION_OWNER,
             'address' => $address
         ]);
 
@@ -271,7 +271,7 @@ class RegisterUserTest extends ApiTestCase
 
         $user = UserModel::findOrFail($this->decodeHashValue($responseContent->data->id));
 
-        $this->assertTrue($user->hasRole(Role::CLIENT));
+        $this->assertTrue($user->hasRole(Role::ORGANIZATION_OWNER));
         $this->assertSame($address, $responseContent->data->profile->data->address);
 
         $this->assertDatabaseHas(UserModel::TABLE, [User::EMAIL => $this->testData[User::EMAIL]]);
@@ -286,7 +286,7 @@ class RegisterUserTest extends ApiTestCase
 
         $data = array_merge($this->testData, [
             User::LOGIN => $user->login,
-            'role' => Role::CLIENT
+            'role' => Role::ORGANIZATION_OWNER
         ]);
 
         $this->makeCall($data);

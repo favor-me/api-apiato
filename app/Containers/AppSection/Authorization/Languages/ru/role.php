@@ -16,8 +16,8 @@ return [
     'admin' => [
         'display_name' => 'Администратор',
     ],
-    'client' => [
-        'display_name' => 'Клиент',
+    'organization_owner' => [
+        'display_name' => 'Собственник компании',
     ],
     'worker' => [
         'display_name' => 'Рабочий',

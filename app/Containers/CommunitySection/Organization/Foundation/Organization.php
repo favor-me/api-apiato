@@ -26,6 +26,7 @@ final class Organization extends SectionContainer
     public const NAME_MAX_LENGTH = 100;
     public const PHONE_NUMBER = 'phone_number';
     public const USER_OWNER_ID = 'user_owner_id';
+    public const OWNER_NAME = 'owner_name';
     public const INCLUDE_USER_OWNER = 'user_owner';
 
     protected string $apiBaseUri = 'community/organizations';

@@ -33,9 +33,9 @@ return [
 
     'registration' => [
         'allowed-roles' => [
-            Role::CLIENT
+            Role::ORGANIZATION_OWNER
         ],
-        'default-role' => Role::CLIENT
+        'default-role' => Role::ORGANIZATION_OWNER
     ],
 
 

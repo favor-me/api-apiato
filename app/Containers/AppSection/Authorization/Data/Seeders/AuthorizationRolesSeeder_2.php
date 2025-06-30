@@ -32,7 +32,7 @@ class AuthorizationRolesSeeder_2 extends Seeder
     {
         $roles = collect([
             999 => Role::ADMIN,
-            20 => Role::CLIENT,
+            20 => Role::ORGANIZATION_OWNER,
             10 => Role::WORKER
         ]);
 
