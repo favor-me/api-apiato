@@ -14,7 +14,7 @@
  * @apiGroup CommunityOrganization
  * @apiName updateOwnCommunityOrganization
 
- * @api {patch} /v1/community/organizations/own Изменить
+ * @api {patch} /v1/community/organizations/own Изменить свою
  * @apiDescription Изменить.
  *
  * @apiVersion 1.0.0
