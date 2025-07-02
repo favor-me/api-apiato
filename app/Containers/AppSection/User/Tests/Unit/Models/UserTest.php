@@ -17,6 +17,7 @@ namespace App\Containers\AppSection\User\Tests\Unit\Models;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
 use App\Ship\Database\Eloquent\Collection;
@@ -156,5 +157,49 @@ final class UserTest extends UnitTestCase
         $this->assertInstanceOf(OrganizationModel::class, $user->organization()->getModel());
         $this->assertInstanceOf(OrganizationModel::class, $user->organization);
         $this->assertSame($organization->id, $user->organization->id);
+    }
+
+    public function testHasOrganizationOwnerRole(): void
+    {
+        $userA = UserModel::factory()
+            ->create()
+            ->assignRole(RoleModel::ORGANIZATION_OWNER);
+
+        $this->assertTrue($userA->hasOrganizationOwnerRole());
+
+        $userB = UserModel::factory()->create();
+
+        $this->assertFalse($userB->hasOrganizationOwnerRole());
+    }
+
+    public function testIsRealOrganizationOwner(): void
+    {
+        $userA = UserModel::factory()
+            ->create([
+                User::IS_ORGANIZATION_OWNER => true
+            ])
+            ->assignRole(RoleModel::ORGANIZATION_OWNER);
+
+        $this->assertFalse($userA->isRealOrganizationOwner());
+
+        $userB = UserModel::factory()
+            ->create([
+                User::IS_ORGANIZATION_OWNER => true
+            ]);
+
+        $this->assertFalse($userB->isRealOrganizationOwner());
+
+        $organization = OrganizationModel::factory()->create();
+
+        $userC = $organization->userOwner;
+
+        $userC
+            ->setAttribute(User::ORGANIZATION_ID, $organization->id)
+            ->setAttribute(User::IS_ORGANIZATION_OWNER, true)
+            ->save();
+
+        $userC->assignRole(RoleModel::ORGANIZATION_OWNER);
+
+        $this->assertTrue($userC->isRealOrganizationOwner());
     }
 }

@@ -16,6 +16,7 @@ namespace App\Containers\AppSection\User\Models;
 
 use Apiato\Core\Contracts\HasResourceKey;
 use App\Containers\AppSection\Authentication\Traits\AuthenticationTrait;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\Authorization\Traits\AuthorizationTrait;
 use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Foundation\User as BaseUser;
@@ -53,6 +54,7 @@ use JBZoo\Data\JSON as JsonData;
  * @property-read string $remember_token
  * @property-read string $password
  * @property-read JsonData $params Дополнительные параметры.
+ * @property-read null|int $organization_id Уникальный идентификатор организации.
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon $deleted_at
@@ -151,5 +153,25 @@ class User extends UserModel implements HasResourceKey
         return $this
             ->hasMany(UserDevice::class, BaseUser::ID, ID)
             ->whereDate(UPDATED_AT, '>=', $fromDate);
+    }
+
+    public function hasOrganizationOwnerRole(): bool
+    {
+        return $this->hasRole(RoleModel::ORGANIZATION_OWNER);
+    }
+
+    public function isRealOrganizationOwner(): bool
+    {
+        $isResponsibleInOrganization = false;
+        $hasOrganization = !is_null($this->organization_id);
+
+        if ($hasOrganization) {
+            $isResponsibleInOrganization = $this->organization->user_owner_id === $this->id;
+        }
+
+        return $this->hasOrganizationOwnerRole() &&
+            $this->is_organization_owner &&
+            $hasOrganization &&
+            $isResponsibleInOrganization;
     }
 }
