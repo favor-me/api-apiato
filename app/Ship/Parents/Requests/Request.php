@@ -22,6 +22,10 @@ use App\Containers\AppSection\User\Models\User;
  */
 abstract class Request extends AbstractRequest
 {
+    public const FORCE_DELETE = 'force-delete';
+    public const WITH_TRASHED = 'with-trashed';
+    public const ONLY_TRASHED = 'only-trashed';
+
     public function __construct(
         array $query = [],
         array $request = [],
@@ -33,6 +37,26 @@ abstract class Request extends AbstractRequest
     ) {
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
         $this->afterInitialize();
+    }
+
+    public function takeWithTrashed(): bool
+    {
+        return $this->get('take') === self::WITH_TRASHED;
+    }
+
+    public function takeOnlyTrashed(): bool
+    {
+        return $this->get('take') === self::ONLY_TRASHED;
+    }
+
+    public function isOnlyTrashed(): bool
+    {
+        return $this->boolean(self::ONLY_TRASHED) === true;
+    }
+
+    public function isForceDelete(): bool
+    {
+        return $this->boolean(self::FORCE_DELETE) === true;
     }
 
     protected function afterInitialize(): void

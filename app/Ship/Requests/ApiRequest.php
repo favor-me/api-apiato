@@ -25,7 +25,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rules\Exists;
 
-abstract class ApiRequest extends Request
+class ApiRequest extends Request
 {
     public const TITLE_AS = 'title-as';
     public const VALUE_AS = 'value-as';

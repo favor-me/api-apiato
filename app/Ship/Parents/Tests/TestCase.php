@@ -24,6 +24,7 @@ use Illuminate\Testing\TestResponse;
 
 /***
  * @property Generator $faker
+ * @property null|User $testingUser
  * @method mixed|User getTestingUser(?array $userDetails = null, ?array $access = null, bool $createUserAsAdmin = false)
  */
 abstract class TestCase extends AbstractTestCase
