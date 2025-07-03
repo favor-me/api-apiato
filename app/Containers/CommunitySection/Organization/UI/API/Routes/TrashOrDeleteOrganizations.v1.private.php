@@ -12,10 +12,9 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
- * @_apiGroup CommunityOrganization
+ * @apiGroup CommunityOrganization
  * @apiName trashOrDeleteCommunityOrganizations
-
- * @api {delete} /v1/community/organizations Архивировать|Удалить
+ * @api {delete} /v1/community/organizations Архивировать|Удалить (H)
  * @apiDescription Архивировать или удалить.
  *
  * @apiVersion 1.0.0
@@ -25,7 +24,7 @@
  * @apiBody {String="1"} [force-delete] Произвести жёсткое удаление (удаляется запись из базы).
  *
  * @apiSuccessExample {json} Успешный ответ:
-HTTP/1.1 200 OK
+ * HTTP/1.1 200 OK
  */
 
 use App\Containers\CommunitySection\Organization\Facades\Container;

@@ -12,10 +12,9 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
- * @_apiGroup CommunityOrganization
+ * @apiGroup CommunityOrganization
  * @apiName findByIdCommunityOrganization
-
- * @api {get} /v1/community/organizations/:id Найти по id
+ * @api {get} /v1/community/organizations/:id Найти по id (H)
  * @apiDescription Найти по id.
  *
  * @apiVersion 1.0.0

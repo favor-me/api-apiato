@@ -12,10 +12,9 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
- * @_apiGroup CommunityOrganization
+ * @apiGroup CommunityOrganization
  * @apiName getAllCommunityOrganization
-
- * @api {get} /v1/community/organizations Список
+ * @api {get} /v1/community/organizations Список (H)
  * @apiDescription Получить список.
  *
  * @apiVersion 1.0.0
@@ -24,7 +23,7 @@
  * @apiParam {String="1,0"} [only-trashed] Вкл.\Откл.показ корзины.
  *
  * @apiSuccessExample {json} Успешный ответ:
-HTTP/1.1 200 OK
+ * HTTP/1.1 200 OK
  */
 
 use App\Containers\CommunitySection\Organization\Facades\Container;
