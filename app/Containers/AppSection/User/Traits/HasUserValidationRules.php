@@ -15,9 +15,12 @@
 namespace App\Containers\AppSection\User\Traits;
 
 use App\Containers\AppSection\Authorization\Models\Role;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Ship\Collections\ValidationRulesCollection;
 use App\Ship\Validation\Rule;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Validation\Rules\Exists;
 
 trait HasUserValidationRules
 {
@@ -83,5 +86,11 @@ trait HasUserValidationRules
     public function getUserSurnameValidationRules(): ValidationRulesCollection
     {
         return validation_rules(config('appSection-user.rules.surname'));
+    }
+
+    public function getUserExistsInOrganizationValidationRule(mixed $organizationId): Exists
+    {
+        return Rule::exists(UserModel::TABLE, ID)
+            ->where(User::ORGANIZATION_ID, $organizationId);
     }
 }
