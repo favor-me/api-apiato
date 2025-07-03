@@ -81,7 +81,7 @@ final class RegistrationOrganizationTest extends ApiTestCase
         $data = [
             Organization::NAME => 'Test Organization',
             Organization::PHONE_NUMBER => '+79272236975',
-            Organization::OWNER_NAME => 'Ivanov Ivan',
+            Organization::OWNER_NAME => 'Ivanov|Ivan|Ivanovich',
             User::PASSWORD => 25644578
         ];
 
@@ -99,10 +99,9 @@ final class RegistrationOrganizationTest extends ApiTestCase
                     ->where('data.' . Organization::NAME, $data[Organization::NAME])
                     ->where('data.' . Organization::INN, null)
                     ->where('data.' . Organization::PHONE_NUMBER, Str::toPhoneNumber($data[Organization::PHONE_NUMBER]))
-                    ->where(
-                        'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::NAME,
-                        $data[Organization::OWNER_NAME]
-                    )
+                    ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::SURNAME, 'Ivanov')
+                    ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::NAME, 'Ivan')
+                    ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::PATRONYMIC, 'Ivanovich')
                     ->where(
                         'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::PHONE_NUMBER,
                         Str::toPhoneNumber($data[Organization::PHONE_NUMBER])

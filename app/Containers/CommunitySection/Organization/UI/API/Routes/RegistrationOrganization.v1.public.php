@@ -13,7 +13,6 @@
  *
  * @apiGroup Organization
  * @apiName registrationOrganization
-
  * @api {post} /v1/registration Зарегистрировать компанию
  * @apiDescription Зарегистрировать новую компанию.
  *
@@ -22,7 +21,7 @@
  *
  * @apiBody {String} name Название компании.
  * @apiBody {String} phone_number Контактный номер телефона.
- * @apiBody {String} owner_name Имя (ФИО) собственника.
+ * @apiBody {String} owner_name Ф|И|О собственника.
  * @apiBody {String} password Пароль для входа.
  * @apiBody {String} [inn] ИНН.
  * @apiBody {String} [email] Контактный адрес электронной почты.

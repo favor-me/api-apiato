@@ -21,5 +21,6 @@ return [
     ],
     'owner_name' => [
         'required' => 'Укажите имя'
-    ]
+    ],
+    'is_owner_name' => 'Не верно указано ФИО'
 ];

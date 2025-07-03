@@ -19,6 +19,7 @@ use App\Containers\AppSection\User\Traits\HasUserValidationRules;
 use App\Containers\CommunitySection\Organization\Dto\RegistrationOrganizationDto;
 use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Containers\CommunitySection\Organization\Validation\Rules\IsOwnerNameRule;
 use App\Ship\Collections\ValidationRulesCollection;
 use App\Ship\Parents\Transformers\Transformer;
 
@@ -46,7 +47,7 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
     {
         return parent::messages() +
             [
-                Organization::OWNER_NAME => Container::trans('validation.owner_name.required')
+                Organization::OWNER_NAME . '.required' => Container::trans('validation.owner_name.required')
             ];
     }
 
@@ -69,6 +70,9 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
 
     public function getClientValidationRules(): ValidationRulesCollection
     {
-        return validation_rules(['required']);
+        return validation_rules([
+            'required',
+            new IsOwnerNameRule()
+        ]);
     }
 }

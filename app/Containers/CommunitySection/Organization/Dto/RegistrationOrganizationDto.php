@@ -16,6 +16,7 @@ namespace App\Containers\CommunitySection\Organization\Dto;
 
 use App\Containers\AppSection\User\Dto\RegisterUserDto;
 use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\CommunitySection\Organization\Validation\Rules\IsOwnerNameRule;
 
 class RegistrationOrganizationDto extends CreateOrganizationDto
 {
@@ -24,9 +25,13 @@ class RegistrationOrganizationDto extends CreateOrganizationDto
 
     public function toRegisterUserDto(): RegisterUserDto
     {
+        list ($surname, $name, $patronymic) = explode(IsOwnerNameRule::SEPARATOR, $this->owner_name);
+
         return new RegisterUserDto([
             User::PASSWORD => $this->password,
-            User::NAME => $this->owner_name,
+            User::SURNAME => $surname,
+            User::NAME => $name,
+            User::PATRONYMIC => $patronymic,
             User::PHONE_NUMBER => $this->phone_number
         ]);
     }
