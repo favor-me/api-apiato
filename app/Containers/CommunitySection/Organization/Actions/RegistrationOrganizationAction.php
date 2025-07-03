@@ -29,6 +29,8 @@ use App\Ship\Exceptions\CreateResourceFailedException;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Actions\Action;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class RegistrationOrganizationAction extends Action
 {
@@ -36,16 +38,20 @@ class RegistrationOrganizationAction extends Action
      * @param RegistrationOrganizationDto $dto
      * @return OrganizationModel
      * @throws CreateResourceFailedException
+     * @throws Throwable
      */
-    public function run(RegistrationOrganizationDto $dto)
+    public function run(RegistrationOrganizationDto $dto): OrganizationModel
     {
         try {
+            DB::beginTransaction();
             $ownerUser = $this->createOrganizationUserOwner($dto);
             $organization = $this->createOrganization($ownerUser, $dto);
             $this->assignOrganizationOwner($ownerUser, $organization);
+            DB::commit();
             return $organization;
         } catch (Exception $e) {
-            throw new CreateResourceFailedException();
+            DB::rollback();
+            throw new CreateResourceFailedException($e->getMessage());
         }
     }
 
@@ -66,7 +72,7 @@ class RegistrationOrganizationAction extends Action
 
             return app(UpdateUserTask::class)->run($dto);
         } catch (Exception $e) {
-            throw new UpdateResourceFailedException();
+            throw new UpdateResourceFailedException($e->getMessage());
         }
     }
 
@@ -88,7 +94,7 @@ class RegistrationOrganizationAction extends Action
 
             return app(CreateOrganizationTask::class)->run($createOrganizationDto);
         } catch (Exception $e) {
-            throw new CreateResourceFailedException();
+            throw new CreateResourceFailedException($e->getMessage());
         }
     }
 
@@ -104,7 +110,7 @@ class RegistrationOrganizationAction extends Action
             $user->assignRole(RoleModel::ORGANIZATION_OWNER);
             return $user;
         } catch (Exception $e) {
-            throw new CreateResourceFailedException();
+            throw new CreateResourceFailedException($e->getMessage());
         }
     }
 }
