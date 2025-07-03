@@ -15,25 +15,23 @@
 namespace App\Containers\AppSection\User\UI\API\Transformers;
 
 use App\Containers\AppSection\Authorization\UI\API\Transformers\RoleTransformer;
-use App\Containers\AppSection\User\Facades\Container;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\UserDevice\UI\API\Transformers\UserDeviceTransformer;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
-use App\Ship\Dto\CurrencyDto;
+use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformer;
 use App\Ship\Parents\Transformers\Transformer;
-use App\Ship\SimpleTypes\Config\Money;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class UserTransformer extends Transformer
 {
     protected array $availableIncludes = [
         'roles',
         'devices',
-        'organization'
+        'organization',
+        'organizationBranch'
     ];
 
     public function transform(UserModel $user): array
@@ -55,8 +53,9 @@ class UserTransformer extends Transformer
             'email_verified_at' => $this->nullOrTimestamp($user->email_verified_at),
             'phone_number_verified_at' => $user->phone_number_verified_at,
             User::ORGANIZATION_ID => $user->getHashedKey(User::ORGANIZATION_ID),
-            'created_at' => $user->created_at->getTimestamp(),
-            'updated_at' => $user->updated_at->getTimestamp()
+            User::ORGANIZATION_BRANCH_ID => $user->getHashedKey(User::ORGANIZATION_BRANCH_ID),
+            CREATED_AT => $user->created_at->getTimestamp(),
+            UPDATED_AT => $user->updated_at->getTimestamp()
         ];
     }
 
@@ -68,6 +67,11 @@ class UserTransformer extends Transformer
     protected function includeOrganization(UserModel $user): Item|Primitive
     {
         return $this->primitiveNullOrItem($user->organization, new OrganizationTransformer());
+    }
+
+    protected function includeOrganizationBranch(UserModel $user): Item|Primitive
+    {
+        return $this->primitiveNullOrItem($user->organizationBranch, new OrganizationBranchTransformer());
     }
 
     protected function includeDevices(UserModel $user): Collection

@@ -38,7 +38,7 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
     protected array $access = [
         ROLES => [
             RoleModel::ORGANIZATION_OWNER,
-            RoleModel::WORKER
+            RoleModel::ORGANIZATION_WORKER
         ]
     ];
 

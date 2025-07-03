@@ -15,12 +15,12 @@
 namespace App\Containers\AppSection\User\Requests;
 
 use App\Containers\AppSection\User\Traits\HasUserValidationRules;
+use App\Containers\AppSection\User\UI\API\Transformers\AdminUserTransformer;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
 use App\Ship\Utils\Str;
-use AppSection\User\UI\API\Transformers\AdminUserTransformer;
 
 abstract class UserApiRequest extends ApiRequest implements GettableTransformer
 {

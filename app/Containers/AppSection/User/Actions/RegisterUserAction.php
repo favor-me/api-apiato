@@ -39,7 +39,10 @@ class RegisterUserAction extends Action
         $user = app(CreateUserByCredentialsTask::class)->run($dto);
         $this->assignUserToRole($user, $dto);
 
-        Mail::send(new UserRegisteredMail($user));
+        if (!empty($user->email)) {
+            Mail::send(new UserRegisteredMail($user));
+        }
+
         Notification::send($user, new UserRegisteredNotification($user));
         app(Dispatcher::class)->dispatch(new UserRegisteredEvent($user));
 

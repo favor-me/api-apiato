@@ -33,7 +33,7 @@ class AuthorizationRolesSeeder_2 extends Seeder
         $roles = collect([
             999 => Role::ADMIN,
             20 => Role::ORGANIZATION_OWNER,
-            10 => Role::WORKER
+            10 => Role::ORGANIZATION_WORKER
         ]);
 
         $apiGuard = config('auth.defaults.guard');

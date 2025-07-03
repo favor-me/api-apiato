@@ -12,22 +12,21 @@
  * @link        https://kalistratov.ru
  */
 
-namespace AppSection\User\UI\API\Transformers;
+namespace App\Containers\AppSection\User\UI\API\Transformers;
 
-use App\Containers\AppSection\User\Models\User;
-use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 
 class AdminUserTransformer extends UserTransformer
 {
-    public function transform(User $user): array
+    public function transform(UserModel $user): array
     {
         return parent::transform($user) +
             [
+                User::IS_ADMIN => $user->is_admin,
                 $this->realKey(ID) => $user->id,
-                $this->realKey('country_id') => $user->country_id,
-                $this->realKey('region_id') => $user->region_id,
-                $this->realKey('city_id') => $user->city_id,
-                'is_admin' => $user->is_admin
+                $this->realKey(User::ORGANIZATION_ID) => $user->organization_id,
+                $this->realKey(User::ORGANIZATION_BRANCH_ID) => $user->organization_branch_id,
             ];
     }
 }

@@ -23,29 +23,16 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class RegisterUserRequest extends UserApiRequest implements GettableDto
 {
-    public function getUserEmailValidationRules(): ValidationRulesCollection
-    {
-        return parent::getUserEmailValidationRules()->addRequired();
-    }
-
     public function getUserNameValidationRules(): ValidationRulesCollection
     {
-        return parent::getUserNameValidationRules()->addRequired();
+        return parent::getUserNameValidationRules()
+            ->addRequired();
     }
 
     public function getUserPasswordValidationRules(): ValidationRulesCollection
     {
-        return parent::getUserPasswordValidationRules()->addRequired();
-    }
-
-    public function getUserPatronymicValidationRules(): ValidationRulesCollection
-    {
-        return parent::getUserPatronymicValidationRules()->addRequired();
-    }
-
-    public function getUserSurnameValidationRules(): ValidationRulesCollection
-    {
-        return parent::getUserSurnameValidationRules()->addRequired();
+        return parent::getUserPasswordValidationRules()
+            ->addRequired();
     }
 
     public function rules(): array
@@ -59,7 +46,7 @@ class RegisterUserRequest extends UserApiRequest implements GettableDto
      */
     public function getDto(): RegisterUserDto
     {
-        return $this->newDto($this->validated());
+        return $this->newDto($this->getDtoData());
     }
 
     /**
@@ -70,5 +57,10 @@ class RegisterUserRequest extends UserApiRequest implements GettableDto
     public function newDto(array $data = []): RegisterUserDto
     {
         return new RegisterUserDto($data);
+    }
+
+    protected function getDtoData(): array
+    {
+        return $this->validated();
     }
 }

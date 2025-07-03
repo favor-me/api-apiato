@@ -26,7 +26,7 @@ final class UpdateUserTest extends ApiTestCase
 {
     protected array $access = [
         ROLES => [
-            RoleModel::WORKER
+            RoleModel::ORGANIZATION_WORKER
         ]
     ];
 
@@ -194,7 +194,7 @@ final class UpdateUserTest extends ApiTestCase
             ->create([
                 User::ORGANIZATION_ID => $organization->id
             ])
-            ->assignRole(RoleModel::WORKER);
+            ->assignRole(RoleModel::ORGANIZATION_WORKER);
 
         $data = [
             User::NAME => 'New worker'

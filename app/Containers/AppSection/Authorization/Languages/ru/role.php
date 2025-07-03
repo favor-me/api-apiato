@@ -19,8 +19,8 @@ return [
     'organization_owner' => [
         'display_name' => 'Собственник компании',
     ],
-    'worker' => [
-        'display_name' => 'Рабочий',
+    'organization_worker' => [
+        'display_name' => 'Сотрудник компании',
     ],
     'login_failed_exception' => 'Ошибка аутентификации.'
 ];
