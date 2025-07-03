@@ -17,8 +17,11 @@ namespace App\Containers\AppSection\User\Tasks;
 use App\Containers\AppSection\User\Data\Criterias\AdminsCriteria;
 use App\Containers\AppSection\User\Data\Criterias\ClientsCriteria;
 use App\Containers\AppSection\User\Data\Criterias\RoleCriteria;
+use App\Containers\AppSection\User\Foundation\User;
 use App\Ship\Criterias\InCriteria;
+use App\Ship\Criterias\NotInCriteria;
 use App\Ship\Criterias\OrderByCreationDateDescendingCriteria;
+use App\Ship\Criterias\ThisEqualThatCriteria;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
@@ -42,6 +45,29 @@ class GetAllUsersTask extends UserTask
     public function byIds(array $ids): self
     {
         $this->repository->pushCriteria(new InCriteria($ids));
+        return $this;
+    }
+
+    /**
+     * @param array $values
+     * @param string $field
+     * @return $this
+     * @throws RepositoryException
+     */
+    public function exclude(array $values, string $field = ID): self
+    {
+        $this->repository->pushCriteria(new NotInCriteria($values, $field));
+        return $this;
+    }
+
+    /**
+     * @param mixed $id
+     * @return $this
+     * @throws RepositoryException
+     */
+    public function fromOrganization(mixed $id): self
+    {
+        $this->repository->pushCriteria(new ThisEqualThatCriteria(User::ORGANIZATION_ID, $id));
         return $this;
     }
 
