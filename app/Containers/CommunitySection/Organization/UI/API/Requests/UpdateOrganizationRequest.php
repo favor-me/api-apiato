@@ -15,12 +15,14 @@
 
 namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\CommunitySection\Organization\Dto\UpdateOrganizationDto;
-use App\Containers\CommunitySection\Organization\Permissions\Permissions;
 use App\Ship\Collections\ValidationRulesCollection;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\Rules\Unique;
 
 /**
  * @method UpdateOrganizationDto getDto()
@@ -30,7 +32,7 @@ class UpdateOrganizationRequest extends CreateOrganizationRequest
     use HasInputId;
 
     protected array $access = [
-        PERMISSIONS => Permissions::UPDATE
+        RoleModel::ORGANIZATION_OWNER
     ];
 
     protected array $urlParameters = [
@@ -49,15 +51,48 @@ class UpdateOrganizationRequest extends CreateOrganizationRequest
         ]);
     }
 
+    public function getOrganizationPhoneNumberValidationRules(): ValidationRulesCollection
+    {
+        return parent::getOrganizationPhoneNumberValidationRules()
+            ->removeRequired();
+    }
+
     public function getOrganizationIdValidationRules(): ValidationRulesCollection
     {
         return parent::getOrganizationIdValidationRules()
             ->addRequired();
     }
 
+    public function getOrganizationNameUniqueValidationRule(): Unique
+    {
+        return parent::getOrganizationEmailUniqueValidationRule()
+            ->ignore($this->id);
+    }
+
+    public function getOrganizationInnUniqueValidationRule(): Unique
+    {
+        return parent::getOrganizationInnUniqueValidationRule()
+            ->ignore($this->id);
+    }
+
+    public function getOrganizationPhoneNumberUniqueValidationRule(): Unique
+    {
+        return parent::getOrganizationPhoneNumberUniqueValidationRule()
+            ->ignore($this->id);
+    }
+
     public function newDto(array $data = []): UpdateOrganizationDto
     {
         return new UpdateOrganizationDto($data);
+    }
+
+    protected function prepareForValidation(): void
+    {
+        parent::prepareForValidation();
+
+        $this->merge([
+            ID => $this->user()->getHashedKey(User::ORGANIZATION_ID)
+        ]);
     }
 
     /**
@@ -73,5 +108,17 @@ class UpdateOrganizationRequest extends CreateOrganizationRequest
         }
 
         return $result;
+    }
+
+    protected function getCheckAuthorizeMethods(): array
+    {
+        return array_merge(parent::getCheckAuthorizeMethods(), [
+            'isOrganizationOwner'
+        ]);
+    }
+
+    protected function isOrganizationOwner(): bool
+    {
+        return $this->user()->isRealOrganizationOwner();
     }
 }

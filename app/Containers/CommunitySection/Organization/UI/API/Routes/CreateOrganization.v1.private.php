@@ -12,7 +12,7 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
- * @apiGroup CommunityOrganization
+ * @_apiGroup CommunityOrganization
  * @apiName createCommunityOrganization
 
  * @api {post} /v1/community/organizations Создать

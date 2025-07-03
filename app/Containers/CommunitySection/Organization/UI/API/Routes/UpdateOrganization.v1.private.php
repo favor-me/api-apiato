@@ -19,15 +19,14 @@
  * @apiDescription Изменить.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь (Собственник организации)
  *
  * @apiParam {String} id Уникальный идентификатор
  *
- * @apiBody {String} [name]
- * @apiBody {String} [inn]
- * @apiBody {String} [phone_number]
- * @apiBody {String} [email]
- * @apiBody {String} [params]
+ * @apiBody {String} [name] Название организации.
+ * @apiBody {String} [inn] ИНН.
+ * @apiBody {String} [phone_number] Контактный номер телефона.
+ * @apiBody {String} [email] Контактный адрес электронной почты.
  *
  * @apiUse OrganizationSuccessSingleResponse
  */
@@ -38,5 +37,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::patch(Container::getApiUri('{' . ID . '}'), UpdateOrganizationController::class)
     ->name('api_community_organization_update_organization')
-    ->where(ID, '^(?!own$).+')
     ->middleware(['auth:api']);

@@ -38,7 +38,7 @@ final class OrganizationFactory extends Factory
         return [
             Organization::EMAIL => $this->faker->email,
             Organization::INN => $this->faker->numberBetween(),
-            Organization::NAME => $this->faker->title,
+            Organization::NAME => uniqid($this->faker->title),
             Organization::PHONE_NUMBER => $this->faker->e164PhoneNumber,
             Organization::USER_OWNER_ID => UserModel::factory(),
             PARAMS => []
