@@ -13,6 +13,7 @@
  */
 
 
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Ship\Parents\Database\Migrations\Migration;
@@ -24,7 +25,7 @@ return new class extends Migration
     {
         Schema::table($this->getTableName(), function (Blueprint $table) {
             $table
-                ->unsignedInteger(User::ORGANIZATION_ID)
+                ->unsignedBigInteger(User::ORGANIZATION_ID)
                 ->nullable()
                 ->after(PARAMS);
 
@@ -32,6 +33,13 @@ return new class extends Migration
                 ->boolean(User::IS_ORGANIZATION_OWNER)
                 ->default(false)
                 ->after(User::IS_ADMIN);
+
+            $table->foreign(User::ORGANIZATION_ID, $this->getFieldForeignKeyName(User::ORGANIZATION_ID))
+                ->on(OrganizationModel::TABLE)
+                ->references(ID)
+                ->cascadeOnDelete();
+
+            $table->index(User::ORGANIZATION_ID, $this->getFieldIndexName(User::ORGANIZATION_ID));
         });
     }
 
