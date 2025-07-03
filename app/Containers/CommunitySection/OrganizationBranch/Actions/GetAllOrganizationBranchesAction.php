@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\OrganizationBranch\Actions;
 
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Tasks\GetAllOrganizationBranchesTask;
 use App\Ship\Parents\Actions\Action;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
@@ -38,6 +39,11 @@ class GetAllOrganizationBranchesAction extends Action
             $task->onlyTrashed();
         }
 
-        return $task->addRequestCriteria()->run($limit);
+        return $task
+            ->addRequestCriteria(null, [
+                ID,
+                OrganizationBranch::ORGANIZATION_ID
+            ])
+            ->run($limit);
     }
 }
