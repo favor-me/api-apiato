@@ -22,6 +22,7 @@ use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Foundation\User as BaseUser;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Ship\Database\Casts\JSON;
 use App\Ship\Database\Eloquent\Collection;
@@ -55,10 +56,12 @@ use JBZoo\Data\JSON as JsonData;
  * @property-read string $password
  * @property-read JsonData $params Дополнительные параметры.
  * @property-read null|int $organization_id Уникальный идентификатор организации.
+ * @property-read null|int $organization_branch_id Уникальный идентификатор отделения организации.
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon $deleted_at
  * @property-read null|OrganizationModel $organization
+ * @property-read null|OrganizationBranchModel $organizationBranch
  * @property-read Collection $roles
  * @property-read Collection $contacts
  * @property-read Collection $devices Список устройств.
@@ -94,6 +97,7 @@ class User extends UserModel implements HasResourceKey
         BaseUser::IS_ADMIN,
         BaseUser::IS_ORGANIZATION_OWNER,
         BaseUser::ORGANIZATION_ID,
+        BaseUser::ORGANIZATION_BRANCH_ID,
         BaseUser::PATRONYMIC,
         BaseUser::PHONE_NUMBER,
         PARAMS
@@ -118,6 +122,11 @@ class User extends UserModel implements HasResourceKey
     public function organization(): BelongsTo
     {
         return $this->belongsTo(OrganizationModel::class, BaseUser::ORGANIZATION_ID, ID);
+    }
+
+    public function organizationBranch(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationBranchModel::class, BaseUser::ORGANIZATION_BRANCH_ID, ID);
     }
 
     public function getDefaultLogin(): string

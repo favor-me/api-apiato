@@ -35,6 +35,7 @@ class RegisterUserDto extends Dto
     public ?bool $is_admin = false;
     public ?bool $is_organization_owner = false;
     public ?int $organization_id = null;
+    public ?int $organization_branch_id = null;
     public ?string $role;
 
     /**

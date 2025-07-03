@@ -17,6 +17,8 @@ namespace App\Containers\AppSection\User\Tests\Unit\Models;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
@@ -54,6 +56,7 @@ final class UserTest extends UnitTestCase
             User::IS_ADMIN,
             User::IS_ORGANIZATION_OWNER,
             User::ORGANIZATION_ID,
+            User::ORGANIZATION_BRANCH_ID,
             User::PATRONYMIC,
             User::PHONE_NUMBER,
             PARAMS
@@ -170,6 +173,27 @@ final class UserTest extends UnitTestCase
         $userB = UserModel::factory()->create();
 
         $this->assertFalse($userB->hasOrganizationOwnerRole());
+    }
+
+    public function testBelongsToOrganizationBranch(): void
+    {
+        $organization = OrganizationModel::factory()->create();
+
+        $organizationBranch = OrganizationBranchModel::factory()
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $organization->id
+            ]);
+
+        $user = UserModel::factory()
+            ->create([
+                User::ORGANIZATION_ID => $organization->id,
+                User::ORGANIZATION_BRANCH_ID => $organizationBranch->id
+            ]);
+
+        $this->assertInstanceOf(BelongsTo::class, $user->organizationBranch());
+        $this->assertInstanceOf(OrganizationBranchModel::class, $user->organizationBranch()->getModel());
+        $this->assertInstanceOf(OrganizationBranchModel::class, $user->organizationBranch);
+        $this->assertSame($organizationBranch->id, $user->organizationBranch->id);
     }
 
     public function testIsRealOrganizationOwner(): void
