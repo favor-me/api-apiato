@@ -160,18 +160,26 @@ class User extends UserModel implements HasResourceKey
         return $this->hasRole(RoleModel::ORGANIZATION_OWNER);
     }
 
-    public function isRealOrganizationOwner(): bool
+    public function isRealOrganizationOwner(?int $organizationId = null): bool
     {
-        $isResponsibleInOrganization = false;
-        $hasOrganization = !is_null($this->organization_id);
+        $organizationId = is_null($organizationId) ? $this->organization_id : $organizationId;
 
-        if ($hasOrganization) {
-            $isResponsibleInOrganization = $this->organization->user_owner_id === $this->id;
+        if (!is_null($organizationId)) {
+            $user = clone $this;
+            $user->setAttribute(BaseUser::ORGANIZATION_ID, $organizationId);
+
+            /** @var null|OrganizationModel $organization */
+            $organization = $user->organization()->first();
+
+            if (is_null($organization)) {
+                return false;
+            }
+
+            return $this->hasOrganizationOwnerRole() &&
+                $this->is_organization_owner &&
+                $organization->user_owner_id === $this->id;
         }
 
-        return $this->hasOrganizationOwnerRole() &&
-            $this->is_organization_owner &&
-            $hasOrganization &&
-            $isResponsibleInOrganization;
+        return false;
     }
 }

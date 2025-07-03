@@ -189,17 +189,23 @@ final class UserTest extends UnitTestCase
 
         $this->assertFalse($userB->isRealOrganizationOwner());
 
-        $organization = OrganizationModel::factory()->create();
+        $organizationA = OrganizationModel::factory()->create();
 
-        $userC = $organization->userOwner;
+        $userC = $organizationA->userOwner;
 
         $userC
-            ->setAttribute(User::ORGANIZATION_ID, $organization->id)
+            ->setAttribute(User::ORGANIZATION_ID, $organizationA->id)
             ->setAttribute(User::IS_ORGANIZATION_OWNER, true)
             ->save();
 
         $userC->assignRole(RoleModel::ORGANIZATION_OWNER);
 
         $this->assertTrue($userC->isRealOrganizationOwner());
+        $this->assertTrue($userC->isRealOrganizationOwner($organizationA->id));
+
+        $organizationB = OrganizationModel::factory()->create();
+
+        $this->assertFalse($userC->isRealOrganizationOwner(567));
+        $this->assertFalse($userC->isRealOrganizationOwner($organizationB->id));
     }
 }
