@@ -12,9 +12,9 @@
  * @link https://youbm.ru
  */
 
-use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Ship\Parents\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -25,12 +25,12 @@ return new class extends Migration {
             $table
                 ->unsignedBigInteger(User::ORGANIZATION_BRANCH_ID)
                 ->nullable()
-                ->after(PARAMS);
+                ->after(User::ORGANIZATION_ID);
 
             $table->foreign(User::ORGANIZATION_BRANCH_ID, $this->getFieldForeignKeyName(User::ORGANIZATION_BRANCH_ID))
                 ->on(OrganizationBranchModel::TABLE)
                 ->references(ID)
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
             $table->index(User::ORGANIZATION_BRANCH_ID, $this->getFieldIndexName(User::ORGANIZATION_BRANCH_ID));
         });
@@ -39,6 +39,8 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table($this->getTableName(), function (Blueprint $table) {
+            $table->dropForeign($this->getFieldForeignKeyName(User::ORGANIZATION_BRANCH_ID));
+            $table->dropIndex($this->getFieldIndexName(User::ORGANIZATION_BRANCH_ID));
             $table->dropColumn(User::ORGANIZATION_BRANCH_ID);
         });
     }

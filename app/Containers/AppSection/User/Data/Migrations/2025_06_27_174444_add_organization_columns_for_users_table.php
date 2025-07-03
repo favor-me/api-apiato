@@ -45,6 +45,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table($this->getTableName(), function (Blueprint $table) {
+            $table->dropForeign($this->getFieldForeignKeyName(User::ORGANIZATION_ID));
+            $table->dropIndex($this->getFieldIndexName(User::ORGANIZATION_ID));
             $table->dropColumn(User::ORGANIZATION_ID);
             $table->dropColumn(User::IS_ORGANIZATION_OWNER);
         });
