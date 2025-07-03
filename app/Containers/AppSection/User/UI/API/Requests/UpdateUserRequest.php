@@ -14,102 +14,130 @@
 
 namespace App\Containers\AppSection\User\UI\API\Requests;
 
-use App\Containers\AppSection\Profile\Models\Profile;
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Dto\UpdateUserDto;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Requests\UserApiRequest;
+use App\Containers\AppSection\User\Tasks\FindUserByIdTask;
 use App\Containers\AppSection\User\Traits\IsOwnerTrait;
-use App\Containers\LocationSection\Provider\Traits\HasLocationRequest;
 use App\Ship\Collections\ValidationRulesCollection;
-use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Contracts\GettableDto;
 use App\Ship\Traits\Request\HasInputId;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+use App\Ship\Exceptions\NotFoundException;
 
 /**
- * @method User user($guard = null)
+ * @method UserModel user($guard = null)
  */
-class UpdateUserRequest extends UserApiRequest
+class UpdateUserRequest extends UserApiRequest implements GettableDto
 {
     use HasInputId;
     use IsOwnerTrait;
-    use HasLocationRequest;
 
     protected array $access = [
-        'roles' => '',
-        'permissions' => 'update-users'
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER,
+            RoleModel::WORKER
+        ]
     ];
 
     protected array $decode = [
-        'id',
-        'city_id',
-        'region_id',
-        'country_id'
+        ID
     ];
 
     protected array $urlParameters = [
-        'id'
+        ID
     ];
 
-    public function authorize(): bool
+    protected function getCheckAuthorizeMethods(): array
     {
-        return $this->check([
-            'hasAccess|isOwner'
+        return array_merge(parent::getCheckAuthorizeMethods(), [
+            'isOwner|isOrganizationOwner'
         ]);
+    }
+
+    /**
+     * @return bool
+     * @throws NotFoundException
+     */
+    protected function isOrganizationOwner(): bool
+    {
+        if ($this->user()->id === $this->id) {
+            return false;
+        }
+
+        $updatingUser = app(FindUserByIdTask::class)
+            ->setColumns([
+                ID,
+                User::ORGANIZATION_ID
+            ])
+            ->run($this->id);
+
+        if (!is_null($updatingUser)) {
+            return $this->user()
+                ->isRealOrganizationOwner(
+                    $updatingUser->organization_id
+                );
+        }
+
+        return false;
     }
 
     public function getUserEmailValidationRules(): ValidationRulesCollection
     {
-        return parent::getUserEmailValidationRules()->addIgnoreIdForUnique($this->getId());
-    }
-
-    public function getUserLoginRules(): ValidationRulesCollection
-    {
-        $profile = $this->user()->profile;
-        $rules = parent::getUserLoginValidationRules();
-
-        if ($profile instanceof Profile) {
-            return $rules->addIgnoreIdForUnique($profile->id);
-        }
-
-        return $rules;
+        return parent::getUserEmailValidationRules()
+            ->addIgnoreIdForUnique($this->getId());
     }
 
     public function getUserLoginValidationRules(): ValidationRulesCollection
     {
-        return parent::getUserLoginValidationRules()->addIgnoreIdForUnique($this->getId());
+        return parent::getUserLoginValidationRules()
+            ->addIgnoreIdForUnique($this->getId());
     }
 
     protected function getUserRules(): array
     {
         return array_merge(parent::getUserRules(), [
-            'id' => $this->getUserIdValidationRules()->addRequired()
+            ID => $this->getUserIdValidationRules()
         ]);
+    }
+
+    public function getUserIdValidationRules(): ValidationRulesCollection
+    {
+        return parent::getUserIdValidationRules()
+            ->addRequired();
     }
 
     public function getUserPhoneNumberValidationRules(): ValidationRulesCollection
     {
-        return parent::getUserPhoneNumberValidationRules()->addIgnoreIdForUnique($this->getId());
+        return parent::getUserPhoneNumberValidationRules()
+            ->addIgnoreIdForUnique(
+                $this->getId()
+            );
     }
 
     public function rules(): array
     {
-        $rules = array_merge(
-            $this->getUserRules(),
-            $this->getUserProfileRules()
-        );
-
-        $this->addLocationRules($rules);
-
-        return $rules;
+        return $this->getUserRules();
     }
 
     /**
-     * @throws NotFoundException
+     * @return UpdateUserDto
+     * @throws UnknownProperties
      */
-    protected function prepareForValidation(): void
+    public function getDto(): UpdateUserDto
     {
-        parent::prepareForValidation();
+        return $this->newDto($this->validated());
+    }
 
-        $this
-            ->mergeByCityId()
-            ->mergeByRegionId();
+    /**
+     * @param array $data
+     * @return UpdateUserDto
+     * @throws UnknownProperties
+     */
+    public function newDto(array $data = []): UpdateUserDto
+    {
+        return new UpdateUserDto($data);
     }
 }

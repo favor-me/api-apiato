@@ -196,19 +196,4 @@ class Controller extends ApiController
             'message' => __($resetPasswordStatus)
         ], $responseStatus);
     }
-
-    /**
-     * @param UpdateUserRequest $request
-     * @return array
-     * @throws InternalErrorException
-     * @throws InvalidTransformerException
-     * @throws NotFoundException
-     * @throws UnknownProperties
-     */
-    public function updateUser(UpdateUserRequest $request): array
-    {
-        $dto = new UpdateUserDto($request->all());
-        $user = app(UpdateUserAction::class)->run($dto);
-        return $this->transform($user, UserTransformer::class);
-    }
 }

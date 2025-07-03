@@ -17,11 +17,14 @@ namespace App\Containers\AppSection\User\Tasks;
 use App\Containers\AppSection\User\Data\Criterias\RoleCriteria;
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Exceptions\NotFoundException;
-use Prettus\Repository\Exceptions\RepositoryException;
+use App\Ship\Traits\SetColumns;
 use Exception;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class FindUserByIdTask extends UserTask
 {
+    use SetColumns;
+
     /**
      * @param string|int $id
      * @return User
@@ -30,9 +33,9 @@ class FindUserByIdTask extends UserTask
     public function run(string|int $id): User
     {
         try {
-            return $this->repository->find($id);
+            return $this->repository->find($id, $this->columns);
         } catch (Exception $e) {
-            throw new NotFoundException($e->getMessage(), (int) $e->getCode());
+            throw new NotFoundException($e->getMessage());
         }
     }
 

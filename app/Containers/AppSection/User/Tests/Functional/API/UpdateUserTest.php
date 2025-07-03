@@ -14,22 +14,27 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\Profile\Models\Profile;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Facades\Container;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Tests\ApiTestCase;
-use Illuminate\Http\Response;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-class UpdateUserTest extends ApiTestCase
+final class UpdateUserTest extends ApiTestCase
 {
-    protected string $endpoint = 'patch@v1/users/{id}';
-
     protected array $access = [
-        ROLES => '',
-        PERMISSIONS => 'update-users'
+        ROLES => [
+            RoleModel::WORKER
+        ]
     ];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->endpoint = 'patch@v1/' . Container::getApiUri('{' . ID . '}');
+    }
 
     public function testUpdateExistingUser(): void
     {
@@ -52,20 +57,20 @@ class UpdateUserTest extends ApiTestCase
             ->injectId($user->id)
             ->makeCall($data);
 
-        $this->response->assertOk();
-
-        $this->response->assertJson(
-            fn(AssertableJson $json): AssertableJson => $json
-                ->has('data')
-                ->where('data.' . OBJECT, 'User')
-                ->where('data.' . User::EMAIL, $user->email)
-                ->where('data.' . User::NAME, $data[User::NAME])
-                ->where('data.' . User::PHONE_NUMBER, $user->phone_number)
-                ->where('data.' . User::PATRONYMIC, $data[User::PATRONYMIC])
-                ->where('data.' . User::GENDER, $data[User::GENDER])
-                ->where('data.' . User::LOGIN, $user->login)
-                ->etc()
-        );
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . OBJECT, 'User')
+                    ->where('data.' . User::EMAIL, $user->email)
+                    ->where('data.' . User::NAME, $data[User::NAME])
+                    ->where('data.' . User::PHONE_NUMBER, $user->phone_number)
+                    ->where('data.' . User::PATRONYMIC, $data[User::PATRONYMIC])
+                    ->where('data.' . User::GENDER, $data[User::GENDER])
+                    ->where('data.' . User::LOGIN, $user->login)
+                    ->etc()
+            );
 
         $this->assertDatabaseHas(UserModel::TABLE, [User::NAME => $data[User::NAME]]);
     }
@@ -94,42 +99,44 @@ class UpdateUserTest extends ApiTestCase
         $this->assertActionIsUnauthorized();
     }
 
-    public function testUpdateNonExistingUser(): void
+    public function testUserCantUpdateOtherUser(): void
     {
+        $user = UserModel::factory()->create();
+
         $data = [
             User::NAME => 'Updated Name'
         ];
 
         $this
-            ->injectId(7777)
+            ->injectId($user->id)
             ->makeCall($data);
 
-        $this->assertGivenDataIsInvalid();
-
-        $this->response->assertJson(
-            fn(AssertableJson $json): AssertableJson => $json
-                ->has('errors')
-                ->where('errors.' . ID, [__('validation.custom.id.exists')])
-                ->etc()
-        );
+        $this->response
+            ->assertForbidden()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('message')
+                    ->where('message', __('ship::exception.unauthorized_action'))
+                    ->etc()
+            );
     }
 
-    public function testUpdateExistingUserWithoutData(): void
+    public function testUpdateWithoutData(): void
     {
-        $user = UserModel::factory()->create();
+        $user = $this->getTestingUser();
 
         $this
             ->injectId($user->id)
             ->makeCall();
 
-        $this->response->assertStatus(Response::HTTP_EXPECTATION_FAILED);
-
-        $this->response->assertJson(
-            fn(AssertableJson $json): AssertableJson => $json
-                ->has(MESSAGE)
-                ->where(MESSAGE, __('ship::exception.inputs_empty'))
-                ->etc()
-        );
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . ID, $user->getHashedKey())
+                    ->etc()
+            );
     }
 
     public function testUpdateExistingUserWithEmptyValues(): void
@@ -169,28 +176,42 @@ class UpdateUserTest extends ApiTestCase
         );
     }
 
-    public function testUpdateWithProfileData(): void
+    public function testOrganizationOwnerCanUpdateOwnUser(): void
     {
-        $profile = Profile::factory()
+        $organization = OrganizationModel::factory()->create();
+
+        $this->testingUser = $organization->userOwner;
+
+        $this->testingUser
+            ->assignRole(RoleModel::ORGANIZATION_OWNER);
+
+        $this->testingUser
+            ->setAttribute(User::ORGANIZATION_ID, $organization->id)
+            ->setAttribute(User::IS_ORGANIZATION_OWNER, true)
+            ->save();
+
+        $ownUser = UserModel::factory()
             ->create([
-                'about_me' => 'About me text'
-            ]);
+                User::ORGANIZATION_ID => $organization->id
+            ])
+            ->assignRole(RoleModel::WORKER);
+
+        $data = [
+            User::NAME => 'New worker'
+        ];
 
         $this
-            ->injectId($profile->user->id)
-            ->makeCall([
-                User::LOGIN => 'new-test-login',
-                'about_me' => '<p>Empty</p>'
-            ]);
+            ->injectId($ownUser->id)
+            ->makeCall($data);
 
-        $this->response->assertOk();
-
-        $this->response->assertJson(
-            fn(AssertableJson $json): AssertableJson => $json
-                ->has('data')
-                ->where('data.profile.data.about_me', 'Empty')
-                ->where('data.' . User::LOGIN, 'new-test-login')
-                ->etc()
-        );
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . ID, $ownUser->getHashedKey())
+                    ->where('data.' . User::NAME, $data[User::NAME])
+                    ->etc()
+            );
     }
 }
