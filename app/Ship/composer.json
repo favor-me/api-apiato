@@ -3,7 +3,8 @@
     "description": "Apiato Ship folder where shared functionality resides",
     "require": {
         "apiato/core": "^8.13.0",
-        "apiato/documentation-generator-container": "^3.0.5"
+        "apiato/documentation-generator-container": "^3.0.5",
+        "cheren/apiato-unit-container": "2.x-dev"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13.0",
