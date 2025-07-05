@@ -12,7 +12,7 @@
  * @link        https://kalistratov.ru
  */
 
-use App\Ship\Parents\Database\Migrations\Migration;
+use App\Ship\Parents\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 return new class extends Migration

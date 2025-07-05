@@ -12,14 +12,13 @@
  * @link https://youbm.ru
  */
 
-use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
-use App\Ship\Parents\Database\Migrations\Migration;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Ship\Parents\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::table($this->getTableName(), function (Blueprint $table) {

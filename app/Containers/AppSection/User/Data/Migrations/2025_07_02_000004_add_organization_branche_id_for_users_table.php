@@ -15,7 +15,7 @@
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
-use App\Ship\Parents\Database\Migrations\Migration;
+use App\Ship\Parents\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 return new class extends Migration {

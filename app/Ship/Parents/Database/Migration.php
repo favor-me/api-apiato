@@ -12,7 +12,7 @@
  * @link        https://kalistratov.ru
  */
 
-namespace App\Ship\Parents\Database\Migrations;
+namespace App\Ship\Parents\Database;
 
 use Illuminate\Database\Migrations\Migration as BaseMigration;
 use Illuminate\Support\Str;
