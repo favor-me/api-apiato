@@ -12,7 +12,7 @@
  * @link        https://kalistratov.ru
  */
 
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Enumerable;
@@ -53,9 +53,9 @@ if (!function_exists('hash_decode')) {
 
 if (!function_exists('validation_rules')) {
 
-    function validation_rules(array $rules): ValidationRulesCollection
+    function validation_rules(array $rules): ValidationRules
     {
-        return new ValidationRulesCollection($rules);
+        return new ValidationRules($rules);
     }
 
 }

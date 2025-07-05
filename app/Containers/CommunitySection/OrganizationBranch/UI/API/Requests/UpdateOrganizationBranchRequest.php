@@ -18,7 +18,7 @@ namespace App\Containers\CommunitySection\OrganizationBranch\UI\API\Requests;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationBranch\Dto\UpdateOrganizationBranchDto;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -53,31 +53,31 @@ class UpdateOrganizationBranchRequest extends CreateOrganizationBranchRequest
         ]);
     }
 
-    public function getOrganizationBranchNameValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchNameValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchNameValidationRules()
             ->removeRequired();
     }
 
-    public function getOrganizationBranchPhoneNumberValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchPhoneNumberValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchPhoneNumberValidationRules()
             ->removeRequired();
     }
 
-    public function getOrganizationBranchLocationValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchLocationValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchLocationValidationRules()
             ->removeRequired();
     }
 
-    public function getOrganizationBranchResponsibleByValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchResponsibleByValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchResponsibleByValidationRules()
             ->removeRequired();
     }
 
-    public function getOrganizationBranchIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchIdValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchIdValidationRules()
             ->addRequired();

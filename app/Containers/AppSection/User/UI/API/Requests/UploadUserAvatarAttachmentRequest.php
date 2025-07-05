@@ -16,7 +16,7 @@ namespace App\Containers\AppSection\User\UI\API\Requests;
 
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Requests\UserApiRequest;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 
 class UploadUserAvatarAttachmentRequest extends UserApiRequest
 {
@@ -27,7 +27,7 @@ class UploadUserAvatarAttachmentRequest extends UserApiRequest
         ];
     }
 
-    public function getUserAvatarValidationRules(): ValidationRulesCollection
+    public function getUserAvatarValidationRules(): ValidationRules
     {
         return parent::getUserAvatarValidationRules()->addRequired();
     }

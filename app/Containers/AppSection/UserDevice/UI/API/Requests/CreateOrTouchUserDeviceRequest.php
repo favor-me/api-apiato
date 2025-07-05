@@ -21,7 +21,7 @@ use App\Containers\AppSection\UserDevice\Dto\CreateUserDeviceDto;
 use App\Containers\AppSection\UserDevice\Requests\UserDeviceApiRequest;
 use App\Containers\AppSection\User\Foundation\User as BaseUser;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
@@ -54,17 +54,17 @@ class CreateOrTouchUserDeviceRequest extends UserDeviceApiRequest implements Get
         ];
     }
 
-    public function getUserDeviceTokenValidationRules(): ValidationRulesCollection
+    public function getUserDeviceTokenValidationRules(): ValidationRules
     {
         return parent::getUserDeviceTokenValidationRules()->addRequired();
     }
 
-    public function getUserDeviceModelValidationRules(): ValidationRulesCollection
+    public function getUserDeviceModelValidationRules(): ValidationRules
     {
         return parent::getUserDeviceModelValidationRules()->addRequired();
     }
 
-    public function getUserDeviceIdValidationRules(): ValidationRulesCollection
+    public function getUserDeviceIdValidationRules(): ValidationRules
     {
         return parent::getUserIdValidationRules()->addRequired();
     }

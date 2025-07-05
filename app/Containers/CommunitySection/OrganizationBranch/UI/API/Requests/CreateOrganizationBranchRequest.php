@@ -20,7 +20,7 @@ use App\Containers\CommunitySection\OrganizationBranch\Dto\CreateOrganizationBra
 use App\Containers\CommunitySection\OrganizationBranch\Facades\Container;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Requests\OrganizationBranchApiRequest;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\Utils\Str;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
@@ -69,7 +69,7 @@ class CreateOrganizationBranchRequest extends OrganizationBranchApiRequest imple
         ];
     }
 
-    public function getOrganizationBranchResponsibleByValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchResponsibleByValidationRules(): ValidationRules
     {
         return validation_rules([
             $this->getUserExistsInOrganizationValidationRule($this->organization_id)
@@ -77,25 +77,25 @@ class CreateOrganizationBranchRequest extends OrganizationBranchApiRequest imple
             ->addRequired();
     }
 
-    public function getOrganizationBranchOrganizationIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchOrganizationIdValidationRules(): ValidationRules
     {
         return validation_rules([])
             ->addRequired();
     }
 
-    public function getOrganizationBranchLocationValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchLocationValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchLocationValidationRules()
             ->addRequired();
     }
 
-    public function getOrganizationBranchPhoneNumberValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchPhoneNumberValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchPhoneNumberValidationRules()
             ->addRequired();
     }
 
-    public function getOrganizationBranchNameValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchNameValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchNameValidationRules()
             ->addRequired();

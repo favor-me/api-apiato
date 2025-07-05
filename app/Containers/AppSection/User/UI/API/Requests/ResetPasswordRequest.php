@@ -15,18 +15,18 @@
 namespace App\Containers\AppSection\User\UI\API\Requests;
 
 use App\Containers\AppSection\User\Requests\UserApiRequest;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 
 class ResetPasswordRequest extends UserApiRequest
 {
-    public function getUserEmailRules(): ValidationRulesCollection
+    public function getUserEmailRules(): ValidationRules
     {
         return parent::getUserEmailValidationRules()
             ->removeUnique()
             ->addRequired();
     }
 
-    public function getUserPasswordRules(): ValidationRulesCollection
+    public function getUserPasswordRules(): ValidationRules
     {
         return parent::getUserPasswordValidationRules()->addRequired();
     }

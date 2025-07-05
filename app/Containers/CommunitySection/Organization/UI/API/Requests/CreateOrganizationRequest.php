@@ -20,7 +20,7 @@ use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Permissions\Permissions;
 use App\Containers\CommunitySection\Organization\Requests\OrganizationApiRequest;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\Utils\Str;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
@@ -41,13 +41,13 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
         ];
     }
 
-    public function getOrganizationNameValidationRules(): ValidationRulesCollection
+    public function getOrganizationNameValidationRules(): ValidationRules
     {
         return parent::getOrganizationNameValidationRules()
             ->addRequired();
     }
 
-    public function getOrganizationPhoneNumberValidationRules(): ValidationRulesCollection
+    public function getOrganizationPhoneNumberValidationRules(): ValidationRules
     {
         return parent::getOrganizationPhoneNumberValidationRules()
             ->addRequired();

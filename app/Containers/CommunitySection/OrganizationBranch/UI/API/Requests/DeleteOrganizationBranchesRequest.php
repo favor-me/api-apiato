@@ -17,7 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationBranch\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 
 class DeleteOrganizationBranchesRequest extends TrashOrganizationBranchesRequest
@@ -26,7 +26,7 @@ class DeleteOrganizationBranchesRequest extends TrashOrganizationBranchesRequest
         ROLES => RoleModel::ADMIN
     ];
 
-    public function getOrganizationBranchIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchIdValidationRules(): ValidationRules
     {
         return validation_rules([
             Rule::exists(OrganizationBranchModel::TABLE, ID)

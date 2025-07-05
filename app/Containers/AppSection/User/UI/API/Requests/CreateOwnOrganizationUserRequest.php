@@ -19,7 +19,7 @@ use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Traits\IsOrganizationOwner;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 
 /**
@@ -38,7 +38,7 @@ class CreateOwnOrganizationUserRequest extends RegisterUserRequest
         User::ORGANIZATION_BRANCH_ID
     ];
 
-    public function getUserOrganizationBranchIdValidationRules(): ValidationRulesCollection
+    public function getUserOrganizationBranchIdValidationRules(): ValidationRules
     {
         return validation_rules([
             Rule::exists(OrganizationBranchModel::TABLE, ID)
@@ -47,7 +47,7 @@ class CreateOwnOrganizationUserRequest extends RegisterUserRequest
             ->addRequired();
     }
 
-    public function getUserOrganizationIdValidationRules(): ValidationRulesCollection
+    public function getUserOrganizationIdValidationRules(): ValidationRules
     {
         return validation_rules([])
             ->addRequired();

@@ -16,20 +16,20 @@ namespace App\Containers\AppSection\User\UI\API\Requests;
 
 use App\Containers\AppSection\User\Dto\RegisterUserDto;
 use App\Containers\AppSection\User\Requests\UserApiRequest;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\Dto\Dto;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class RegisterUserRequest extends UserApiRequest implements GettableDto
 {
-    public function getUserNameValidationRules(): ValidationRulesCollection
+    public function getUserNameValidationRules(): ValidationRules
     {
         return parent::getUserNameValidationRules()
             ->addRequired();
     }
 
-    public function getUserPasswordValidationRules(): ValidationRulesCollection
+    public function getUserPasswordValidationRules(): ValidationRules
     {
         return parent::getUserPasswordValidationRules()
             ->addRequired();

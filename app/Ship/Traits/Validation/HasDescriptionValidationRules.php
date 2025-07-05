@@ -14,11 +14,11 @@
 
 namespace App\Ship\Traits\Validation;
 
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 
 trait HasDescriptionValidationRules
 {
-    public function getDescriptionValidationRules(): ValidationRulesCollection
+    public function getDescriptionValidationRules(): ValidationRules
     {
         return validation_rules(['string']);
     }

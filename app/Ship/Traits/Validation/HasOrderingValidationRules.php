@@ -14,11 +14,11 @@
 
 namespace App\Ship\Traits\Validation;
 
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 
 trait HasOrderingValidationRules
 {
-    public function getOrderingValidationRules(): ValidationRulesCollection
+    public function getOrderingValidationRules(): ValidationRules
     {
         return validation_rules(['numeric']);
     }

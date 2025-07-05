@@ -15,7 +15,7 @@
 
 namespace App\Ship\Requests;
 
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Traits\Request\HasInputIds;
 use App\Ship\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
@@ -28,7 +28,7 @@ abstract class ApiRestoreRequest extends ApiRequest
         IDS . '.*'
     ];
 
-    public function getIdRules(): ValidationRulesCollection
+    public function getIdRules(): ValidationRules
     {
         return validation_rules([
             $this->existsRule()

@@ -18,7 +18,7 @@ namespace App\Containers\CommunitySection\OrganizationBranch\UI\API\Requests;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Requests\OrganizationBranchApiRequest;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Traits\Request\HasInputIds;
 use Illuminate\Validation\Rules\Exists;
 
@@ -43,7 +43,7 @@ class TrashOrganizationBranchesRequest extends OrganizationBranchApiRequest
         ];
     }
 
-    public function getOrganizationBranchIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchIdValidationRules(): ValidationRules
     {
         return parent::getOrganizationBranchIdValidationRules()
             ->addRequired();

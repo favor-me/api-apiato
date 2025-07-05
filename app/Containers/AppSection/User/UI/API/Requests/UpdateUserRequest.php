@@ -21,7 +21,7 @@ use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Requests\UserApiRequest;
 use App\Containers\AppSection\User\Tasks\FindUserByIdTask;
 use App\Containers\AppSection\User\Traits\IsOwnerTrait;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\Traits\Request\HasInputId;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
@@ -84,13 +84,13 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
         return false;
     }
 
-    public function getUserEmailValidationRules(): ValidationRulesCollection
+    public function getUserEmailValidationRules(): ValidationRules
     {
         return parent::getUserEmailValidationRules()
             ->addIgnoreIdForUnique($this->getId());
     }
 
-    public function getUserLoginValidationRules(): ValidationRulesCollection
+    public function getUserLoginValidationRules(): ValidationRules
     {
         return parent::getUserLoginValidationRules()
             ->addIgnoreIdForUnique($this->getId());
@@ -103,13 +103,13 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
         ]);
     }
 
-    public function getUserIdValidationRules(): ValidationRulesCollection
+    public function getUserIdValidationRules(): ValidationRules
     {
         return parent::getUserIdValidationRules()
             ->addRequired();
     }
 
-    public function getUserPhoneNumberValidationRules(): ValidationRulesCollection
+    public function getUserPhoneNumberValidationRules(): ValidationRules
     {
         return parent::getUserPhoneNumberValidationRules()
             ->addIgnoreIdForUnique(

@@ -17,7 +17,7 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 
 use App\Containers\CommunitySection\Organization\Permissions\Permissions;
 use App\Containers\CommunitySection\Organization\Requests\OrganizationApiRequest;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Traits\Request\HasInputIds;
 
 class TrashOrganizationsRequest extends OrganizationApiRequest
@@ -39,7 +39,7 @@ class TrashOrganizationsRequest extends OrganizationApiRequest
         ];
     }
 
-    public function getOrganizationIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationIdValidationRules(): ValidationRules
     {
         return parent::getOrganizationIdValidationRules()
             ->addRequired();

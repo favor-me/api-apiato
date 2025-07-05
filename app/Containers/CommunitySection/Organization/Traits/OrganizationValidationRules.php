@@ -19,7 +19,7 @@ use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Ship\Validation\Rules\PhoneNumber as PhoneNumberValidationRule;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Support\PhoneNumber;
 use App\Ship\Validation\Rule;
 use Illuminate\Validation\Rules\Unique;
@@ -27,14 +27,14 @@ use Illuminate\Validation\Rules\Exists;
 
 trait OrganizationValidationRules
 {
-    public function getOrganizationIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationIdValidationRules(): ValidationRules
     {
         return validation_rules([
             $this->getOrganizationIdExistsValidationRule(ID)
         ]);
     }
 
-    public function getOrganizationNameValidationRules(): ValidationRulesCollection
+    public function getOrganizationNameValidationRules(): ValidationRules
     {
         return validation_rules([
             $this->getOrganizationNameUniqueValidationRule()
@@ -46,7 +46,7 @@ trait OrganizationValidationRules
         return Rule::unique(OrganizationModel::TABLE, Organization::NAME);
     }
 
-    public function getOrganizationInnValidationRules(): ValidationRulesCollection
+    public function getOrganizationInnValidationRules(): ValidationRules
     {
         return validation_rules([
             $this->getOrganizationInnUniqueValidationRule()
@@ -58,7 +58,7 @@ trait OrganizationValidationRules
         return Rule::unique(OrganizationModel::TABLE, Organization::INN);
     }
 
-    public function getOrganizationPhoneNumberValidationRules(): ValidationRulesCollection
+    public function getOrganizationPhoneNumberValidationRules(): ValidationRules
     {
         return validation_rules([
             $this->getOrganizationPhoneNumberUniqueValidationRule(),
@@ -76,7 +76,7 @@ trait OrganizationValidationRules
         return Rule::unique(OrganizationModel::TABLE, Organization::PHONE_NUMBER);
     }
 
-    public function getOrganizationEmailValidationRules(): ValidationRulesCollection
+    public function getOrganizationEmailValidationRules(): ValidationRules
     {
         return validation_rules([
             $this->getOrganizationEmailUniqueValidationRule()

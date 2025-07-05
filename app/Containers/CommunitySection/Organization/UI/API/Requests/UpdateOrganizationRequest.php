@@ -18,7 +18,7 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\CommunitySection\Organization\Dto\UpdateOrganizationDto;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -51,13 +51,13 @@ class UpdateOrganizationRequest extends CreateOrganizationRequest
         ]);
     }
 
-    public function getOrganizationPhoneNumberValidationRules(): ValidationRulesCollection
+    public function getOrganizationPhoneNumberValidationRules(): ValidationRules
     {
         return parent::getOrganizationPhoneNumberValidationRules()
             ->removeRequired();
     }
 
-    public function getOrganizationIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationIdValidationRules(): ValidationRules
     {
         return parent::getOrganizationIdValidationRules()
             ->addRequired();

@@ -20,7 +20,7 @@ use App\Containers\CommunitySection\Organization\Dto\RegistrationOrganizationDto
 use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Validation\Rules\IsOwnerNameRule;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Parents\Transformers\Transformer;
 
 /**
@@ -51,7 +51,7 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
             ];
     }
 
-    public function getUserPasswordValidationRules(): ValidationRulesCollection
+    public function getUserPasswordValidationRules(): ValidationRules
     {
         return $this->baseUserPasswordValidationRules()
             ->addRequired();
@@ -68,7 +68,7 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
             ->addDefaultIncludes(Organization::INCLUDE_USER_OWNER);
     }
 
-    public function getClientValidationRules(): ValidationRulesCollection
+    public function getClientValidationRules(): ValidationRules
     {
         return validation_rules([
             'required',

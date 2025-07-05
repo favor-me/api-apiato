@@ -14,11 +14,11 @@
 
 namespace App\Ship\Traits\Validation;
 
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 
 trait HasIsModeratedValidationRules
 {
-    public function getIsModeratedValidationRules(): ValidationRulesCollection
+    public function getIsModeratedValidationRules(): ValidationRules
     {
         return validation_rules(['boolean']);
     }

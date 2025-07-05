@@ -33,8 +33,10 @@ class CreateOrganizationBranchController extends ApiController
      * @throws InvalidTransformerException
      * @throws UnknownProperties
      */
-    public function __invoke(CreateOrganizationBranchRequest $request, CreateOrganizationBranchAction $action): JsonResponse
-    {
+    public function __invoke(
+        CreateOrganizationBranchRequest $request,
+        CreateOrganizationBranchAction $action
+    ): JsonResponse {
         $model = $action->run($request->getDto());
         return $this->created(
             $this->transform(

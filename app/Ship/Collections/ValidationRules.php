@@ -16,7 +16,7 @@ namespace App\Ship\Collections;
 
 use Illuminate\Support\Collection;
 
-class ValidationRulesCollection extends Collection
+class ValidationRules extends Collection
 {
     public const REQUIRED = 'required';
     public const UNIQUE = 'unique';

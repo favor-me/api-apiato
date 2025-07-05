@@ -14,11 +14,11 @@
 
 namespace App\Ship\Traits\Validation;
 
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 
 trait HasPublishedValidationRules
 {
-    public function getPublishedValidationRules(): ValidationRulesCollection
+    public function getPublishedValidationRules(): ValidationRules
     {
         return validation_rules(['boolean']);
     }

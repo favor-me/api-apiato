@@ -17,7 +17,7 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\Organization\Permissions\Permissions;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 
 class DeleteOrganizationsRequest extends TrashOrganizationsRequest
@@ -26,7 +26,7 @@ class DeleteOrganizationsRequest extends TrashOrganizationsRequest
         PERMISSIONS => Permissions::DELETE
     ];
 
-    public function getOrganizationIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationIdValidationRules(): ValidationRules
     {
         return validation_rules([
             Rule::exists(OrganizationModel::TABLE, ID)

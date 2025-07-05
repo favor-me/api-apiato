@@ -17,64 +17,64 @@ namespace App\Containers\AppSection\User\Traits;
 use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rules\Exists;
 
 trait HasUserValidationRules
 {
-    public function getUserAvatarValidationRules(): ValidationRulesCollection
+    public function getUserAvatarValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.avatar'));
     }
 
-    public function getUserBirthValidationRules(): ValidationRulesCollection
+    public function getUserBirthValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.birth'));
     }
 
-    public function getUserEmailValidationRules(): ValidationRulesCollection
+    public function getUserEmailValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.email'));
     }
 
-    public function getUserGenderValidationRules(): ValidationRulesCollection
+    public function getUserGenderValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.gender'));
     }
 
-    public function getUserIdValidationRules(): ValidationRulesCollection
+    public function getUserIdValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.id'));
     }
 
-    public function getUserLoginValidationRules(): ValidationRulesCollection
+    public function getUserLoginValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.login'));
     }
 
-    public function getUserNameValidationRules(): ValidationRulesCollection
+    public function getUserNameValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.name'));
     }
 
-    public function getUserPasswordValidationRules(): ValidationRulesCollection
+    public function getUserPasswordValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.password'));
     }
 
-    public function getUserPatronymicValidationRules(): ValidationRulesCollection
+    public function getUserPatronymicValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.patronymic'));
     }
 
-    public function getUserPhoneNumberValidationRules(): ValidationRulesCollection
+    public function getUserPhoneNumberValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.phone_number'));
     }
 
-    public function getUserRegistrationRolesValidationRules(): ValidationRulesCollection
+    public function getUserRegistrationRolesValidationRules(): ValidationRules
     {
         return validation_rules([
             Rule::exists(app(Role::class)->getTable(), 'name')->where(function (Builder $query) {
@@ -83,7 +83,7 @@ trait HasUserValidationRules
         ]);
     }
 
-    public function getUserSurnameValidationRules(): ValidationRulesCollection
+    public function getUserSurnameValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.surname'));
     }

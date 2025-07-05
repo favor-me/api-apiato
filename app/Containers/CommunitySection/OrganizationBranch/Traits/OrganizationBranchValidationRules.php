@@ -18,40 +18,40 @@ namespace App\Containers\CommunitySection\OrganizationBranch\Traits;
 use App\Containers\CommunitySection\OrganizationBranch\Facades\Container;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 
 trait OrganizationBranchValidationRules
 {
-    public function getOrganizationBranchIdValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchIdValidationRules(): ValidationRules
     {
         return validation_rules([
             $this->getOrganizationBranchIdExistsValidationRule(ID)
         ]);
     }
 
-    public function getOrganizationBranchNameValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchNameValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . OrganizationBranch::NAME));
     }
 
-    public function getOrganizationBranchPhoneNumberValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchPhoneNumberValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . OrganizationBranch::PHONE_NUMBER));
     }
 
-    public function getOrganizationBranchLocationValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchLocationValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . OrganizationBranch::LOCATION));
     }
 
-    public function getOrganizationBranchLatitudeValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchLatitudeValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . OrganizationBranch::LATITUDE));
     }
 
-    public function getOrganizationBranchLongitudeValidationRules(): ValidationRulesCollection
+    public function getOrganizationBranchLongitudeValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . OrganizationBranch::LONGITUDE));
     }

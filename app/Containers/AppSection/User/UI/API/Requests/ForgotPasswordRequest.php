@@ -15,7 +15,7 @@
 namespace App\Containers\AppSection\User\UI\API\Requests;
 
 use App\Containers\AppSection\User\Models\User;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 
 class ForgotPasswordRequest extends ResetPasswordRequest
 {
@@ -27,7 +27,7 @@ class ForgotPasswordRequest extends ResetPasswordRequest
         ];
     }
 
-    public function getUserEmailRules(): ValidationRulesCollection
+    public function getUserEmailRules(): ValidationRules
     {
         return parent::getUserEmailRules()
             ->add('exists:' . User::TABLE . ',email');

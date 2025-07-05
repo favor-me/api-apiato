@@ -14,11 +14,11 @@
 
 namespace App\Ship\Traits\Validation;
 
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 
 trait HasParamsValidationRules
 {
-    public function getParamsValidationRules(): ValidationRulesCollection
+    public function getParamsValidationRules(): ValidationRules
     {
         return validation_rules(['array']);
     }

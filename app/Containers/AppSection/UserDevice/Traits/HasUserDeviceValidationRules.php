@@ -15,22 +15,22 @@
 namespace App\Containers\AppSection\UserDevice\Traits;
 
 use App\Containers\AppSection\UserDevice\Facades\Container;
-use App\Ship\Collections\ValidationRulesCollection;
+use App\Ship\Collections\ValidationRules;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
 
 trait HasUserDeviceValidationRules
 {
-    public function getUserDeviceIdValidationRules(): ValidationRulesCollection
+    public function getUserDeviceIdValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . ID));
     }
 
-    public function getUserDeviceTokenValidationRules(): ValidationRulesCollection
+    public function getUserDeviceTokenValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . BaseUserDevice::TOKEN));
     }
 
-    public function getUserDeviceModelValidationRules(): ValidationRulesCollection
+    public function getUserDeviceModelValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . BaseUserDevice::MODEL));
     }
