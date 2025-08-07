@@ -88,7 +88,9 @@ final class DeleteOrganizationBranchesTest extends ApiTestCase
             ->create();
 
         $this->makeCall([
-            IDS => $models->getIds()
+            IDS => $models
+                ->getHashedKeys()
+                ->toArray()
         ]);
 
         $this->response

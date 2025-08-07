@@ -36,7 +36,13 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
 
     public function rules(): array
     {
-        return parent::rules() +
+        $rules = parent::rules();
+
+        if (array_key_exists(Organization::USER_OWNER_ID, $rules)) {
+            unset($rules[Organization::USER_OWNER_ID]);
+        }
+
+        return $rules +
             [
                 Organization::OWNER_NAME => $this->getClientValidationRules(),
                 User::PASSWORD => $this->getUserPasswordValidationRules()

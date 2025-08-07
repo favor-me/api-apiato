@@ -19,12 +19,14 @@ use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Ship\Parents\Transformers\Transformer;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
 class OrganizationTransformer extends Transformer
 {
     protected array $availableIncludes = [
-        Organization::INCLUDE_USER_OWNER
+        Organization::INCLUDE_USER_OWNER,
+        Organization::INCLUDE_USERS
     ];
 
     public function transform(OrganizationModel $organization): array
@@ -47,5 +49,10 @@ class OrganizationTransformer extends Transformer
     protected function includeUserOwner(OrganizationModel $organization): Item
     {
         return $this->item($organization->userOwner, new UserTransformer());
+    }
+
+    protected function includeUsers(OrganizationModel $organization): Collection
+    {
+        return $this->collection($organization->users, new UserTransformer());
     }
 }

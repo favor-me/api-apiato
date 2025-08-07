@@ -17,23 +17,23 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Controllers;
 
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Containers\CommunitySection\Organization\Actions\UpdateOrganizationAction;
-use App\Containers\CommunitySection\Organization\UI\API\Requests\UpdateOrganizationRequest;
+use App\Containers\CommunitySection\Organization\UI\API\Requests\UpdateOwnOrganizationRequest;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
-class UpdateOrganizationController extends ApiController
+class UpdateOwnOrganizationController extends ApiController
 {
     /**
-     * @param UpdateOrganizationRequest $request
+     * @param UpdateOwnOrganizationRequest $request
      * @param UpdateOrganizationAction $action
      * @return JsonResponse
      * @throws InvalidTransformerException
      * @throws UnknownProperties
      * @throws UpdateResourceFailedException
      */
-    public function __invoke(UpdateOrganizationRequest $request, UpdateOrganizationAction $action): JsonResponse
+    public function __invoke(UpdateOwnOrganizationRequest $request, UpdateOrganizationAction $action): JsonResponse
     {
         return $this->json(
             $this->transform(

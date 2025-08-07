@@ -31,14 +31,25 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
         PERMISSIONS => Permissions::CREATE
     ];
 
+    protected array $decode = [
+        Organization::USER_OWNER_ID
+    ];
+
     public function rules(): array
     {
         return [
             Organization::NAME => $this->getOrganizationNameValidationRules(),
             Organization::INN => $this->getOrganizationInnValidationRules(),
             Organization::PHONE_NUMBER => $this->getOrganizationPhoneNumberValidationRules(),
-            Organization::EMAIL => $this->getOrganizationEmailValidationRules()
+            Organization::EMAIL => $this->getOrganizationEmailValidationRules(),
+            Organization::USER_OWNER_ID => $this->getOrganizationUserOwnerIdValidationRules()
         ];
+    }
+
+    public function getOrganizationUserOwnerIdValidationRules(): ValidationRules
+    {
+        return $this->getUserIdValidationRules()
+            ->addRequired();
     }
 
     public function getOrganizationNameValidationRules(): ValidationRules

@@ -14,14 +14,11 @@
  *
  * @apiGroup CommunityOrganization
  * @apiName updateCommunityOrganization
-
- * @api {patch} /v1/community/organizations/:id Изменить
+ * @api {patch} /v1/community/organizations/own Изменить свою
  * @apiDescription Изменить.
  *
  * @apiVersion 1.0.0
  * @apiPermission Аутентифицированный пользователь (Собственник организации)
- *
- * @apiParam {String} id Уникальный идентификатор
  *
  * @apiBody {String} [name] Название организации.
  * @apiBody {String} [inn] ИНН.
@@ -32,9 +29,9 @@
  */
 
 use App\Containers\CommunitySection\Organization\Facades\Container;
-use App\Containers\CommunitySection\Organization\UI\API\Controllers\UpdateOrganizationController;
+use App\Containers\CommunitySection\Organization\UI\API\Controllers\UpdateOwnOrganizationController;
 use Illuminate\Support\Facades\Route;
 
-Route::patch(Container::getApiUri('{' . ID . '}'), UpdateOrganizationController::class)
-    ->name('api_community_organization_update_organization')
+Route::patch(Container::getApiUri('own'), UpdateOwnOrganizationController::class)
+    ->name('api_community_organization_update_own_organization')
     ->middleware(['auth:api']);

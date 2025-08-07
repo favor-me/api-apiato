@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\Organization\Requests;
 
+use App\Containers\AppSection\User\Traits\HasUserValidationRules;
 use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\AdminOrganizationTransformer;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
@@ -25,6 +26,7 @@ use App\Ship\Requests\ApiRequest;
 abstract class OrganizationApiRequest extends ApiRequest implements GettableTransformer
 {
     use OrganizationValidationRules;
+    use HasUserValidationRules;
 
     public function getTransformer(): Transformer
     {

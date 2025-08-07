@@ -18,7 +18,6 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Controllers;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Containers\CommunitySection\Organization\Actions\GetAllOrganizationsAction;
-use App\Containers\CommunitySection\Organization\Actions\GetTotalOrganizationsAction;
 use App\Containers\CommunitySection\Organization\UI\API\Requests\GetAllOrganizationsRequest;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
@@ -37,14 +36,11 @@ class GetAllOrganizationsController extends ApiController
     public function __invoke(GetAllOrganizationsRequest $request, GetAllOrganizationsAction $action): JsonResponse
     {
         $models = $action->run($request->isOnlyTrashed());
-        $total = app(GetTotalOrganizationsAction::class)->run();
 
         return $this->json(
             $this->transform(
                 $models,
-                $request->getTransformer(),
-                [],
-                $this->getBaseMetaResponseForGetAllAction(__CLASS__, $total)
+                $request->getTransformer()
             )
         );
     }

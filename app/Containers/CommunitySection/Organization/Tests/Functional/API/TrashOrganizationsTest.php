@@ -37,11 +37,11 @@ final class TrashOrganizationsTest extends ApiTestCase
     {
         $this->makeCall([
             IDS => [
-                getHashedValue(123)
+                hash_encode(123)
             ]
         ]);
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(
             fn(AssertableJson $json): AssertableJson => $json

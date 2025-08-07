@@ -81,7 +81,9 @@ final class TrashOrganizationBranchesTest extends ApiTestCase
             ]);
 
         $this->makeCall([
-            IDS => $models->getIds()
+            IDS => $models
+                ->getHashedKeys()
+                ->toArray()
         ]);
 
         $this->response

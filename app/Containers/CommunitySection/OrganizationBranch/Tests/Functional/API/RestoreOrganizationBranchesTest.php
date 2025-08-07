@@ -53,7 +53,9 @@ final class RestoreOrganizationBranchesTest extends ApiTestCase
             ->create();
 
         $this->makeCall([
-            IDS => $models->getIds()
+            IDS => $models
+                ->getHashedKeys()
+                ->toArray()
         ]);
 
         $this->response
@@ -73,7 +75,9 @@ final class RestoreOrganizationBranchesTest extends ApiTestCase
             ->create();
 
         $this->makeCall([
-            IDS => $models->getIds()
+            IDS => $models
+                ->getHashedKeys()
+                ->toArray()
         ]);
 
         $this->assertGivenDataIsInvalid();

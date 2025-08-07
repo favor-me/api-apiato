@@ -80,7 +80,7 @@ final class RestoreOrganizationsTest extends ApiTestCase
                 ->toArray()
         ]);
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(
             fn(AssertableJson $json): AssertableJson => $json
@@ -112,7 +112,7 @@ final class RestoreOrganizationsTest extends ApiTestCase
             ]
         ]);
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(
             fn(AssertableJson $json): AssertableJson => $json

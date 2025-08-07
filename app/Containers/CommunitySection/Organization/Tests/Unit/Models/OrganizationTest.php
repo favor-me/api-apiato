@@ -15,9 +15,14 @@
 
 namespace App\Containers\CommunitySection\Organization\Tests\Unit\Models;
 
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Organization\Tests\UnitTestCase;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Ship\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 final class OrganizationTest extends UnitTestCase
 {
@@ -56,7 +61,50 @@ final class OrganizationTest extends UnitTestCase
             Organization::INN,
             Organization::PHONE_NUMBER,
             Organization::EMAIL,
+            Organization::USER_OWNER_ID,
             PARAMS
         ], $this->model->getFillable());
+    }
+
+    public function testBelongsToUserOwner(): void
+    {
+        $organization = OrganizationModel::factory()->create();
+
+        $user = UserModel::factory()
+            ->create([
+                User::IS_ORGANIZATION_OWNER => true,
+                User::ORGANIZATION_ID => $organization->id
+            ]);
+
+        $this->assertInstanceOf(BelongsTo::class, $organization->userOwner());
+        $this->assertInstanceOf(UserModel::class, $organization->userOwner()->getModel());
+        $this->assertSame($user->is_organization_owner, true);
+        $this->assertSame($user->organization_id, $organization->id);
+    }
+
+    public function testHasManyUsers(): void
+    {
+        $organizationA = OrganizationModel::factory()->create();
+        $organizationB = OrganizationModel::factory()->create();
+
+        $organizationAUsers = UserModel::factory()
+            ->count(4)
+            ->create([
+                User::ORGANIZATION_ID => $organizationA->id
+            ]);
+
+        $organizationBUsers = UserModel::factory()
+            ->count(4)
+            ->create([
+                User::ORGANIZATION_ID => $organizationB->id
+            ]);
+
+        $this->assertInstanceOf(HasMany::class, $organizationA->users());
+        $this->assertInstanceOf(UserModel::class, $organizationA->users()->getModel());
+
+        $this->assertInstanceOf(Collection::class, $organizationA->users);
+        $this->assertCount($organizationAUsers->count(), $organizationA->users);
+
+        $this->assertCount($organizationBUsers->count(), $organizationB->users);
     }
 }

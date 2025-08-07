@@ -167,8 +167,8 @@ final class GetAllOrganizationsTest extends ApiTestCase
                     ->where('data', function (Collection $statuses) {
                         $statuses->each(function ($status) {
                             $this->assertSame([
-                                VALUE,
-                                TITLE,
+                                'value',
+                                'title'
                             ], array_keys($status));
                         });
 

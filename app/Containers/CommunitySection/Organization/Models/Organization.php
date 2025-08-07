@@ -15,13 +15,16 @@
 
 namespace App\Containers\CommunitySection\Organization\Models;
 
+use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Organization\Data\Factories\OrganizationFactory;
 use App\Containers\CommunitySection\Organization\Foundation\Organization as BaseOrganization;
 use App\Ship\Database\Casts\JSON as JsonCast;
+use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\Model;
 use App\Ship\Traits\Model\IsNumbered;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use JBZoo\Data\JSON;
@@ -38,6 +41,7 @@ use JBZoo\Data\JSON;
  * @property-read null|Carbon $updated_at Дата и время обновления.
  * @property-read null|Carbon $deleted_at Дата и время удаления.
  * @property-read UserModel $userOwner Объект пользователя который владеет компанией.
+ * @property-read Collection $users Коллекция сотрудников (пользователей) организации.
  *
  * @method static OrganizationFactory factory(...$parameters)
  */
@@ -73,5 +77,10 @@ class Organization extends Model
     public function userOwner(): BelongsTo
     {
         return $this->belongsTo(UserModel::class, BaseOrganization::USER_OWNER_ID, ID);
+    }
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(UserModel::class, User::ORGANIZATION_ID, ID);
     }
 }

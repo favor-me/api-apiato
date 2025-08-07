@@ -16,9 +16,10 @@
 namespace App\Containers\CommunitySection\Organization\Tests\Functional\API;
 
 use App\Containers\CommunitySection\Organization\Facades\Container;
+use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
-use App\Containers\CommunitySection\Organization\Tests\Functional\ApiTestCase;
 use App\Containers\CommunitySection\Organization\Permissions\Permissions;
+use App\Containers\CommunitySection\Organization\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class FindOrganizationByIdTest extends ApiTestCase
@@ -39,7 +40,7 @@ final class FindOrganizationByIdTest extends ApiTestCase
             ->injectId(555)
             ->makeCall();
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
     }
 
     public function testSuccess(): void
@@ -57,6 +58,10 @@ final class FindOrganizationByIdTest extends ApiTestCase
                     ->has('data')
                     ->where('data.' . OBJECT, OrganizationModel::RESOURCE_KEY)
                     ->where('data.' . ID, $model->getHashedKey())
+                    ->where('meta.include', [
+                        Organization::INCLUDE_USER_OWNER,
+                        Organization::INCLUDE_USERS
+                    ])
                     ->etc()
             );
     }

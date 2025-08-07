@@ -18,6 +18,7 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\CommunitySection\Organization\Dto\UpdateOrganizationDto;
+use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
@@ -27,7 +28,7 @@ use Illuminate\Validation\Rules\Unique;
 /**
  * @method UpdateOrganizationDto getDto()
  */
-class UpdateOrganizationRequest extends CreateOrganizationRequest
+class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
 {
     use HasInputId;
 
@@ -35,18 +36,19 @@ class UpdateOrganizationRequest extends CreateOrganizationRequest
         RoleModel::ORGANIZATION_OWNER
     ];
 
-    protected array $urlParameters = [
+    protected array $decode = [
         ID
     ];
 
-    protected function afterInitialize(): void
-    {
-        $this->mergeDecode(ID);
-    }
-
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
+        $rules = parent::rules();
+
+        if (array_key_exists(Organization::USER_OWNER_ID, $rules)) {
+            unset($rules[Organization::USER_OWNER_ID]);
+        }
+
+        return array_merge($rules, [
             ID => $this->getOrganizationIdValidationRules()
         ]);
     }
