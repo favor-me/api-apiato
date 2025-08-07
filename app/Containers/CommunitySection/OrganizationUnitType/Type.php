@@ -41,4 +41,9 @@ abstract class Type implements Namebled, Arrayable
             'name' => $this->getName()
         ];
     }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
 }
