@@ -29,6 +29,7 @@ final class Organization extends SectionContainer
     public const OWNER_NAME = 'owner_name';
     public const INCLUDE_USER_OWNER = 'user_owner';
     public const INCLUDE_USERS = 'users';
+    public const INCLUDE_BRANCHES = 'branches';
 
     protected string $apiBaseUri = 'community/organizations';
 }

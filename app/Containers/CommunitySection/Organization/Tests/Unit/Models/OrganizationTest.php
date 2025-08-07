@@ -20,6 +20,8 @@ use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Organization\Tests\UnitTestCase;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Ship\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -106,5 +108,28 @@ final class OrganizationTest extends UnitTestCase
         $this->assertCount($organizationAUsers->count(), $organizationA->users);
 
         $this->assertCount($organizationBUsers->count(), $organizationB->users);
+    }
+
+    public function testHasManyBranches(): void
+    {
+        $organizationA = OrganizationModel::factory()->create();
+        $organizationB = OrganizationModel::factory()->create();
+
+        $organizationABranches = OrganizationBranchModel::factory()
+            ->count(3)
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $organizationA->id
+            ]);
+
+        OrganizationBranchModel::factory()
+            ->count(2)
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $organizationB->id
+            ]);
+
+        $this->assertInstanceOf(HasMany::class, $organizationA->branches());
+        $this->assertInstanceOf(OrganizationBranchModel::class, $organizationA->branches()->getModel());
+        $this->assertInstanceOf(Collection::class, $organizationA->branches);
+        $this->assertCount($organizationABranches->count(), $organizationA->branches);
     }
 }

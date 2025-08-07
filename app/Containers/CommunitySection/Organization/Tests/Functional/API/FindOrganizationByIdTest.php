@@ -60,7 +60,8 @@ final class FindOrganizationByIdTest extends ApiTestCase
                     ->where('data.' . ID, $model->getHashedKey())
                     ->where('meta.include', [
                         Organization::INCLUDE_USER_OWNER,
-                        Organization::INCLUDE_USERS
+                        Organization::INCLUDE_USERS,
+                        Organization::INCLUDE_BRANCHES
                     ])
                     ->etc()
             );

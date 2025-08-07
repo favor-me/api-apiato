@@ -19,6 +19,8 @@ use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Organization\Data\Factories\OrganizationFactory;
 use App\Containers\CommunitySection\Organization\Foundation\Organization as BaseOrganization;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\Model;
@@ -42,6 +44,7 @@ use JBZoo\Data\JSON;
  * @property-read null|Carbon $deleted_at Дата и время удаления.
  * @property-read UserModel $userOwner Объект пользователя который владеет компанией.
  * @property-read Collection $users Коллекция сотрудников (пользователей) организации.
+ * @property-read Collection $branches Коллекция отделений организации.
  *
  * @method static OrganizationFactory factory(...$parameters)
  */
@@ -77,6 +80,11 @@ class Organization extends Model
     public function userOwner(): BelongsTo
     {
         return $this->belongsTo(UserModel::class, BaseOrganization::USER_OWNER_ID, ID);
+    }
+
+    public function branches(): HasMany
+    {
+        return $this->hasMany(OrganizationBranchModel::class, OrganizationBranch::ORGANIZATION_ID, ID);
     }
 
     public function users(): HasMany

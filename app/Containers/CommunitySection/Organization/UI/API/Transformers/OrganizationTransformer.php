@@ -18,6 +18,7 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Transformers;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -26,7 +27,8 @@ class OrganizationTransformer extends Transformer
 {
     protected array $availableIncludes = [
         Organization::INCLUDE_USER_OWNER,
-        Organization::INCLUDE_USERS
+        Organization::INCLUDE_USERS,
+        Organization::INCLUDE_BRANCHES
     ];
 
     public function transform(OrganizationModel $organization): array
@@ -54,5 +56,10 @@ class OrganizationTransformer extends Transformer
     protected function includeUsers(OrganizationModel $organization): Collection
     {
         return $this->collection($organization->users, new UserTransformer());
+    }
+
+    protected function includeBranches(OrganizationModel $organization): Collection
+    {
+        return $this->collection($organization->branches, new OrganizationBranchTransformer());
     }
 }
