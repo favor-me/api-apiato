@@ -104,7 +104,9 @@ final class DeleteUserTest extends ApiTestCase
             ->create();
 
         $this->makeCall([
-            IDS => $users->getIds()
+            IDS => $users
+                ->getHashedKeys()
+                ->toArray()
         ]);
 
         $this->response->assertNoContent();

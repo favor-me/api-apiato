@@ -14,45 +14,74 @@
 
 namespace App\Ship\Tests\Unit\Database\Eloquent;
 
-use App\Containers\AppSection\User\Models\User;
-use App\Ship\Database\Eloquent\Collection;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Ship\Tests\UnitTestCase;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 
-class CollectionTest extends UnitTestCase
+final class CollectionTest extends UnitTestCase
 {
-    public function testGetIdsWithDisableHashedIdMode(): void
+    public function testHashedKeysWithDisableHashedIdMode(): void
     {
         Config::set('apiato.hash-id', false);
 
-        $users = User::factory()
+        $users = UserModel::factory()
             ->count(5)
             ->create();
 
-        $this->assertInstanceOf(Collection::class, $users);
+        $ids = $users->getHashedKeys();
 
-        $ids = $users->getIds();
-        $this->assertIsArray($ids);
-        $this->assertSame($users->count(), count($ids));
+        $this->assertInstanceOf(Collection::class, $ids);
+        $this->assertCount($users->count(), $ids);
 
-        $users->each(fn(User $user) => $this->assertTrue(in_array($user->id, $ids)));
+        $users->each(
+            fn(UserModel $user) => $this->assertTrue(
+                in_array($user->id, $ids->toArray())
+            )
+        );
     }
 
-    public function testGetIdsWithEnableHashedIdMode(): void
+    public function testHashedKeysWithEnableHashedIdMode(): void
     {
         Config::set('apiato.hash-id', true);
 
-        $count = 10;
-        $users = User::factory()->count($count)->create();
+        $users = UserModel::factory()
+            ->count(3)
+            ->create();
 
-        $this->assertInstanceOf(Collection::class, $users);
+        $ids = $users->getHashedKeys();
 
-        $ids = $users->getIds();
-        $this->assertIsArray($ids);
-        $this->assertSame($count, count($ids));
+        $this->assertInstanceOf(Collection::class, $ids);
+        $this->assertCount($users->count(), $users);
 
-        foreach ($ids as $id) {
-            $this->assertIsString($id);
-        }
+        $ids
+            ->each(
+                fn($id) => $this->assertIsString($id)
+            );
+    }
+
+    public function testHashedKeysCustom(): void
+    {
+        Config::set('apiato.hash-id', true);
+
+        $organization = OrganizationModel::factory()->create();
+
+        $users = UserModel::factory()
+            ->count(3)
+            ->create([
+                User::ORGANIZATION_ID => $organization->id
+            ]);
+
+        $ids = $users->getHashedKeys(User::ORGANIZATION_ID);
+
+        $this->assertInstanceOf(Collection::class, $ids);
+        $this->assertCount($users->count(), $users);
+
+        $ids
+            ->each(
+                fn($id) => $this->assertSame($organization->getHashedKey(), $id)
+            );
     }
 }

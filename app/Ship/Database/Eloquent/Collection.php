@@ -14,14 +14,19 @@
 
 namespace App\Ship\Database\Eloquent;
 
-use Illuminate\Database\Eloquent\Collection as BaseCollection;
+use Illuminate\Database\Eloquent\Collection as BaseEloquentCollection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection as BaseCollection;
 
-class Collection extends BaseCollection
+class Collection extends BaseEloquentCollection
 {
-    public function getIds(): array
+    public function getHashedKeys(string $key = ID): BaseCollection
     {
-        return array_map(function ($model) {
-            return $model->getHashedKey();
-        }, $this->items);
+        $keys = array_map(
+            fn(Model $model) => $model->getHashedKey($key),
+            $this->items
+        );
+
+        return collect($keys);
     }
 }
