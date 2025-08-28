@@ -56,7 +56,7 @@ final class OrganizationUnitTest extends UnitTestCase
             OrganizationUnit::TYPE,
             OrganizationUnit::SKU,
             OrganizationUnit::ORDERING,
-            'params',
+            PARAMS,
             OrganizationUnit::COST_PRICE,
             OrganizationUnit::PRICE_UP,
             OrganizationUnit::CLIENT_PRICE,

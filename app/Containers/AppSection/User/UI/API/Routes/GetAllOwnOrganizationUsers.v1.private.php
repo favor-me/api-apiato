@@ -25,5 +25,5 @@ use App\Containers\AppSection\User\UI\API\Controllers\GetAllOwnOrganizationUsers
 use Illuminate\Support\Facades\Route;
 
 Route::get('own/users', GetAllOwnOrganizationUsersController::class)
-    ->name('api_user_get_all_awn_users')
+    ->name('api_user_get_all_own_users')
     ->middleware(['auth:api']);
