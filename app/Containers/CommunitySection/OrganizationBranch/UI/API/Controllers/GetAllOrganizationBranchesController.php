@@ -35,10 +35,13 @@ class GetAllOrganizationBranchesController extends ApiController
      */
     public function __invoke(
         GetAllOrganizationBranchesRequest $request,
-        GetAllOrganizationBranchesAction  $action
+        GetAllOrganizationBranchesAction $action
     ): JsonResponse
     {
-        $models = $action->run($request->isOnlyTrashed());
+        $models = $action->run(
+            $request->isOnlyTrashed(),
+            $request->getLimit()
+        );
         return $this->json(
             $this->transform(
                 $models,

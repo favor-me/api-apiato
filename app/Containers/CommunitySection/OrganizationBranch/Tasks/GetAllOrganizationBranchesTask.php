@@ -16,9 +16,15 @@
 namespace App\Containers\CommunitySection\OrganizationBranch\Tasks;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrganizationBranchesTask extends OrganizationBranchTask
 {
+    /**
+     * @param mixed|null $limit
+     * @return LengthAwarePaginator
+     * @throws RepositoryException
+     */
     public function run(mixed $limit = null): LengthAwarePaginator
     {
         return $this->repository->paginate($limit);
