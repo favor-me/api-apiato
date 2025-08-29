@@ -64,10 +64,12 @@ return [
             'max:' . User::NAME_MAX_LENGTH
         ],
         User::SURNAME => [
+            'nullable',
             'min:' . User::NAME_MIN_LENGTH,
             'max:' . User::NAME_MAX_LENGTH
         ],
         User::PATRONYMIC => [
+            'nullable',
             'min:' . User::NAME_MIN_LENGTH,
             'max:' . User::PASSWORD_MAX_LENGTH
         ],
