@@ -15,7 +15,9 @@
 namespace App\Containers\AppSection\User\Tasks;
 
 use App\Containers\AppSection\User\Data\Criterias\RoleCriteria;
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Ship\Criterias\ThisEqualThatCriteria;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Traits\SetColumns;
 use Exception;
@@ -27,16 +29,27 @@ class FindUserByIdTask extends UserTask
 
     /**
      * @param string|int $id
-     * @return User
+     * @return UserModel
      * @throws NotFoundException
      */
-    public function run(string|int $id): User
+    public function run(string|int $id): UserModel
     {
         try {
             return $this->repository->find($id, $this->columns);
         } catch (Exception $e) {
             throw new NotFoundException($e->getMessage());
         }
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     * @throws RepositoryException
+     */
+    public function organization(int $id): self
+    {
+        $this->repository->pushCriteria(new ThisEqualThatCriteria(User::ORGANIZATION_ID, $id));
+        return $this;
     }
 
     /**

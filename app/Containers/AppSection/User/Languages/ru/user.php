@@ -19,4 +19,5 @@ return [
     'profile_deleted' => 'Ваш профиль был удалён безвозвратно',
     'registration_success_message' => ':name вы успешно зарегестрировались в нашей системе.',
     'url_not_allowed' => 'URL адрес не доступен :url',
+    'user_is_not_organization_owner' => 'Пользователь не является собственником организации'
 ];
