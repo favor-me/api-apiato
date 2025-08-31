@@ -14,20 +14,22 @@
 
 namespace App\Containers\AppSection\User\Data\Repositories;
 
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Ship\Parents\Repositories\Repository;
 
 /**
- * @method  User update(array $attributes, $id)
+ * @method UserModel update(array $attributes, $id)
  */
 class UserRepository extends Repository
 {
     protected $fieldSearchable = [
-        'id'                => '=',
-        'email'             => '=',
-        'email_verified_at' => '=',
-        'name'              => 'like',
-        'created_at'        => 'like'
+        ID => '=',
+        User::EMAIL => '=',
+        User::EMAIL_VERIFIED_AT => '=',
+        User::NAME => 'like',
+        User::ORGANIZATION_BRANCH_ID => '=',
+        CREATED_AT => 'like'
     ];
 
     public function model(): string
@@ -35,10 +37,10 @@ class UserRepository extends Repository
         return config('auth.providers.users.model');
     }
 
-    public function getSuperUser(array $columns = ['*']): User
+    public function getSuperUser(array $columns = ['*']): UserModel
     {
         return $this->findWhere([
-            ['email', '=', config('appSection-user.super-admin-email')]
+            [User::EMAIL, '=', config('appSection-user.super-admin-email')]
         ], $columns)->first();
     }
 }

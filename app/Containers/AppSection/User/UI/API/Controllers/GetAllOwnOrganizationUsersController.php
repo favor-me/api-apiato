@@ -36,7 +36,14 @@ class GetAllOwnOrganizationUsersController extends ApiController
         GetAllOrganizationUsersAction     $action
     ): JsonResponse
     {
-        $users = $action->run($request->getOrganizationId(), $request->getAuthUserId());
-        return Response::create($users, $request->getTransformer())->ok();
+        $users = $action->run(
+            $request->getOrganizationId(),
+            $request->getAuthUserId()
+        );
+
+        return Response::create(
+            $users,
+            $request->getTransformer()
+        )->ok();
     }
 }

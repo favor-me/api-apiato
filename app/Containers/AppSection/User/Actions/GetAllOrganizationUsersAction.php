@@ -15,6 +15,7 @@
 namespace App\Containers\AppSection\User\Actions;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
+use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Tasks\GetAllUsersTask;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Ship\Parents\Actions\Action;
@@ -42,7 +43,10 @@ class GetAllOrganizationUsersAction extends Action
         }
 
         return $task
-            ->addRequestCriteria()
+            ->addRequestCriteria(null, [
+                ID,
+                User::ORGANIZATION_BRANCH_ID
+            ])
             ->fromOrganization($organization)
             ->ordered()
             ->run();
