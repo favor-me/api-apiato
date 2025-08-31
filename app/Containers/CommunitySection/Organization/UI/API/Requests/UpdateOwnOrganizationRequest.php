@@ -83,6 +83,18 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
             ->ignore($this->id);
     }
 
+    public function getOrganizationEmailValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationEmailValidationRules()
+            ->add('nullable');
+    }
+
+    public function getOrganizationInnValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationInnValidationRules()
+            ->add('nullable');
+    }
+
     public function newDto(array $data = []): UpdateOrganizationDto
     {
         return new UpdateOrganizationDto($data);
