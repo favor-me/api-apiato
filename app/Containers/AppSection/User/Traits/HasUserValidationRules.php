@@ -17,6 +17,8 @@ namespace App\Containers\AppSection\User\Traits;
 use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 use Illuminate\Database\Query\Builder;
@@ -86,6 +88,12 @@ trait HasUserValidationRules
     public function getUserSurnameValidationRules(): ValidationRules
     {
         return validation_rules(config('appSection-user.rules.surname'));
+    }
+
+    public function getUserExistsInOrganizationBranchIdValidationRule(mixed $organizationId): Exists
+    {
+        return Rule::exists(OrganizationBranchModel::TABLE, ID)
+            ->where(OrganizationBranch::ORGANIZATION_ID, $organizationId);
     }
 
     public function getUserExistsInOrganizationValidationRule(mixed $organizationId): Exists

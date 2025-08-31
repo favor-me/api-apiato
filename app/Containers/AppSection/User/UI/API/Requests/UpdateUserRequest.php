@@ -43,7 +43,8 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
     ];
 
     protected array $decode = [
-        ID
+        ID,
+        User::ORGANIZATION_BRANCH_ID
     ];
 
     protected array $urlParameters = [
@@ -99,8 +100,18 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
     protected function getUserRules(): array
     {
         return array_merge(parent::getUserRules(), [
-            ID => $this->getUserIdValidationRules()
+            ID => $this->getUserIdValidationRules(),
+            User::ORGANIZATION_BRANCH_ID => $this->getUserOrganizationBranchIdValidationRules()
         ]);
+    }
+
+    public function getUserOrganizationBranchIdValidationRules(): ValidationRules
+    {
+        return validation_rules([
+            $this->getUserExistsInOrganizationBranchIdValidationRule(
+                $this->user()->organization_id
+            )
+        ])->addRequired();
     }
 
     public function getUserIdValidationRules(): ValidationRules

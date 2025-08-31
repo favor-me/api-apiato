@@ -41,10 +41,8 @@ class CreateOwnOrganizationUserRequest extends RegisterUserRequest
     public function getUserOrganizationBranchIdValidationRules(): ValidationRules
     {
         return validation_rules([
-            Rule::exists(OrganizationBranchModel::TABLE, ID)
-                ->where(OrganizationBranch::ORGANIZATION_ID, $this->organization_id)
-        ])
-            ->addRequired();
+            $this->getUserExistsInOrganizationBranchIdValidationRule($this->organization_id)
+        ])->addRequired();
     }
 
     public function getUserOrganizationIdValidationRules(): ValidationRules
