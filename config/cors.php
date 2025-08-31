@@ -42,16 +42,9 @@ return [
      * Matches the request origin. `[*]` allows all origins.
      */
     'allowed_origins' => [
-        'http://beauty.loc',
         'http://localhost:3000',
-        'http://localhost:8080',
-        'http://localhost:8081',
-        'http://youbm.online',
-        'https://youbm.online',
-        'http://test.youbm.online',
-        'https://test.youbm.online',
-        'http://youbm.joomla',
-        'https://youbm.joomla',
+        'https://test-crm.favor-me.ru',
+        'http://test-crm.favor-me.ru'
     ],
 
     /*
