@@ -88,6 +88,7 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
         return parent::messages() +
             [
                 Organization::NAME . '.required' => Container::trans('validation.name.required'),
+                Organization::NAME . '.unique' => Container::trans('validation.name.unique'),
                 Organization::PHONE_NUMBER . '.required' => Container::trans('validation.phone_number.required'),
             ];
     }
