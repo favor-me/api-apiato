@@ -39,6 +39,7 @@ class UserTransformer extends Transformer
         return [
             OBJECT => $user->getResourceKey(),
             ID => $user->getHashedKey(),
+            'number' => $user->getNumber(),
             'login' => $user->login,
             'name' => $user->name,
             'patronymic' => $user->patronymic,

@@ -27,6 +27,7 @@ use App\Containers\CommunitySection\Organization\Models\Organization as Organiza
 use App\Ship\Database\Casts\JSON;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\UserModel;
+use App\Ship\Traits\Model\IsNumbered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -79,6 +80,7 @@ class User extends UserModel implements HasResourceKey
     use SoftDeletes;
     use AuthorizationTrait;
     use AuthenticationTrait;
+    use IsNumbered;
 
     public const TABLE = 'users';
     public const WEEK_LAST_ACTIVE_DEVICES = 2;
