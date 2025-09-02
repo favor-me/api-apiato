@@ -108,10 +108,11 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
     public function getUserOrganizationBranchIdValidationRules(): ValidationRules
     {
         return validation_rules([
+            'nullable',
             $this->getUserExistsInOrganizationBranchIdValidationRule(
                 $this->user()->organization_id
             )
-        ])->addRequired();
+        ]);
     }
 
     public function getUserIdValidationRules(): ValidationRules
