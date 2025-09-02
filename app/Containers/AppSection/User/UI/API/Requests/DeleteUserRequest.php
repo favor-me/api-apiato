@@ -16,25 +16,32 @@ namespace App\Containers\AppSection\User\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\User\Requests\UserApiRequest;
+use App\Ship\Collections\ValidationRules;
+use App\Ship\Traits\Request\HasInputIds;
 
-/**
- * @property mixed $ids
- */
 class DeleteUserRequest extends UserApiRequest
 {
+    use HasInputIds;
+
     protected array $access = [
-        'roles' => Role::ADMIN,
-        'permissions' => 'delete-users'
+        ROLES => Role::ADMIN,
+        PERMISSIONS => 'delete-users'
     ];
 
     protected array $decode = [
-        'ids.*'
+        IDS . '.*'
     ];
 
     public function rules(): array
     {
         return [
-            'ids' => $this->getUserIdValidationRules()->addRequired()
+            IDS => $this->getUserIdValidationRules()
         ];
+    }
+
+    public function getUserIdValidationRules(): ValidationRules
+    {
+        return parent::getUserIdValidationRules()
+            ->addRequired();
     }
 }

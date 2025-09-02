@@ -14,6 +14,25 @@
 
 namespace App\Containers\AppSection\User\Tests;
 
-class ApiTestCase extends FunctionalUnitTestCase
+use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\AppSection\User\Foundation\User;
+
+abstract class ApiTestCase extends FunctionalUnitTestCase
 {
+    protected function getTestingOwnerUser(): UserModel
+    {
+        $organization = OrganizationModel::factory()->create();
+
+        $user = $this->getTestingUser([
+            User::ORGANIZATION_ID => $organization->id,
+            User::IS_ORGANIZATION_OWNER => true
+        ]);
+
+        $organization->setAttribute(Organization::USER_OWNER_ID, $user->id);
+        $organization->update();
+
+        return $user;
+    }
 }

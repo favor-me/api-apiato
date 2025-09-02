@@ -21,7 +21,7 @@ use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Tests\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-final class FindOwnUserByIdTest extends ApiTestCase
+final class DeleteOwnUsersTest extends ApiTestCase
 {
     protected array $access = [
         ROLES => RoleModel::ORGANIZATION_OWNER
@@ -30,43 +30,27 @@ final class FindOwnUserByIdTest extends ApiTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->endpoint = 'get@v1/own/users/{' . ID . '}';
+        $this->endpoint = 'delete@v1/own/users';
     }
 
-    public function testAuthUserIsNotOrganizationOwner(): void
-    {
-        $user = UserModel::factory()->create();
-
-        $this
-            ->injectId($user->id)
-            ->makeCall();
-
-        $this->response
-            ->assertNotFound()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('message')
-                    ->where('message', Container::trans('user.user_is_not_organization_owner'))
-                    ->etc()
-            );
-    }
-
-    public function testUserNotFound(): void
+    public function testUserNotOwn(): void
     {
         $this->getTestingOwnerUser();
 
         $user = UserModel::factory()->create();
 
-        $this
-            ->injectId($user->id)
-            ->makeCall();
+        $this->makeCall([
+            IDS => [
+                $user->getHashedKey()
+            ]
+        ]);
 
         $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(
             fn(AssertableJson $json): AssertableJson => $json
-                ->where('errors.' . ID, [
-                    __('validation.custom.id.exists')
+                ->where('errors.' . IDS, [
+                    __('validation.custom.ids.exists')
                 ])
                 ->etc()
         );
@@ -74,23 +58,25 @@ final class FindOwnUserByIdTest extends ApiTestCase
 
     public function testSuccess(): void
     {
-        $owner = $this->getTestingOwnerUser();
+        $ownerUser = $this->getTestingOwnerUser();
 
         $user = UserModel::factory()
             ->create([
-                User::ORGANIZATION_ID => $owner->organization_id
+                User::ORGANIZATION_ID => $ownerUser->organization_id
             ]);
 
-        $this
-            ->injectId($user->id)
-            ->makeCall();
+        $this->makeCall([
+            IDS => [
+                $user->getHashedKey()
+            ]
+        ]);
 
         $this->response
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data')
-                    ->where('data.id', $user->getHashedKey())
+                    ->has(MESSAGE)
+                    ->where(MESSAGE, Container::transMultipleTrashed(1))
                     ->etc()
             );
     }
