@@ -56,7 +56,8 @@ class UserTransformer extends Transformer
             User::ORGANIZATION_ID => $user->getHashedKey(User::ORGANIZATION_ID),
             User::ORGANIZATION_BRANCH_ID => $user->getHashedKey(User::ORGANIZATION_BRANCH_ID),
             CREATED_AT => $user->created_at->getTimestamp(),
-            UPDATED_AT => $user->updated_at->getTimestamp()
+            UPDATED_AT => $user->updated_at->getTimestamp(),
+            DELETED_AT => $this->nullOrTime($user->deleted_at)
         ];
     }
 

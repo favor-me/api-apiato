@@ -77,7 +77,7 @@ abstract class Transformer extends AbstractTransformer
             return [
                 'timestamp' => $carbon->getTimestamp(),
                 'diff_for_humans' => $carbon->diffForHumans(),
-                'date_for_human' => $carbon->format(TIMETABLE_RESERVATION_DATE_AT_FORMAT),
+                'date_for_human' => $carbon->format('Y-m-d'),
                 'date_for_human_full' => $carbon->translatedFormat(__('time.full_to_human')),
                 'date_for_human_full_with_time' => $carbon->translatedFormat(__('time.full_to_human_with_time')),
                 'iso' => $carbon->toISOString(true),
