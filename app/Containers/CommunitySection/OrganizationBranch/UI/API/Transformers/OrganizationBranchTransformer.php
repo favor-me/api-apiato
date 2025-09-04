@@ -35,12 +35,15 @@ class OrganizationBranchTransformer extends Transformer
         return [
             OBJECT => $organizationBranch->getResourceKey(),
             ID => $organizationBranch->getHashedKey(),
+            'number' => $organizationBranch->getNumber(),
             OrganizationBranch::NAME => $organizationBranch->name,
             OrganizationBranch::PHONE_NUMBER => $organizationBranch->phone_number,
             OrganizationBranch::LOCATION => $organizationBranch->location,
             OrganizationBranch::LATITUDE => $organizationBranch->latitude,
             OrganizationBranch::LONGITUDE => $organizationBranch->longitude,
-            OrganizationBranch::ORGANIZATION_ID => $organizationBranch->getHashedKey(OrganizationBranch::ORGANIZATION_ID),
+            OrganizationBranch::ORGANIZATION_ID => $organizationBranch->getHashedKey(
+                OrganizationBranch::ORGANIZATION_ID
+            ),
             OrganizationBranch::RESPONSIBLE_BY => $organizationBranch->getHashedKey(OrganizationBranch::RESPONSIBLE_BY),
             CREATED_AT => $this->nullOrTimestamp($organizationBranch->created_at),
             UPDATED_AT => $this->nullOrTimestamp($organizationBranch->updated_at),

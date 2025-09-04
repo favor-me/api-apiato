@@ -122,6 +122,7 @@ class CreateOrganizationBranchRequest extends OrganizationBranchApiRequest imple
 
     protected function prepareForValidation(): void
     {
+        $this->prepareForValidationCoordinates();
         $this->prepareForValidationPhoneNumber();
         if ($this->user()->isRealOrganizationOwner()) {
             $this->prepareForValidationOrganizationId();
@@ -143,6 +144,19 @@ class CreateOrganizationBranchRequest extends OrganizationBranchApiRequest imple
         $this->merge([
             OrganizationBranch::ORGANIZATION_ID => $this->user()->getHashedKey(OrganizationBranch::ORGANIZATION_ID)
         ]);
+    }
+
+    protected function prepareForValidationCoordinates(): void
+    {
+        $coordinates = $this->get('coordinates');
+        if (str_contains($coordinates, ',')) {
+            list($latitude, $longitude) = explode(',', $coordinates);
+
+            $this->merge([
+                OrganizationBranch::LATITUDE => trim($latitude),
+                OrganizationBranch::LONGITUDE => trim($longitude)
+            ]);
+        }
     }
 
     protected function prepareForValidationPhoneNumber(): void

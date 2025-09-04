@@ -25,6 +25,7 @@
  * @apiBody {String} location Расположение\Адрес
  * @apiBody {String} latitude Широта (координаты). Значения между `-90,90`
  * @apiBody {String} longitude Долгота (координаты). Значения между `-180,180`
+ * @apiBody {String} [coordinates] Координаты в формате `40.317871093749986, 51.69050011510639`
  * @apiBody {String} [responsible_by] Ответственный пользователь за отделение. По умолчанию устанавливается собственник.
  *
  * @apiUse OrganizationBranchSuccessSingleResponse
