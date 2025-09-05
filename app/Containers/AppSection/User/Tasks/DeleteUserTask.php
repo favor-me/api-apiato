@@ -70,6 +70,11 @@ class DeleteUserTask extends UserTask
     protected function checkHasSuperUser(array $ids): self
     {
         $superUser = $this->repository->getSuperUser();
+
+        if (is_null($superUser)) {
+            return $this;
+        }
+
         if (in_array($superUser->id, $ids)) {
             throw new DeleteResourceFailedException(__('ship::exception.unable_to_remove_superuser'));
         }

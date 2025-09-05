@@ -37,10 +37,12 @@ class UserRepository extends Repository
         return config('auth.providers.users.model');
     }
 
-    public function getSuperUser(array $columns = ['*']): UserModel
+    public function getSuperUser(array $columns = ['*']): ?UserModel
     {
-        return $this->findWhere([
+        $result = $this->findWhere([
             [User::EMAIL, '=', config('appSection-user.super-admin-email')]
-        ], $columns)->first();
+        ], $columns);
+
+        return $result->first();
     }
 }
