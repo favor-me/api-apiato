@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * FavorMe system
+ *
+ * This file is part of the FavorMe system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
+ */
+
+namespace App\Containers\CommunitySection\OrganizationClient\Models;
+
+use App\Containers\CommunitySection\Organization\Traits\BelongsToOrganization;
+use Illuminate\Support\Carbon;
+use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient as BaseOrganizationClient;
+use App\Containers\CommunitySection\OrganizationClient\Data\Factories\OrganizationClientFactory;
+use App\Ship\Parents\Models\Model;
+use App\Ship\Traits\Model\IsNumbered;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+/**
+ * @property-read int $id Уникальный идентификатор.
+ * @property-read int $organization_id Уникальный идентификатор.
+ * @property-read string $name Имя.
+ * @property-read mixed $patronymic Отчество.
+ * @property-read mixed $surname Фамилия.
+ * @property-read mixed $phone_number Номер телефона.
+ * @property-read mixed $note Заметка.
+ * @property-read Carbon|null $created_at Дата и время создания.
+ * @property-read Carbon|null $updated_at Дата и время обновления.
+ * @property-read Carbon|null $deleted_at Дата и время удаления.
+ *
+ * @method static OrganizationClientFactory factory(...$parameters)
+ */
+class OrganizationClient extends Model
+{
+    use IsNumbered;
+    use SoftDeletes;
+    use BelongsToOrganization;
+
+    public const TABLE = 'organization_clients';
+    public const RESOURCE_KEY = 'OrganizationClient';
+
+    protected $table = self::TABLE;
+    protected string $resourceKey = self::RESOURCE_KEY;
+
+    protected $fillable = [
+        BaseOrganizationClient::ORGANIZATION_ID,
+        BaseOrganizationClient::NAME,
+        BaseOrganizationClient::PATRONYMIC,
+        BaseOrganizationClient::SURNAME,
+        BaseOrganizationClient::PHONE_NUMBER,
+        BaseOrganizationClient::NOTE
+    ];
+}
