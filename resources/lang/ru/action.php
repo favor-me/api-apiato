@@ -15,5 +15,6 @@
 return [
     'deleted_multiple' => 'Успешно :deletes :count :items.',
     'created_multiple' => 'Успешно :creates :count :items.',
+    'restored_multiple' => 'Успешно :restores :count :items.',
     'trashed_multiple' => 'Успешно :moved в корзину :count :items.'
 ];
