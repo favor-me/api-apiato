@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\OrganizationClient\Data\Repositories;
 
+use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
 use App\Ship\Parents\Repositories\Repository;
 
@@ -24,7 +25,12 @@ use App\Ship\Parents\Repositories\Repository;
 final class OrganizationClientRepository extends Repository
 {
     protected $fieldSearchable = [
-        ID => '='
+        ID => '=',
+        OrganizationClient::NAME => 'like',
+        OrganizationClient::PATRONYMIC => 'like',
+        OrganizationClient::SURNAME => 'like',
+        OrganizationClient::PHONE_NUMBER => 'like',
+        OrganizationClient::NOTE => 'like'
     ];
 
     public function model(): string
