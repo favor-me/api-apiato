@@ -21,6 +21,7 @@ use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationCl
 use App\Containers\CommunitySection\OrganizationClient\Requests\OrganizationClientApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
+use App\Ship\Utils\Str;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class CreateOrganizationClientRequest extends OrganizationClientApiRequest implements GettableDto
@@ -67,5 +68,22 @@ class CreateOrganizationClientRequest extends OrganizationClientApiRequest imple
     public function newDto(array $data = []): CreateOrganizationClientDto
     {
         return new CreateOrganizationClientDto($data);
+    }
+
+    protected function prepareForValidation(): void
+    {
+        parent::prepareForValidation();
+        $this->prepareForValidationPhoneNumber();
+    }
+
+    protected function prepareForValidationPhoneNumber(): void
+    {
+        if ($this->has(OrganizationClient::PHONE_NUMBER)) {
+            $this->merge([
+                OrganizationClient::PHONE_NUMBER => Str::toPhoneNumber(
+                    $this->get(OrganizationClient::PHONE_NUMBER)
+                )
+            ]);
+        }
     }
 }
