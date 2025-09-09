@@ -15,12 +15,13 @@
 
 namespace App\Containers\CommunitySection\OrganizationClient\UI\API\Requests;
 
-use App\Containers\CommunitySection\OrganizationClient\Dto\UpdateOrganizationClientDto;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationClient\Dto\UpdateOrganizationClientDto;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\Rules\Unique;
 
 /**
  * @method UpdateOrganizationClientDto getDto()
@@ -61,6 +62,12 @@ class UpdateOrganizationClientRequest extends CreateOrganizationClientRequest
     public function newDto(array $data = []): UpdateOrganizationClientDto
     {
         return new UpdateOrganizationClientDto($data);
+    }
+
+    public function getOrganizationClientPhoneNumberUnique(string $column = 'NULL'): Unique
+    {
+        return parent::getOrganizationClientPhoneNumberUnique($column)
+            ->whereNot(ID, $this->id);
     }
 
     /**
