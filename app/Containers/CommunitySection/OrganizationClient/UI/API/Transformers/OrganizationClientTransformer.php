@@ -32,6 +32,7 @@ class OrganizationClientTransformer extends Transformer
         return [
             OBJECT => $organizationClient->getResourceKey(),
             ID => $organizationClient->getHashedKey(),
+            'number' => $organizationClient->getNumber(),
             OrganizationClient::ORGANIZATION_ID => $organizationClient->getHashedKey(
                 OrganizationClient::ORGANIZATION_ID
             ),
