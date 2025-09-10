@@ -15,12 +15,13 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\API;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnitType\ProductType;
+use App\Containers\Vendor\Unit\Models\Unit;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class CreateOrganizationUnitTest extends ApiTestCase
@@ -40,7 +41,8 @@ final class CreateOrganizationUnitTest extends ApiTestCase
     public function testWithoutAccess(): void
     {
         $this->getTestingUser(null, [
-            PERMISSIONS => ''
+            PERMISSIONS => '',
+            ROLES => ''
         ]);
 
         $this->makeCall($this->testData);
@@ -51,11 +53,23 @@ final class CreateOrganizationUnitTest extends ApiTestCase
     public function testSuccess(): void
     {
         $this->getTestingOrganizationUser();
+        $unit = Unit::factory()->create();
+
+        $costPrice = 100;
+        $priceUp = 12.2;
+        $clientPrice = $costPrice + (($costPrice / 100) * $priceUp);
 
         $data = [
             OrganizationUnit::NAME => 'My product',
-            OrganizationUnit::TYPE => (new ProductType())->getName()
+            OrganizationUnit::TYPE => (new ProductType())->getName(),
+            OrganizationUnit::SKU => 'sk-45t',
+            OrganizationUnit::ORDERING => 10,
+            OrganizationUnit::COST_PRICE => $costPrice,
+            OrganizationUnit::PRICE_UP => $priceUp,
+            OrganizationUnit::SYSTEM_UNIT_ID => $unit->getHashedKey(),
         ];
+
+        $this->makeCall($data);
 
         $this->response
             ->assertCreated()
@@ -63,8 +77,51 @@ final class CreateOrganizationUnitTest extends ApiTestCase
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
                     ->where('data.' . OBJECT, OrganizationUnitModel::RESOURCE_KEY)
-                    //->where('data.' . OrganizationUnit::, $data[OrganizationUnit::])
+                    ->where('data.' . OrganizationUnit::NAME, $data[OrganizationUnit::NAME])
+                    ->where('data.' . OrganizationUnit::TYPE, $data[OrganizationUnit::TYPE])
+                    ->where('data.' . OrganizationUnit::SKU, $data[OrganizationUnit::SKU])
+                    ->where('data.' . OrganizationUnit::ORDERING, $data[OrganizationUnit::ORDERING])
+                    ->where('data.' . OrganizationUnit::PRICE_UP, $data[OrganizationUnit::PRICE_UP])
+                    ->where(
+                        'data.' . OrganizationUnit::COST_PRICE . '.currency.value',
+                        $data[OrganizationUnit::COST_PRICE]
+                    )
+                    ->where('data.' . OrganizationUnit::CLIENT_PRICE . '.currency.value', $clientPrice)
                     ->etc()
             );
+    }
+
+    public function testWithInvalidClientPrice(): void
+    {
+        $this->getTestingOrganizationUser();
+
+        $costPrice = 100;
+        $priceUp = 8;
+
+        $data = [
+            OrganizationUnit::NAME => 'My product',
+            OrganizationUnit::TYPE => (new ProductType())->getName(),
+            OrganizationUnit::COST_PRICE => $costPrice,
+            OrganizationUnit::PRICE_UP => $priceUp,
+            OrganizationUnit::CLIENT_PRICE => 200
+        ];
+
+        $this->makeCall($data);
+
+        $this->assertGivenDataIsInvalid();
+
+        $this->response->assertJson(
+            fn(AssertableJson $json): AssertableJson => $json
+                ->has('errors')
+                ->where('errors.' . OrganizationUnit::CLIENT_PRICE, [
+                    Container::trans('validation.client_price.size', [
+                        'size' => app('money')
+                            ->addCurrency(108)
+                            ->currency()
+                            ->text()
+                    ])
+                ])
+                ->etc()
+        );
     }
 }

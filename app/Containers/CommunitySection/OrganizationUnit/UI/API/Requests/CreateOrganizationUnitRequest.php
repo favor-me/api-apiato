@@ -17,19 +17,35 @@ namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Dto\CreateOrganizationUnitDto;
+use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Requests\OrganizationUnitApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
+use App\Ship\SimpleTypes\Type\Money;
+use App\Ship\Traits\Request\CanPrepareMoney;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implements GettableDto
 {
+    use CanPrepareMoney;
+
     protected array $access = [
         ROLES => [
             RoleModel::ORGANIZATION_OWNER
         ]
     ];
+
+    protected ?Money $internalClientPrice = null;
+
+    protected function afterInitialize(): void
+    {
+        parent::afterInitialize();
+
+        $this->mergeDecode([
+            OrganizationUnit::SYSTEM_UNIT_ID
+        ]);
+    }
 
     public function rules(): array
     {
@@ -49,7 +65,8 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
 
     public function getOrganizationUnitSystemUnitIdValidationRules(): ValidationRules
     {
-        return $this->getUnitIdValidationRules();
+        return $this->getUnitIdValidationRules()
+            ->addRequired();
     }
 
     public function getOrganizationUnitNameValidationRules(): ValidationRules
@@ -87,5 +104,60 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
     public function newDto(array $data = []): CreateOrganizationUnitDto
     {
         return new CreateOrganizationUnitDto($data);
+    }
+
+    public function messages(): array
+    {
+        return parent::messages() +
+            [
+                OrganizationUnit::CLIENT_PRICE . '.size' => Container::trans('validation.client_price.size', [
+                    'size' => $this->internalClientPrice->currency()->text()
+                ])
+            ];
+    }
+
+    public function getOrganizationUnitClientPriceValidationRules(): ValidationRules
+    {
+        $rules = parent::getOrganizationUnitClientPriceValidationRules();
+
+        if ($this->has(OrganizationUnit::COST_PRICE)) {
+            $rules->add('size:' . $this->internalClientPrice->val());
+        }
+
+        return $rules;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        parent::prepareForValidation();
+        $this->prepareForValidationOrganizationClientPrice();
+    }
+
+    protected function prepareForValidationOrganizationClientPrice(): void
+    {
+        $this
+            ->prepareMoney(OrganizationUnit::COST_PRICE)
+            ->prepareMoney(OrganizationUnit::CLIENT_PRICE);
+
+        if ($this->has(OrganizationUnit::COST_PRICE)) {
+            $costPrice = app('money')
+                ->addCurrency(
+                    $this->get(OrganizationUnit::COST_PRICE)
+                );
+
+            $clientPrice = app('money')->add($costPrice);
+            $priceUp = (float)$this->get(OrganizationUnit::PRICE_UP);
+
+            if ($priceUp > ZERO) {
+                $clientPrice->add($priceUp . '%');
+            }
+
+            $this->internalClientPrice = $clientPrice;
+            if (empty($this->get(OrganizationUnit::CLIENT_PRICE))) {
+                $this->merge([
+                    OrganizationUnit::CLIENT_PRICE => $this->internalClientPrice->val()
+                ]);
+            }
+        }
     }
 }

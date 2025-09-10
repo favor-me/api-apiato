@@ -21,6 +21,7 @@ use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as 
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\Unique;
 
 trait OrganizationUnitValidationRules
 {
@@ -33,7 +34,14 @@ trait OrganizationUnitValidationRules
 
     public function getOrganizationUnitNameValidationRules(): ValidationRules
     {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::NAME));
+        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::NAME))
+            ->add($this->getOrganizationUnitNameUniqueValidationRule());
+    }
+
+    public function getOrganizationUnitNameUniqueValidationRule(): Unique
+    {
+        return Rule::unique(OrganizationUnitModel::TABLE, OrganizationUnit::NAME)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id);
     }
 
     public function getOrganizationUnitTypeValidationRules(): ValidationRules
@@ -43,7 +51,14 @@ trait OrganizationUnitValidationRules
 
     public function getOrganizationUnitSkuValidationRules(): ValidationRules
     {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::SKU));
+        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::SKU))
+            ->add($this->getOrganizationUnitSkuUniqueValidationRule());
+    }
+
+    public function getOrganizationUnitSkuUniqueValidationRule(): Unique
+    {
+        return Rule::unique(OrganizationUnitModel::TABLE, OrganizationUnit::SKU)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id);
     }
 
     public function getOrganizationUnitOrderingValidationRules(): ValidationRules

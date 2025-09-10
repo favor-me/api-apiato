@@ -34,16 +34,16 @@ return [
         ],
         OrganizationUnit::COST_PRICE => [
             'nullable',
-            'integer',
+            'numeric',
             'max:' . OrganizationUnit::PRICE_MAX_LENGTH
         ],
         OrganizationUnit::PRICE_UP => [
             'nullable',
-            'float'
+            'numeric'
         ],
         OrganizationUnit::CLIENT_PRICE => [
             'nullable',
-            'integer',
+            'numeric',
             'max:' . OrganizationUnit::PRICE_MAX_LENGTH
         ],
         OrganizationUnit::BALANCE => [

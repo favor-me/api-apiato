@@ -18,6 +18,10 @@ namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Unit\Models;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\UnitTestCase;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\Vendor\Unit\Models\Unit;
+use App\Ship\SimpleTypes\Type\Money;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use JBZoo\Data\JSON;
 
 final class OrganizationUnitTest extends UnitTestCase
 {
@@ -52,11 +56,11 @@ final class OrganizationUnitTest extends UnitTestCase
     public function testFillable(): void
     {
         $this->assertSame([
+            PARAMS,
             OrganizationUnit::NAME,
             OrganizationUnit::TYPE,
             OrganizationUnit::SKU,
             OrganizationUnit::ORDERING,
-            PARAMS,
             OrganizationUnit::COST_PRICE,
             OrganizationUnit::PRICE_UP,
             OrganizationUnit::CLIENT_PRICE,
@@ -64,5 +68,27 @@ final class OrganizationUnitTest extends UnitTestCase
             OrganizationUnit::ORGANIZATION_ID,
             OrganizationUnit::SYSTEM_UNIT_ID
         ], $this->model->getFillable());
+    }
+
+    public function testCasts(): void
+    {
+        $this->assertInstanceOf(Money::class, $this->model->cost_price);
+        $this->assertInstanceOf(Money::class, $this->model->client_price);
+        $this->assertInstanceOf(JSON::class, $this->model->params);
+    }
+
+    public function testBelongsToSystemUnit(): void
+    {
+        $systemUnit = Unit::factory()->create();
+
+        $unit = OrganizationUnitModel::factory()
+            ->make([
+                OrganizationUnit::SYSTEM_UNIT_ID => $systemUnit->id
+            ]);
+
+        $this->assertInstanceOf(BelongsTo::class, $unit->systemUnit());
+        $this->assertInstanceOf(Unit::class, $unit->systemUnit()->getModel());
+        $this->assertInstanceOf(Unit::class, $unit->systemUnit);
+        $this->assertSame($systemUnit->id, $unit->systemUnit->id);
     }
 }

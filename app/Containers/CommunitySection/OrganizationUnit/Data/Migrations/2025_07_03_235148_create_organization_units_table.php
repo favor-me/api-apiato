@@ -23,7 +23,7 @@ return new class extends CreateTableMigration
         $table->unsignedBigInteger(OrganizationUnit::CLIENT_PRICE)->nullable();
         $table->float(OrganizationUnit::BALANCE)->nullable();
         $table->unsignedBigInteger(OrganizationUnit::ORGANIZATION_ID);
-        $table->unsignedBigInteger(OrganizationUnit::SYSTEM_UNIT_ID);
+        $table->unsignedBigInteger(OrganizationUnit::SYSTEM_UNIT_ID)->nullable();
         $table->timestamps();
         $table->softDeletes();
 
