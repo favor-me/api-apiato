@@ -13,12 +13,14 @@
  * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
  */
 
-namespace App\Containers\CommunitySection\OrganizationUnit\Data\Seeders;
-
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
-use App\Ship\Seeders\PermissionsSeeder;
-
-final class OrganizationUnitPermissionsSeeder extends PermissionsSeeder
-{
-    protected ?string $permissionClass = Permissions::class;
-}
+return [
+    'type' => [
+        'required' => 'Необходимо указать тип юнита'
+    ],
+    'name' => [
+        'required' => 'Название товара/услуги обязательно к заполнению'
+    ],
+    'organization_id' => [
+        'required' => 'Необходимо указать пренадлежность к организации'
+    ],
+];

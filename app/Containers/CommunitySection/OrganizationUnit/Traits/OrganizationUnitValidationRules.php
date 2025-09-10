@@ -51,11 +51,6 @@ trait OrganizationUnitValidationRules
         return validation_rules(Container::getConfig('rules.' . OrganizationUnit::ORDERING));
     }
 
-    public function getOrganizationUnitParamsValidationRules(): ValidationRules
-    {
-        return validation_rules(Container::getConfig('rules.' . 'params'));
-    }
-
     public function getOrganizationUnitCostPriceValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . OrganizationUnit::COST_PRICE));
@@ -76,10 +71,6 @@ trait OrganizationUnitValidationRules
         return validation_rules(Container::getConfig('rules.' . OrganizationUnit::BALANCE));
     }
 
-    public function getOrganizationUnitOrganizationIdValidationRules(): ValidationRules
-    {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::ORGANIZATION_ID));
-    }
     public function getOrganizationUnitSystemUnitIdValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . OrganizationUnit::SYSTEM_UNIT_ID));

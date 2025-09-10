@@ -15,9 +15,9 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Dto\CreateOrganizationUnitDto;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
 use App\Containers\CommunitySection\OrganizationUnit\Requests\OrganizationUnitApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
@@ -26,7 +26,9 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implements GettableDto
 {
     protected array $access = [
-        PERMISSIONS => Permissions::CREATE
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER
+        ]
     ];
 
     public function rules(): array
@@ -36,7 +38,6 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
             OrganizationUnit::TYPE => $this->getOrganizationUnitTypeValidationRules(),
             OrganizationUnit::SKU => $this->getOrganizationUnitSkuValidationRules(),
             OrganizationUnit::ORDERING => $this->getOrganizationUnitOrderingValidationRules(),
-            'params' => $this->getOrganizationUnitParamsValidationRules(),
             OrganizationUnit::COST_PRICE => $this->getOrganizationUnitCostPriceValidationRules(),
             OrganizationUnit::PRICE_UP => $this->getOrganizationUnitPriceUpValidationRules(),
             OrganizationUnit::CLIENT_PRICE => $this->getOrganizationUnitClientPriceValidationRules(),
@@ -44,6 +45,29 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
             OrganizationUnit::ORGANIZATION_ID => $this->getOrganizationUnitOrganizationIdValidationRules(),
             OrganizationUnit::SYSTEM_UNIT_ID => $this->getOrganizationUnitSystemUnitIdValidationRules(),
         ];
+    }
+
+    public function getOrganizationUnitSystemUnitIdValidationRules(): ValidationRules
+    {
+        return $this->getUnitIdValidationRules();
+    }
+
+    public function getOrganizationUnitNameValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitNameValidationRules()
+            ->addRequired();
+    }
+
+    public function getOrganizationUnitTypeValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitTypeValidationRules()
+            ->addRequired();
+    }
+
+    public function getOrganizationUnitOrganizationIdValidationRules(): ValidationRules
+    {
+        return $this->getOrganizationIdValidationRules()
+            ->addRequired();
     }
 
     /**

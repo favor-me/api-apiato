@@ -19,13 +19,16 @@ use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationUnitType\ProductType;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class CreateOrganizationUnitTest extends ApiTestCase
 {
     protected array $access = [
-        PERMISSIONS => Permissions::CREATE
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER
+        ]
     ];
 
     public function setUp(): void
@@ -47,11 +50,12 @@ final class CreateOrganizationUnitTest extends ApiTestCase
 
     public function testSuccess(): void
     {
-        $data = [
-            // Write data
-        ];
+        $this->getTestingOrganizationUser();
 
-        $this->makeCall($data);
+        $data = [
+            OrganizationUnit::NAME => 'My product',
+            OrganizationUnit::TYPE => (new ProductType())->getName()
+        ];
 
         $this->response
             ->assertCreated()
