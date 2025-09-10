@@ -17,15 +17,19 @@ namespace App\Ship\Parents\Tests;
 use Apiato\Core\Abstracts\Tests\PhpUnit\TestCase as AbstractTestCase;
 use Apiato\Core\Exceptions\UndefinedMethodException;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestRequestHelperTrait;
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use Faker\Generator;
 use Illuminate\Contracts\Console\Kernel as ApiatoConsoleKernel;
 use Illuminate\Testing\TestResponse;
+use JsonException;
 
 /***
  * @property Generator $faker
- * @property null|User $testingUser
- * @method mixed|User getTestingUser(?array $userDetails = null, ?array $access = null, bool $createUserAsAdmin = false)
+ * @property null|UserModel $testingUser
+ * @method mixed|UserModel getTestingUser(?array $userDetails = null, ?array $access = null, bool $createUserAsAdmin = false)
  */
 abstract class TestCase extends AbstractTestCase
 {
@@ -116,26 +120,31 @@ abstract class TestCase extends AbstractTestCase
 
     public function assertActionIsUnauthorized(): self
     {
-        $this->response->assertForbidden();
-
-        $this->response->assertJson([
-            MESSAGE => __('ship::exception.unauthorized_action')
-        ]);
+        $this->response
+            ->assertForbidden()
+            ->assertJson([
+                MESSAGE => __('ship::exception.unauthorized_action')
+            ]);
 
         return $this;
     }
 
     public function assertGivenDataIsInvalid(): self
     {
-        $this->response->assertUnprocessable();
-
-        $this->response->assertJson([
-            MESSAGE => __('ship::exception.given_data_was_invalid')
-        ]);
+        $this->response
+            ->assertUnprocessable()
+            ->assertJson([
+                MESSAGE => __('ship::exception.given_data_was_invalid')
+            ]);
 
         return $this;
     }
 
+    /**
+     * @param array $keys
+     * @return void
+     * @throws JsonException
+     */
     public function assertNoValidationErrorContain(array $keys): void
     {
         $responseContent = $this->getResponseContentObject();
@@ -143,5 +152,20 @@ abstract class TestCase extends AbstractTestCase
         foreach ($keys as $key) {
             $this->assertFalse(in_array($key, $errorKeys));
         }
+    }
+
+    public function getTestingOrganizationUser(?array $userDetails = null, ?array $access = null): UserModel
+    {
+        $user = $this->getTestingUser($userDetails, $access);
+
+        $organization = OrganizationModel::factory()
+            ->create([
+                Organization::USER_OWNER_ID => $user->id
+            ]);
+
+        $user->setAttribute(User::ORGANIZATION_ID, $organization->id);
+        $user->update();
+
+        return $user;
     }
 }
