@@ -27,6 +27,9 @@ use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
 
+/**
+ * @property-read mixed $organization_id
+ */
 abstract class OrganizationUnitApiRequest extends ApiRequest implements GettableTransformer
 {
     use HasUnitValidationRules;

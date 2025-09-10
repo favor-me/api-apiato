@@ -19,15 +19,15 @@ use App\Ship\Dto\Dto;
 
 class CreateOrganizationUnitDto extends Dto
 {
-    public ?string $balance;
+    public ?float $balance;
     public ?string $client_price;
     public ?string $cost_price;
     public ?string $name;
-    public ?string $ordering;
-    public ?string $organization_id;
+    public int $ordering = ZERO;
+    public ?int $organization_id;
     public ?string $params;
     public ?string $price_up;
     public ?string $sku;
-    public ?string $system_unit_id;
+    public ?int $system_unit_id;
     public ?string $type;
 }
