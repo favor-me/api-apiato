@@ -40,6 +40,11 @@ class Money extends Type
         return parent::add($value . ' ' . MoneyConfig::CURRENCY, $getClone);
     }
 
+    public function getSymbol(): string
+    {
+        return $this->formatter->get($this->internalRule)['symbol'];
+    }
+
     public function getTransformerData(): array
     {
         $ruleParams = $this->formatter->get($this->rule);
