@@ -46,6 +46,11 @@ class Money extends ShipConfig
                 'rate' => 1,
                 'num_decimals' => 0,
                 'symbol' => $this->getExchangeSymbol()
+            ],
+            '%' => [
+                'symbol' => '%',
+                'format_positive' => '%v%s',
+                'format_negative' => '-%v%s',
             ]
         ];
     }
@@ -84,13 +89,13 @@ class Money extends ShipConfig
         return config('money.num_decimals');
     }
 
-    protected function getCurrencySymbol(): string
+    public function getCurrencySymbol(): string
     {
         $defaultCurrency = $this->getDefaultUserCurrency();
         return config('money.currencies.' . $defaultCurrency . '.' . self::CURRENCY);
     }
 
-    protected function getExchangeSymbol(): string
+    public function getExchangeSymbol(): string
     {
         $defaultCurrency = $this->getDefaultUserCurrency();
         return config('money.currencies.' . $defaultCurrency . '.' . self::EXCHANGE);
