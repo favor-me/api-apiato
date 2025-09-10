@@ -15,6 +15,8 @@
 namespace App\Ship\Parents\Transformers;
 
 use Apiato\Core\Abstracts\Transformers\Transformer as AbstractTransformer;
+use App\Ship\SimpleTypes\Type\Money;
+use App\Ship\Transformers\MoneyTransformer;
 use Illuminate\Support\Carbon;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
@@ -59,6 +61,11 @@ abstract class Transformer extends AbstractTransformer
         }
 
         return $this->item($data, $transformer, $resourceKey);
+    }
+
+    public function money(Money $money): array
+    {
+        return (new MoneyTransformer())->transform($money);
     }
 
     public function nullOrTimestamp(?Carbon $carbon): ?int
