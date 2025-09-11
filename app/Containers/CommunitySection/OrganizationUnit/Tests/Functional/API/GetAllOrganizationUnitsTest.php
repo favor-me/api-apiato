@@ -15,19 +15,23 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\API;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
-use App\Ship\Requests\ApiRequest;
 use App\Ship\Parents\Requests\Request;
+use App\Ship\Requests\ApiRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class GetAllOrganizationUnitsTest extends ApiTestCase
 {
     protected array $access = [
-        PERMISSIONS => Permissions::READ
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER,
+            RoleModel::ORGANIZATION_WORKER
+        ]
     ];
 
     public function setUp(): void
@@ -36,11 +40,9 @@ final class GetAllOrganizationUnitsTest extends ApiTestCase
         $this->endpoint = 'get@v1/' . Container::getApiUri();
     }
 
-    public function testSuccess(): void
+    public function testNowOwn(): void
     {
-        $baseCount = OrganizationUnitModel::count();
-
-        $models = OrganizationUnitModel::factory()
+        OrganizationUnitModel::factory()
             ->count(3)
             ->create();
 
@@ -50,25 +52,50 @@ final class GetAllOrganizationUnitsTest extends ApiTestCase
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data', ZERO)
+                    ->etc()
+            );
+    }
+
+    public function testOwnSuccess(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $models = OrganizationUnitModel::factory()
+            ->count(3)
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $this->makeCall();
+
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
-                    ->where('meta.pagination.total', $models->count() + $baseCount)
+                    ->where('meta.pagination.total', $models->count())
                     ->etc()
             );
     }
 
     public function testOnlyTrashed(): void
     {
-        $this->getTestingUser(null, [
-            PERMISSIONS => Permissions::READ_ARCHIVE
+        $user = $this->getTestingOrganizationUser(null, [
+            ROLES => RoleModel::ORGANIZATION_OWNER
         ]);
 
         OrganizationUnitModel::factory()
             ->count(3)
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $trashedModels = OrganizationUnitModel::factory()
             ->trashed()
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
@@ -86,21 +113,25 @@ final class GetAllOrganizationUnitsTest extends ApiTestCase
 
     public function testCanReadOnlyTrashedList(): void
     {
-        $this->getTestingUser(null, [
-            PERMISSIONS => [
-                Permissions::READ,
-                Permissions::READ_ARCHIVE
+        $user = $this->getTestingOrganizationUser(null, [
+            ROLES => [
+                RoleModel::ORGANIZATION_OWNER,
+                RoleModel::ORGANIZATION_WORKER
             ]
         ]);
 
         $trashedModels = OrganizationUnitModel::factory()
             ->count(3)
             ->trashed()
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         OrganizationUnitModel::factory()
             ->count(2)
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
@@ -117,22 +148,24 @@ final class GetAllOrganizationUnitsTest extends ApiTestCase
 
     public function testCantReadOnlyTrashedList(): void
     {
-        $this->getTestingUser(null, [
-            PERMISSIONS => [
-                Permissions::READ
+        $user = $this->getTestingOrganizationUser(null, [
+            ROLES => [
+                RoleModel::ORGANIZATION_WORKER
             ]
         ]);
-
-        $baseCount = OrganizationUnitModel::count();
 
         OrganizationUnitModel::factory()
             ->count(5)
             ->trashed()
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $models = OrganizationUnitModel::factory()
             ->count(6)
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
@@ -142,18 +175,20 @@ final class GetAllOrganizationUnitsTest extends ApiTestCase
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', $baseCount + $models->count())
+                    ->has('data', $models->count())
                     ->etc()
             );
     }
 
     public function testToList(): void
     {
-        $defaultCount = OrganizationUnitModel::count();
+        $user = $this->getTestingOrganizationUser();
 
         $models = OrganizationUnitModel::factory()
             ->count(3)
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->endpoint($this->endpoint . '?to=' . ApiRequest::TO_LIST_VALUE)
@@ -163,12 +198,12 @@ final class GetAllOrganizationUnitsTest extends ApiTestCase
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
-                    ->where('meta.pagination.total', $defaultCount + $models->count())
+                    ->where('meta.pagination.total', $models->count())
                     ->where('data', function (Collection $statuses) {
                         $statuses->each(function ($status) {
                             $this->assertSame([
-                                VALUE,
-                                TITLE,
+                                'value',
+                                'title',
                             ], array_keys($status));
                         });
 

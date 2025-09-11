@@ -15,7 +15,7 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Requests\OrganizationUnitApiRequest;
 use App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers\OrganizationUnitToListTransformer;
 use App\Ship\Contracts\IsListableRequest;
@@ -26,15 +26,15 @@ class GetAllOrganizationUnitsRequest extends OrganizationUnitApiRequest implemen
     use ListableTransformerRequest;
 
     protected array $access = [
-        PERMISSIONS => [
-            Permissions::READ,
-            Permissions::READ_ARCHIVE
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER,
+            RoleModel::ORGANIZATION_WORKER
         ]
     ];
 
     public function isOnlyTrashed(): bool
     {
-        if (!$this->user()->hasPermissionTo(Permissions::READ_ARCHIVE)) {
+        if (!$this->user()->hasRole(RoleModel::ORGANIZATION_OWNER)) {
             return false;
         }
 

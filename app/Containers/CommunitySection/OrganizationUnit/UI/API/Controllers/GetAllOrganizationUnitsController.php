@@ -16,9 +16,8 @@
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Controllers;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
-use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Core\Facades\Response;
 use App\Containers\CommunitySection\OrganizationUnit\Actions\GetAllOrganizationUnitsAction;
-use App\Containers\CommunitySection\OrganizationUnit\Actions\GetTotalOrganizationUnitsAction;
 use App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests\GetAllOrganizationUnitsRequest;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
@@ -31,21 +30,20 @@ class GetAllOrganizationUnitsController extends ApiController
      * @param GetAllOrganizationUnitsAction $action
      * @return JsonResponse
      * @throws CoreInternalErrorException
-     * @throws InvalidTransformerException
      * @throws RepositoryException
      */
-    public function __invoke(GetAllOrganizationUnitsRequest $request, GetAllOrganizationUnitsAction $action): JsonResponse
+    public function __invoke(
+        GetAllOrganizationUnitsRequest $request,
+        GetAllOrganizationUnitsAction  $action
+    ): JsonResponse
     {
-        $models = $action->run($request->isOnlyTrashed());
-        $total = app(GetTotalOrganizationUnitsAction::class)->run();
+        $models = $action
+            ->setOrganizationId($request->organization_id)
+            ->run($request->isOnlyTrashed());
 
-        return $this->json(
-            $this->transform(
-                $models,
-                $request->getTransformer(),
-                [],
-                $this->getBaseMetaResponseForGetAllAction(__CLASS__, $total)
-            )
-        );
+        return Response::create(
+            $models,
+            $request->getTransformer()
+        )->ok();
     }
 }

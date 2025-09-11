@@ -15,12 +15,35 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tasks;
 
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Ship\Criterias\ThisEqualThatCriteria;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrganizationUnitsTask extends OrganizationUnitTask
 {
+    /**
+     * @param mixed|null $limit
+     * @return LengthAwarePaginator
+     * @throws RepositoryException
+     */
     public function run(mixed $limit = null): LengthAwarePaginator
     {
         return $this->repository->paginate($limit);
+    }
+
+    /**
+     * @param mixed $id
+     * @return $this
+     * @throws RepositoryException
+     */
+    public function organization(mixed $id): self
+    {
+        $this->repository
+            ->pushCriteria(
+                new ThisEqualThatCriteria(OrganizationUnit::ORGANIZATION_ID, (int)$id)
+            );
+
+        return $this;
     }
 }

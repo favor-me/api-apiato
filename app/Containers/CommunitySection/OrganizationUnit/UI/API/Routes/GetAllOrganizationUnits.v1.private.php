@@ -14,17 +14,16 @@
  *
  * @apiGroup CommunityOrganizationUnit
  * @apiName getAllCommunityOrganizationUnit
-
  * @api {get} /v1/community/organization-units Список
  * @apiDescription Получить список.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролями `organization_owner`, `organization_worker`
  *
- * @apiParam {String="1,0"} [only-trashed] Вкл.\Откл.показ корзины.
+ * @apiParam {String="1,0"} [only-trashed] Вкл.\Откл.показ корзины. Корзина доступна только пользователю с ролью `organization_owner`
  *
  * @apiSuccessExample {json} Успешный ответ:
-HTTP/1.1 200 OK
+ * HTTP/1.1 200 OK
  */
 
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;

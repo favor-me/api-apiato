@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers;
 
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Ship\Transformers\ToListTransformer;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,6 @@ class OrganizationUnitToListTransformer extends ToListTransformer
 {
     public function getDefaultTitle(Model $model): string
     {
-        return $model->getAttribute('title');
+        return $model->getAttribute(OrganizationUnit::NAME);
     }
 }

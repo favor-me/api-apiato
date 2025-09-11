@@ -15,14 +15,22 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Actions;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\CommunitySection\OrganizationUnit\Tasks\GetAllOrganizationUnitsTask;
 use App\Ship\Parents\Actions\Action;
-use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrganizationUnitsAction extends Action
 {
+    protected mixed $organizationId;
+
+    public function setOrganizationId(mixed $id): self
+    {
+        $this->organizationId = $id;
+        return $this;
+    }
+
     /**
      * @param bool $onlyTrashed
      * @param mixed|null $limit
@@ -38,6 +46,9 @@ class GetAllOrganizationUnitsAction extends Action
             $task->onlyTrashed();
         }
 
-        return $task->addRequestCriteria()->run($limit);
+        return $task
+            ->addRequestCriteria()
+            ->organization($this->organizationId)
+            ->run($limit);
     }
 }
