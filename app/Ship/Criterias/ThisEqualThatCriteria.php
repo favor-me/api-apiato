@@ -45,7 +45,7 @@ class ThisEqualThatCriteria extends Criteria
      * @param   string $field
      * @param   string $value
      */
-    public function __construct(string $field, string $value)
+    public function __construct(string $field, mixed $value)
     {
         $this->field = $field;
         $this->value = $value;
