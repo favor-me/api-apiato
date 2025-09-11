@@ -30,10 +30,12 @@ class RestoreOrganizationUnitsController extends ApiController
      * @return JsonResponse
      * @throws NotFoundException
      */
-    public function __invoke(RestoreOrganizationUnitsRequest $request, RestoreOrganizationUnitsAction $action): JsonResponse
+    public function __invoke(
+        RestoreOrganizationUnitsRequest $request,
+        RestoreOrganizationUnitsAction  $action
+    ): JsonResponse
     {
         $result = $action->run($request->getIds());
-
         return $this->accepted([
             MESSAGE => Container::transMultipleRestored($result)
         ]);

@@ -14,27 +14,26 @@
  *
  * @apiGroup CommunityOrganizationUnit
  * @apiName restoreCommunityOrganizationUnit
-
  * @api {post} /v1/restore/community/organization-units Восстановить
  * @apiDescription Восстановление одной или несколько записей. Перемещение из корзины в "рабочую зону"..
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
  * @apiBody {Array} ids Id массив элементов
  *
  * @apiParamExample {json} Пример формирования ids:
-"ids": [
-    "NxOpZowo9GmjKqdR",
-    "XbPW7awNkzl83LD6",
-    "KJqn4Z26Owdlv6MB"
-]
+ * "ids": [
+ * "NxOpZowo9GmjKqdR",
+ * "XbPW7awNkzl83LD6",
+ * "KJqn4Z26Owdlv6MB"
+ * ]
  *
  * @apiSuccessExample {json} Успешный ответ:
-HTTP/1.1 202 Accepted
-{
-    "message": "Успешно восстановлены 3 элемента."
-}
+* HTTP/1.1 202 Accepted
+* {
+    * "message": "Успешно восстановлены 3 элемента."
+* }
  */
 
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;

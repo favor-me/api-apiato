@@ -15,18 +15,37 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
-use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
-use App\Ship\Requests\ApiRestoreRequest;
+use App\Containers\AppSection\Authorization\Models\Role;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnit\Requests\OrganizationUnitApiRequest;
+use App\Ship\Traits\Request\HasInputIds;
+use Illuminate\Validation\Rules\Exists;
 
-class RestoreOrganizationUnitsRequest extends ApiRestoreRequest
+class RestoreOrganizationUnitsRequest extends OrganizationUnitApiRequest
 {
+    use HasInputIds;
+
     protected array $access = [
-        PERMISSIONS => Permissions::READ_ARCHIVE
+        ROLES => Role::ORGANIZATION_OWNER
     ];
 
-    public function getTableName(): string
+    protected function afterInitialize(): void
     {
-        return OrganizationUnitModel::TABLE;
+        parent::afterInitialize();
+        $this->mergeDecode(IDS . '.*');
+    }
+
+    public function rules(): array
+    {
+        return [
+            IDS . '.*' => $this->getOrganizationUnitIdValidationRules()
+        ];
+    }
+
+    public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationUnitIdExistsValidationRule($column)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id)
+            ->whereNotNull(DELETED_AT);
     }
 }

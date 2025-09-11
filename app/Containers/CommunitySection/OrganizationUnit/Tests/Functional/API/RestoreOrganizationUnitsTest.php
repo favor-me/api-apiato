@@ -15,9 +15,10 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\API;
 
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
 use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -25,7 +26,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 final class RestoreOrganizationUnitsTest extends ApiTestCase
 {
     protected array $access = [
-        PERMISSIONS => Permissions::READ_ARCHIVE
+        ROLES => Role::ORGANIZATION_OWNER
     ];
 
     public function setUp(): void
@@ -37,7 +38,7 @@ final class RestoreOrganizationUnitsTest extends ApiTestCase
     public function testIsUnauthorized(): void
     {
         $this->getTestingUser(null, [
-            PERMISSIONS => ''
+            ROLES => ''
         ]);
 
         $this->makeCall();
@@ -45,12 +46,32 @@ final class RestoreOrganizationUnitsTest extends ApiTestCase
         $this->assertActionIsUnauthorized();
     }
 
-    public function testWithTrashed(): void
+    public function testWithNotOwnTrashed(): void
     {
         $models = OrganizationUnitModel::factory()
             ->count(2)
             ->trashed()
             ->create();
+
+        $this->makeCall([
+            IDS => $models
+                ->getHashedKeys()
+                ->toArray()
+        ]);
+
+        $this->assertGivenDataIsInvalid();
+    }
+
+    public function testOwnWithTrashed(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $models = OrganizationUnitModel::factory()
+            ->count(2)
+            ->trashed()
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this->makeCall([
             IDS => $models
@@ -70,9 +91,13 @@ final class RestoreOrganizationUnitsTest extends ApiTestCase
 
     public function testWithNotTrashed(): void
     {
+        $user = $this->getTestingOrganizationUser();
+
         $models = OrganizationUnitModel::factory()
             ->count(2)
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this->makeCall([
             IDS => $models
@@ -80,7 +105,7 @@ final class RestoreOrganizationUnitsTest extends ApiTestCase
                 ->toArray()
         ]);
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(
             fn(AssertableJson $json): AssertableJson => $json
@@ -99,11 +124,18 @@ final class RestoreOrganizationUnitsTest extends ApiTestCase
 
     public function testWithOneTrashedAndOneIsNotTrashed(): void
     {
-        $model = OrganizationUnitModel::factory()->create();
+        $user = $this->getTestingOrganizationUser();
+
+        $model = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $modelTrashed = OrganizationUnitModel::factory()
             ->trashed()
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this->makeCall([
             IDS => [
@@ -112,7 +144,7 @@ final class RestoreOrganizationUnitsTest extends ApiTestCase
             ]
         ]);
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(
             fn(AssertableJson $json): AssertableJson => $json
