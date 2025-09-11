@@ -21,7 +21,7 @@
  * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
  * @apiBody {String} name Название
- * @apiBody {String} type Тип
+ * @apiBody {String} type Тип (имя `name` типа) (см. <a href="#api-CommunityOrganizationUnitType-getAllCommunityOrganizationUnitTypes">типы</a>)
  * @apiBody {String|Null} [sku] Артикул
  * @apiBody {Numeric} [ordering] Значение сортировки
  * @apiBody {Array|Object} [params] Дополнительные параметры
