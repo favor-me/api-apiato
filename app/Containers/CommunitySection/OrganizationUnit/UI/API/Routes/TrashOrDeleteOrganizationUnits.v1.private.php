@@ -14,18 +14,20 @@
  *
  * @apiGroup CommunityOrganizationUnit
  * @apiName trashOrDeleteCommunityOrganizationUnits
-
  * @api {delete} /v1/community/organization-units Архивировать|Удалить
  * @apiDescription Архивировать или удалить.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
  * @apiBody {Array} ids Список id
  * @apiBody {String="1"} [force-delete] Произвести жёсткое удаление (удаляется запись из базы).
  *
  * @apiSuccessExample {json} Успешный ответ:
-HTTP/1.1 200 OK
+ * HTTP/1.1 200 OK
+ * {
+ * "message": "Успешно перемещены в корзину 4 товара."
+ * }
  */
 
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;

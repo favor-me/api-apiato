@@ -15,22 +15,26 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Requests\OrganizationUnitApiRequest;
-use App\Ship\Traits\Request\HasInputIds;
 use App\Ship\Collections\ValidationRules;
+use App\Ship\Traits\Request\HasInputIds;
+use Illuminate\Validation\Rules\Exists;
 
 class TrashOrganizationUnitsRequest extends OrganizationUnitApiRequest
 {
     use HasInputIds;
 
     protected array $access = [
-        PERMISSIONS => Permissions::TRASH
+        ROLES => RoleModel::ORGANIZATION_OWNER
     ];
 
-    protected array $decode = [
-        IDS . '.*'
-    ];
+    protected function afterInitialize(): void
+    {
+        parent::afterInitialize();
+        $this->mergeDecode(IDS . '.*');
+    }
 
     public function rules(): array
     {
@@ -43,5 +47,11 @@ class TrashOrganizationUnitsRequest extends OrganizationUnitApiRequest
     {
         return parent::getOrganizationUnitIdValidationRules()
             ->addRequired();
+    }
+
+    public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationUnitIdExistsValidationRule($column)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id);
     }
 }

@@ -30,7 +30,10 @@ class TrashOrganizationUnitsController extends ApiController
      * @return JsonResponse
      * @throws DeleteResourceFailedException
      */
-    public function __invoke(TrashOrganizationUnitsRequest $request, TrashOrganizationUnitsAction $action): JsonResponse
+    public function __invoke(
+        TrashOrganizationUnitsRequest $request,
+        TrashOrganizationUnitsAction  $action
+    ): JsonResponse
     {
         $result = $action->run($request->getIds());
         return $this->json([

@@ -30,7 +30,10 @@ class DeleteOrganizationUnitsController extends ApiController
      * @return JsonResponse
      * @throws NotFoundException
      */
-    public function __invoke(DeleteOrganizationUnitsRequest $request, DeleteOrganizationUnitsAction $action): JsonResponse
+    public function __invoke(
+        DeleteOrganizationUnitsRequest $request,
+        DeleteOrganizationUnitsAction  $action
+    ): JsonResponse
     {
         $result = $action->run($request->getIds());
         return $this->json([

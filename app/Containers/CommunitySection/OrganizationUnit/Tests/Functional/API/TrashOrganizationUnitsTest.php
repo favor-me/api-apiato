@@ -15,16 +15,17 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\API;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class TrashOrganizationUnitsTest extends ApiTestCase
 {
     protected array $access = [
-        PERMISSIONS => Permissions::TRASH
+        ROLES => RoleModel::ORGANIZATION_OWNER
     ];
 
     public function setUp(): void
@@ -37,11 +38,35 @@ final class TrashOrganizationUnitsTest extends ApiTestCase
     {
         $this->makeCall([
             IDS => [
-                getHashedValue(123)
+                hash_encode(123)
             ]
         ]);
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
+
+        $this->response->assertJson(
+            fn(AssertableJson $json): AssertableJson => $json
+                ->has('errors')
+                ->where('errors', [
+                    IDS . '.0' => [
+                        __('validation.custom.ids.*.exists')
+                    ]
+                ])
+                ->etc()
+        );
+    }
+
+    public function testNotOwn(): void
+    {
+        $model = OrganizationUnitModel::factory()->create();
+
+        $this->makeCall([
+            IDS => [
+                $model->getHashedKey()
+            ]
+        ]);
+
+        $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(
             fn(AssertableJson $json): AssertableJson => $json
@@ -57,9 +82,13 @@ final class TrashOrganizationUnitsTest extends ApiTestCase
 
     public function testSuccess(): void
     {
+        $user = $this->getTestingOrganizationUser();
+
         $models = OrganizationUnitModel::factory()
             ->count(4)
-            ->create();
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this->makeCall([
             IDS => $models

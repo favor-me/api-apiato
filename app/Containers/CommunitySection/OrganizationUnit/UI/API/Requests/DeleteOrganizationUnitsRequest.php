@@ -15,22 +15,13 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
-use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
-use App\Ship\Collections\ValidationRules;
-use App\Ship\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
 
 class DeleteOrganizationUnitsRequest extends TrashOrganizationUnitsRequest
 {
-    protected array $access = [
-        PERMISSIONS => Permissions::DELETE
-    ];
-
-    public function getOrganizationUnitIdValidationRules(): ValidationRules
+    public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
     {
-        return validation_rules([
-            Rule::exists(OrganizationUnitModel::TABLE, ID)
-                ->whereNotNull(DELETED_AT)
-        ])->addRequired();
+        return parent::getOrganizationUnitIdExistsValidationRule($column)
+            ->whereNotNull(DELETED_AT);
     }
 }
