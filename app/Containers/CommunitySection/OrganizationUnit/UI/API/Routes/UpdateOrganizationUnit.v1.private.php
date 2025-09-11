@@ -14,26 +14,25 @@
  *
  * @apiGroup CommunityOrganizationUnit
  * @apiName updateCommunityOrganizationUnit
-
  * @api {post} /v1/community/organization-units/:id Изменить
  * @apiDescription Изменить.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
  * @apiParam {String} id Уникальный идентификатор
  *
- * @apiBody {String} [name]
- * @apiBody {String} [type]
- * @apiBody {String} [sku]
- * @apiBody {String} [ordering]
- * @apiBody {String} [params]
- * @apiBody {String} [cost_price]
- * @apiBody {String} [price_up]
- * @apiBody {String} [client_price]
- * @apiBody {String} [balance]
- * @apiBody {String} [organization_id]
- * @apiBody {String} [system_unit_id]
+ * @apiBody {String} [name] Название
+ * @apiBody {String} [type] Тип
+ * @apiBody {String|Null} [sku] Артикул
+ * @apiBody {Numeric} [ordering] Значение сортировки
+ * @apiBody {Array|Object} [params] Дополнительные параметры
+ * @apiBody {Numeric} [cost_price] Себестоимость
+ * @apiBody {Numeric} [price_up] Наценка себестоимости в % для расчёта цены продажи
+ * @apiBody {Numeric} [client_price] Цена продажи
+ * @apiBody {Numeric} [balance] Остаток
+ * @apiBody {String} [organization_id] Уникальный идентификатор органзации. Устанавливается автоматически.
+ * @apiBody {String} [system_unit_id] Уникальный идентификатор еденицы измерения
  *
  * @apiUse OrganizationUnitSuccessSingleResponse
  */

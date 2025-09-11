@@ -15,12 +15,14 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\CommunitySection\OrganizationUnit\Dto\UpdateOrganizationUnitDto;
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\Rules\Exists;
 
 /**
  * @method UpdateOrganizationUnitDto getDto()
@@ -30,7 +32,7 @@ class UpdateOrganizationUnitRequest extends CreateOrganizationUnitRequest
     use HasInputId;
 
     protected array $access = [
-        PERMISSIONS => Permissions::UPDATE
+        ROLES => Role::ORGANIZATION_OWNER
     ];
 
     protected array $urlParameters = [
@@ -53,6 +55,36 @@ class UpdateOrganizationUnitRequest extends CreateOrganizationUnitRequest
     {
         return parent::getOrganizationUnitIdValidationRules()
             ->addRequired();
+    }
+
+    public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationUnitIdExistsValidationRule($column)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id);
+    }
+
+    public function getOrganizationUnitSystemUnitIdValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitSystemUnitIdValidationRules()
+            ->removeRequired();
+    }
+
+    public function getOrganizationUnitNameValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitNameValidationRules()
+            ->removeRequired();
+    }
+
+    public function getOrganizationUnitTypeValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitTypeValidationRules()
+            ->removeRequired();
+    }
+
+    public function getOrganizationUnitOrganizationIdValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitOrganizationIdValidationRules()
+            ->removeRequired();
     }
 
     public function newDto(array $data = []): UpdateOrganizationUnitDto

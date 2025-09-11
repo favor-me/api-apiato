@@ -108,12 +108,15 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
 
     public function messages(): array
     {
-        return parent::messages() +
-            [
-                OrganizationUnit::CLIENT_PRICE . '.size' => Container::trans('validation.client_price.size', [
-                    'size' => $this->internalClientPrice->currency()->text()
-                ])
-            ];
+        $messages = parent::messages();
+
+        if ($this->has(OrganizationUnit::COST_PRICE)) {
+            $messages[OrganizationUnit::CLIENT_PRICE . '.size'] = Container::trans('validation.client_price.size', [
+                'size' => $this->internalClientPrice->currency()->text()
+            ]);
+        }
+
+        return $messages;
     }
 
     public function getOrganizationUnitClientPriceValidationRules(): ValidationRules

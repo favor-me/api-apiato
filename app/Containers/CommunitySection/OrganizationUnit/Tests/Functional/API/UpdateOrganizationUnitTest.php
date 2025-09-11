@@ -15,17 +15,17 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\API;
 
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class UpdateOrganizationUnitTest extends ApiTestCase
 {
     protected array $access = [
-        PERMISSIONS => Permissions::UPDATE
+        ROLES => Role::ORGANIZATION_OWNER
     ];
 
     public function setUp(): void
@@ -52,15 +52,43 @@ final class UpdateOrganizationUnitTest extends ApiTestCase
 
     public function testWithInvalidId(): void
     {
+        $this->getTestingOrganizationUser();
+
         $data = [
-            // Write here
+            OrganizationUnit::NAME => 'New name'
         ];
 
         $this
             ->injectId(123123)
             ->makeCall($data);
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
+
+        $this->response->assertJson(
+            fn(AssertableJson $json): AssertableJson => $json
+                ->has('errors')
+                ->where('errors.' . ID, [
+                    __('validation.custom.id.exists')
+                ])
+                ->etc()
+        );
+    }
+
+    public function testNotOwn(): void
+    {
+        $this->getTestingOrganizationUser();
+
+        $model = OrganizationUnitModel::factory()->create();
+
+        $data = [
+            OrganizationUnit::NAME => 'My unit'
+        ];
+
+        $this
+            ->injectId($model->id)
+            ->makeCall($data);
+
+        $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(
             fn(AssertableJson $json): AssertableJson => $json
@@ -74,10 +102,15 @@ final class UpdateOrganizationUnitTest extends ApiTestCase
 
     public function testSuccess(): void
     {
-        $model = OrganizationUnitModel::factory()->create();
+        $user = $this->getTestingOrganizationUser();
+
+        $model = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $data = [
-            // Write here
+            OrganizationUnit::NAME => 'My unit'
         ];
 
         $this
@@ -90,7 +123,7 @@ final class UpdateOrganizationUnitTest extends ApiTestCase
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
                     ->where('data.' . ID, $model->getHashedKey())
-                    //->where('data.' . OrganizationUnit::, $data[OrganizationUnit::])
+                    ->where('data.' . OrganizationUnit::NAME, $data[OrganizationUnit::NAME])
                     ->etc()
             );
     }

@@ -16,6 +16,7 @@
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Controllers;
 
 use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Core\Facades\Response;
 use App\Containers\CommunitySection\OrganizationUnit\Actions\UpdateOrganizationUnitAction;
 use App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests\UpdateOrganizationUnitRequest;
 use App\Ship\Exceptions\UpdateResourceFailedException;
@@ -33,13 +34,14 @@ class UpdateOrganizationUnitController extends ApiController
      * @throws UnknownProperties
      * @throws UpdateResourceFailedException
      */
-    public function __invoke(UpdateOrganizationUnitRequest $request, UpdateOrganizationUnitAction $action): JsonResponse
+    public function __invoke(
+        UpdateOrganizationUnitRequest $request,
+        UpdateOrganizationUnitAction  $action
+    ): JsonResponse
     {
-        return $this->json(
-            $this->transform(
-                $action->run($request->getDto()),
-                $request->getTransformer()
-            )
-        );
+        return Response::create(
+            $action->run($request->getDto()),
+            $request->getTransformer()
+        )->ok();
     }
 }
