@@ -15,26 +15,33 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Requests\OrganizationUnitApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Traits\Request\HasInputId;
+use Illuminate\Validation\Rules\Exists;
 
 class FindOrganizationUnitByIdRequest extends OrganizationUnitApiRequest
 {
     use HasInputId;
 
     protected array $access = [
-        PERMISSIONS => Permissions::READ
-    ];
-
-    protected array $decode = [
-        ID
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER,
+            RoleModel::ORGANIZATION_WORKER
+        ]
     ];
 
     protected array $urlParameters = [
         ID
     ];
+
+    protected function afterInitialize(): void
+    {
+        parent::afterInitialize();
+        $this->mergeDecode(ID);
+    }
 
     public function rules(): array
     {
@@ -47,5 +54,11 @@ class FindOrganizationUnitByIdRequest extends OrganizationUnitApiRequest
     {
         return parent::getOrganizationUnitIdValidationRules()
             ->addRequired();
+    }
+
+    public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationUnitIdExistsValidationRule($column)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id);
     }
 }

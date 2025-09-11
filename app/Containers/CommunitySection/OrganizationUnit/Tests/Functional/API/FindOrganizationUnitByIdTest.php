@@ -15,16 +15,20 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\API;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
-use App\Containers\CommunitySection\OrganizationUnit\Permissions\Permissions;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class FindOrganizationUnitByIdTest extends ApiTestCase
 {
     protected array $access = [
-        PERMISSIONS => Permissions::READ
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER,
+            RoleModel::ORGANIZATION_WORKER
+        ]
     ];
 
     public function setUp(): void
@@ -39,12 +43,39 @@ final class FindOrganizationUnitByIdTest extends ApiTestCase
             ->injectId(555)
             ->makeCall();
 
-        $this->assertGivenDataWasInvalid();
+        $this->assertGivenDataIsInvalid();
     }
 
-    public function testSuccess(): void
+    public function testNotOwn(): void
     {
         $model = OrganizationUnitModel::factory()->create();
+
+        $this
+            ->injectId($model->id)
+            ->makeCall();
+
+        $this->assertGivenDataIsInvalid();
+
+        $this->response->assertJson(
+            fn(AssertableJson $json): AssertableJson => $json
+                ->has('errors')
+                ->where('errors', [
+                    ID => [
+                        __('validation.custom.id.exists')
+                    ]
+                ])
+                ->etc()
+        );
+    }
+
+    public function testOwn(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $model = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->injectId($model->id)
