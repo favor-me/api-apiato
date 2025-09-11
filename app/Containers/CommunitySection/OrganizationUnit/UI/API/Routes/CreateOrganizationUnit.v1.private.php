@@ -18,7 +18,7 @@
  * @apiDescription Создание.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
  * @apiBody {String} name Название
  * @apiBody {String} type Тип

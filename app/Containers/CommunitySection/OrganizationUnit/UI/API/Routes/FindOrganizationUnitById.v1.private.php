@@ -14,12 +14,11 @@
  *
  * @apiGroup CommunityOrganizationUnit
  * @apiName findByIdCommunityOrganizationUnit
-
  * @api {get} /v1/community/organization-units/:id Найти по id
  * @apiDescription Найти по id.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролями `organization_owner`, `organization_worker`
  *
  * @apiParam {String} id Уникальный идентификатор.
  *
