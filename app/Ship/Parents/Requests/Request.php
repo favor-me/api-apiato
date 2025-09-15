@@ -16,6 +16,7 @@ namespace App\Ship\Parents\Requests;
 
 use Apiato\Core\Abstracts\Requests\Request as AbstractRequest;
 use App\Containers\AppSection\User\Models\User;
+use App\Ship\Events\RequestInitializeEvent;
 
 /**
  * @method null|User user($guard = null)
@@ -59,7 +60,14 @@ abstract class Request extends AbstractRequest
         return $this->boolean(self::FORCE_DELETE) === true;
     }
 
+    public function setAccess(array $access): static
+    {
+        $this->access = $access;
+        return $this;
+    }
+
     protected function afterInitialize(): void
     {
+        event('request.initialize: ' . static::class, new RequestInitializeEvent($this));
     }
 }

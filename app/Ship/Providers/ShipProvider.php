@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Schema;
 class ShipProvider extends MainServiceProvider
 {
     public array $serviceProviders = [
+        EventsServiceProvider::class,
         QueryLoggerServiceProvider::class,
         RouteServiceProvider::class,
         DevelopmentLoaderProvider::class,
