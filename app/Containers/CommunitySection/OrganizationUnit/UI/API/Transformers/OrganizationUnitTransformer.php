@@ -17,17 +17,24 @@ namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers;
 
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\Vendor\Unit\UI\API\Transformers\UnitTransformer;
 use App\Ship\Parents\Transformers\Transformer;
+use League\Fractal\Resource\Item;
 
 class OrganizationUnitTransformer extends Transformer
 {
+    protected array $defaultIncludes = [
+        OrganizationUnit::INCLUDE_SYSTEM_UNIT
+    ];
+
     public function transform(OrganizationUnitModel $organizationUnit): array
     {
         return [
             OBJECT => $organizationUnit->getResourceKey(),
             ID => $organizationUnit->getHashedKey(),
+            'number' => $organizationUnit->getNumber(),
             OrganizationUnit::NAME => $organizationUnit->name,
-            OrganizationUnit::TYPE => $organizationUnit->type,
+            OrganizationUnit::TYPE => $organizationUnit->type->toArray(),
             OrganizationUnit::SKU => $organizationUnit->sku,
             OrganizationUnit::ORDERING => $organizationUnit->ordering,
             PARAMS => $organizationUnit->params,
@@ -35,11 +42,17 @@ class OrganizationUnitTransformer extends Transformer
             OrganizationUnit::PRICE_UP => $organizationUnit->price_up,
             OrganizationUnit::CLIENT_PRICE => $this->money($organizationUnit->client_price),
             OrganizationUnit::BALANCE => $organizationUnit->balance,
+            OrganizationUnit::IS_INFINITY_BALANCE => $organizationUnit->is_infinity_balance,
             OrganizationUnit::ORGANIZATION_ID => $organizationUnit->getHashedKey(OrganizationUnit::ORGANIZATION_ID),
             OrganizationUnit::SYSTEM_UNIT_ID => $organizationUnit->getHashedKey(OrganizationUnit::SYSTEM_UNIT_ID),
             CREATED_AT => $this->nullOrTimestamp($organizationUnit->created_at),
             UPDATED_AT => $this->nullOrTimestamp($organizationUnit->updated_at),
             DELETED_AT => $this->nullOrTimestamp($organizationUnit->deleted_at)
         ];
+    }
+
+    protected function includeSystemUnit(OrganizationUnitModel $organizationUnit): Item
+    {
+        return $this->item($organizationUnit->systemUnit, new UnitTransformer());
     }
 }

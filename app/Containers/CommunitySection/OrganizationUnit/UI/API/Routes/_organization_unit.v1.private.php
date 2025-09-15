@@ -14,28 +14,29 @@
  *
  * @apiDefine OrganizationUnitSuccessSingleResponse
  * @apiSuccessExample {json} Успешный ответ:
-HTTP/1.1 200 OK
-{
-    "data": {
-        "object": "OrganizationUnit",
-        "id": null,
-        "name": "Mr.",
-        "type": "Quo sint omnis illo adipisci.",
-        "sku": "Corrupti vitae sed atque libero maxime.",
-        "ordering": 0,
-        "params": null,
-        "cost_price": null,
-        "price_up": null,
-        "client_price": null,
-        "balance": null,
-        "organization_id": null,
-        "system_unit_id": null,
-        "created_at": null,
-        "updated_at": null,
-        "deleted_at": null
-    },
-    "meta": {
-        "include": []
-    }
-}
+* HTTP/1.1 200 OK
+* {
+    * "data": {
+        * "object": "OrganizationUnit",
+        * "id": null,
+        * "name": "Mr.",
+        * "type": "Quo sint omnis illo adipisci.",
+        * "sku": "Corrupti vitae sed atque libero maxime.",
+        * "ordering": 0,
+        * "params": null,
+        * "cost_price": null,
+        * "price_up": null,
+        * "client_price": null,
+ * "balance": null,
+ * "is_infinity_balance": false,
+ * "organization_id": null,
+ * "system_unit_id": null,
+        * "created_at": null,
+        * "updated_at": null,
+        * "deleted_at": null
+    * },
+    * "meta": {
+        * "include": []
+    * }
+* }
  */

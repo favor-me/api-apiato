@@ -50,6 +50,8 @@ abstract class OrganizationUnitApiRequest extends ApiRequest implements Gettable
         return [
             OrganizationUnit::TYPE . '.required' => Container::trans('validation.type.required'),
             OrganizationUnit::NAME . '.required' => Container::trans('validation.name.required'),
+            OrganizationUnit::NAME . '.unique' => Container::trans('validation.name.unique'),
+            OrganizationUnit::SKU . '.unique' => Container::trans('validation.sku.unique'),
             OrganizationUnit::ORGANIZATION_ID . '.required' => Container::trans('validation.organization_id.required'),
         ];
     }

@@ -18,6 +18,7 @@ namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Unit\Models;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\UnitTestCase;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\Vendor\Unit\Models\Unit;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -65,6 +66,7 @@ final class OrganizationUnitTest extends UnitTestCase
             OrganizationUnit::PRICE_UP,
             OrganizationUnit::CLIENT_PRICE,
             OrganizationUnit::BALANCE,
+            OrganizationUnit::IS_INFINITY_BALANCE,
             OrganizationUnit::ORGANIZATION_ID,
             OrganizationUnit::SYSTEM_UNIT_ID
         ], $this->model->getFillable());
@@ -72,6 +74,7 @@ final class OrganizationUnitTest extends UnitTestCase
 
     public function testCasts(): void
     {
+        $this->assertIsBool($this->model->is);
         $this->assertInstanceOf(Money::class, $this->model->cost_price);
         $this->assertInstanceOf(Money::class, $this->model->client_price);
         $this->assertInstanceOf(JSON::class, $this->model->params);
@@ -90,5 +93,10 @@ final class OrganizationUnitTest extends UnitTestCase
         $this->assertInstanceOf(Unit::class, $unit->systemUnit()->getModel());
         $this->assertInstanceOf(Unit::class, $unit->systemUnit);
         $this->assertSame($systemUnit->id, $unit->systemUnit->id);
+    }
+
+    public function testAttributeType(): void
+    {
+        $this->assertInstanceOf(Type::class, $this->model->type);
     }
 }

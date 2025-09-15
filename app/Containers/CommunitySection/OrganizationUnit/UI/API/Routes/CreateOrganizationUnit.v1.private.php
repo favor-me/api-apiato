@@ -29,6 +29,7 @@
  * @apiBody {Numeric} [price_up] Наценка себестоимости в % для расчёта цены продажи
  * @apiBody {Numeric} [client_price] Цена продажи
  * @apiBody {Numeric} [balance] Остаток
+ * @apiBody {Boolean=0,1} [is_infinity_balance] Флаг бесконечного остатка
  * @apiBody {String} [organization_id] Уникальный идентификатор органзации. Устанавливается автоматически.
  * @apiBody {String} system_unit_id Уникальный идентификатор еденицы измерения
  *

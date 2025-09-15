@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Data\Repositories;
 
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Ship\Parents\Repositories\Repository;
 
@@ -24,7 +25,9 @@ use App\Ship\Parents\Repositories\Repository;
 final class OrganizationUnitRepository extends Repository
 {
     protected $fieldSearchable = [
-        ID => '='
+        ID => '=',
+        OrganizationUnit::NAME => 'like',
+        OrganizationUnit::TYPE => '='
     ];
 
     public function model(): string

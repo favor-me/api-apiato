@@ -22,6 +22,7 @@ return new class extends CreateTableMigration
         $table->unsignedBigInteger(OrganizationUnit::PRICE_UP)->nullable();
         $table->unsignedBigInteger(OrganizationUnit::CLIENT_PRICE)->nullable();
         $table->float(OrganizationUnit::BALANCE)->nullable();
+        $table->boolean(OrganizationUnit::IS_INFINITY_BALANCE)->default(false);
         $table->unsignedBigInteger(OrganizationUnit::ORGANIZATION_ID);
         $table->unsignedBigInteger(OrganizationUnit::SYSTEM_UNIT_ID)->nullable();
         $table->timestamps();

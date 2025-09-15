@@ -40,6 +40,7 @@ final class OrganizationUnitFactory extends Factory
     {
         return [
             OrganizationUnit::BALANCE => null,
+            OrganizationUnit::IS_INFINITY_BALANCE => false,
             OrganizationUnit::NAME => $this->faker->title,
             OrganizationUnit::ORDERING => ZERO,
             OrganizationUnit::ORGANIZATION_ID => OrganizationModel::factory(),

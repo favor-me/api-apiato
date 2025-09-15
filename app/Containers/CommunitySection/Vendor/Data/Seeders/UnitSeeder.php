@@ -15,9 +15,12 @@
 
 namespace App\Containers\CommunitySection\Vendor\Data\Seeders;
 
+use App\Containers\Vendor\Unit\Foundation\Unit;
+use App\Containers\Vendor\Unit\Models\Unit as UnitModel;
 use App\Containers\Vendor\Unit\Tasks\CreateUnitTask;
 use App\Ship\Exceptions\CreateResourceFailedException;
 use App\Ship\Parents\Seeders\Seeder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @codingStandardsIgnoreStart
@@ -31,7 +34,13 @@ class UnitSeeder extends Seeder
     {
         $task = app(CreateUnitTask::class);
         foreach ($this->getDefaultUnits() as $unitName) {
-            $task->run($unitName);
+            $existsUnit = DB::table(UnitModel::TABLE)
+                ->where(Unit::NAME, $unitName)
+                ->exists();
+
+            if (!$existsUnit) {
+                $task->run($unitName);
+            }
         }
     }
 

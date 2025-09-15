@@ -32,6 +32,9 @@ return [
         OrganizationUnit::ORDERING => [
             'integer'
         ],
+        OrganizationUnit::IS_INFINITY_BALANCE => [
+            'boolean'
+        ],
         OrganizationUnit::COST_PRICE => [
             'nullable',
             'numeric',
@@ -48,7 +51,7 @@ return [
         ],
         OrganizationUnit::BALANCE => [
             'nullable',
-            'float'
+            'numeric'
         ]
     ]
 

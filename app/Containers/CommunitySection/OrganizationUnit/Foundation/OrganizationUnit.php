@@ -20,6 +20,7 @@ use App\Ship\Foundation\SectionContainer;
 final class OrganizationUnit extends SectionContainer
 {
     public const BALANCE = 'balance';
+    public const IS_INFINITY_BALANCE = 'is_infinity_balance';
     public const CLIENT_PRICE = 'client_price';
     public const COST_PRICE = 'cost_price';
     public const NAME = 'name';
@@ -29,6 +30,7 @@ final class OrganizationUnit extends SectionContainer
     public const SKU = 'sku';
     public const SYSTEM_UNIT_ID = 'system_unit_id';
     public const TYPE = 'type';
+    public const INCLUDE_SYSTEM_UNIT = 'systemUnit';
     public const PRICE_MAX_LENGTH = 200000;
 
     protected string $apiBaseUri = 'community/organization-units';

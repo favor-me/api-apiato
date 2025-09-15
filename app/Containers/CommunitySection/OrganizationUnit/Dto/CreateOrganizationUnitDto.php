@@ -20,6 +20,7 @@ use App\Ship\Dto\Dto;
 class CreateOrganizationUnitDto extends Dto
 {
     public ?float $balance;
+    public bool $is_infinity_balance = false;
     public ?string $client_price;
     public ?string $cost_price;
     public ?string $name;

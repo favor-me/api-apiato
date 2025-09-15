@@ -86,6 +86,11 @@ trait OrganizationUnitValidationRules
         return validation_rules(Container::getConfig('rules.' . OrganizationUnit::BALANCE));
     }
 
+    public function getOrganizationUnitIsInfinityBalanceValidationRules(): ValidationRules
+    {
+        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::IS_INFINITY_BALANCE));
+    }
+
     public function getOrganizationUnitSystemUnitIdValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . OrganizationUnit::SYSTEM_UNIT_ID));

@@ -58,6 +58,7 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
             OrganizationUnit::PRICE_UP => $this->getOrganizationUnitPriceUpValidationRules(),
             OrganizationUnit::CLIENT_PRICE => $this->getOrganizationUnitClientPriceValidationRules(),
             OrganizationUnit::BALANCE => $this->getOrganizationUnitBalanceValidationRules(),
+            OrganizationUnit::IS_INFINITY_BALANCE => $this->getOrganizationUnitIsInfinityBalanceValidationRules(),
             OrganizationUnit::ORGANIZATION_ID => $this->getOrganizationUnitOrganizationIdValidationRules(),
             OrganizationUnit::SYSTEM_UNIT_ID => $this->getOrganizationUnitSystemUnitIdValidationRules(),
         ];
@@ -123,7 +124,8 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
     {
         $rules = parent::getOrganizationUnitClientPriceValidationRules();
 
-        if ($this->has(OrganizationUnit::COST_PRICE)) {
+        $priceUp = (float)$this->get(OrganizationUnit::PRICE_UP);
+        if ($this->has(OrganizationUnit::COST_PRICE) && $priceUp > 0) {
             $rules->add('size:' . $this->internalClientPrice->val());
         }
 
@@ -133,7 +135,18 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
+        $this->prepareForValidationIsInfinityBalance();
         $this->prepareForValidationOrganizationClientPrice();
+    }
+
+    protected function prepareForValidationIsInfinityBalance(): void
+    {
+        $isInfinityBalance = (bool)$this->get(OrganizationUnit::IS_INFINITY_BALANCE);
+        if ($isInfinityBalance) {
+            $this->merge([
+                OrganizationUnit::BALANCE => ZERO
+            ]);
+        }
     }
 
     protected function prepareForValidationOrganizationClientPrice(): void
