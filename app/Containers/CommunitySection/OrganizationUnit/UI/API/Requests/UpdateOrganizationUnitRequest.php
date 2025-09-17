@@ -23,6 +23,7 @@ use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\Unique;
 
 /**
  * @method UpdateOrganizationUnitDto getDto()
@@ -41,6 +42,7 @@ class UpdateOrganizationUnitRequest extends CreateOrganizationUnitRequest
 
     protected function afterInitialize(): void
     {
+        parent::afterInitialize();
         $this->mergeDecode(ID);
     }
 
@@ -85,6 +87,18 @@ class UpdateOrganizationUnitRequest extends CreateOrganizationUnitRequest
     {
         return parent::getOrganizationUnitOrganizationIdValidationRules()
             ->removeRequired();
+    }
+
+    public function getOrganizationUnitSkuUniqueValidationRule(): Unique
+    {
+        return parent::getOrganizationUnitSkuUniqueValidationRule()
+            ->ignore($this->id);
+    }
+
+    public function getOrganizationUnitNameUniqueValidationRule(): Unique
+    {
+        return parent::getOrganizationUnitNameUniqueValidationRule()
+            ->ignore($this->id);
     }
 
     public function newDto(array $data = []): UpdateOrganizationUnitDto

@@ -91,11 +91,6 @@ trait OrganizationUnitValidationRules
         return validation_rules(Container::getConfig('rules.' . OrganizationUnit::IS_INFINITY_BALANCE));
     }
 
-    public function getOrganizationUnitSystemUnitIdValidationRules(): ValidationRules
-    {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::SYSTEM_UNIT_ID));
-    }
-
     public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
     {
         return Rule::exists(OrganizationUnitModel::TABLE, $column);
