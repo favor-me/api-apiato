@@ -27,6 +27,7 @@ final class StrTest extends UnitTestCase
 
     public function testToPhoneNumber(): void
     {
+        //  Russian phone numbers.
         $this->assertSame(79991110022, Str::toPhoneNumber('+79991110022'));
         $this->assertSame(79991110022, Str::toPhoneNumber('+7(999) 111 00 22'));
         $this->assertSame(79991110022, Str::toPhoneNumber('+7-999-111-00-22'));
@@ -34,5 +35,11 @@ final class StrTest extends UnitTestCase
         $this->assertSame(79991110022, Str::toPhoneNumber('8-(999)-111-00-22'));
         $this->assertSame(79991110022, Str::toPhoneNumber('89991110022'));
         $this->assertSame(12343585335, Str::toPhoneNumber('+12343585335'));
+
+        //  Belarus phone numbers.
+        $this->assertSame(375447913687, Str::toPhoneNumber('+375447913687'));
+        $this->assertSame(375447913687, Str::toPhoneNumber('375447913687'));
+        $this->assertSame(375447913687, Str::toPhoneNumber('37544-791-36-87'));
+        $this->assertSame(375447913687, Str::toPhoneNumber('+375(447)-91-36-87'));
     }
 }

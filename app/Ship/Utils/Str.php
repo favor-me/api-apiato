@@ -32,7 +32,7 @@ class Str
             return (int)$number;
         }
 
-        if (preg_match('/^(?!7)/', $number)) {
+        if (str_starts_with($number, '8')) {
             return (int)substr_replace($number, 7, 0, 1);
         }
 
