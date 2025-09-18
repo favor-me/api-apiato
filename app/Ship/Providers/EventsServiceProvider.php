@@ -16,6 +16,8 @@ namespace App\Ship\Providers;
 
 use App\Containers\Vendor\Unit\UI\API\Requests\GetAllUnitsRequest;
 use App\Ship\Events\Handlers\GetAllUnitsRequestEventHandler;
+use App\Ship\Events\Handlers\ModelCreatingEventHandler;
+use App\Ship\Events\Handlers\ModelUpdatingEventHandler;
 use App\Ship\Parents\Providers\EventsServiceProvider as BaseEventsServiceProvider;
 
 class EventsServiceProvider extends BaseEventsServiceProvider
@@ -23,6 +25,12 @@ class EventsServiceProvider extends BaseEventsServiceProvider
     protected $listen = [
         'request.initialize: ' . GetAllUnitsRequest::class => [
             GetAllUnitsRequestEventHandler::class
+        ],
+        'eloquent.creating:*' => [
+            ModelCreatingEventHandler::class
+        ],
+        'eloquent.updating:*' => [
+            ModelUpdatingEventHandler::class
         ]
     ];
 }
