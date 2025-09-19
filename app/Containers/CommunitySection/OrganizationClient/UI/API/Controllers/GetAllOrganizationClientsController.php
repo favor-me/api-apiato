@@ -17,6 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationClient\UI\API\Controllers;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Core\Facades\Response;
 use App\Containers\CommunitySection\OrganizationClient\Actions\GetAllOrganizationClientsAction;
 use App\Containers\CommunitySection\OrganizationClient\UI\API\Requests\GetAllOrganizationClientsRequest;
 use App\Ship\Parents\Controllers\ApiController;
@@ -38,12 +39,13 @@ class GetAllOrganizationClientsController extends ApiController
         GetAllOrganizationClientsAction  $action
     ): JsonResponse
     {
-        $models = $action->run($request->isOnlyTrashed());
-        return $this->json(
-            $this->transform(
-                $models,
-                $request->getTransformer()
-            )
-        );
+        $models = $action
+            ->organization($request->organization_id)
+            ->run($request->isOnlyTrashed());
+
+        return Response::create(
+            $models,
+            $request->getTransformer()
+        )->ok();
     }
 }

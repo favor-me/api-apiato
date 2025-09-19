@@ -16,6 +16,7 @@
 namespace App\Containers\CommunitySection\OrganizationClient\Requests;
 
 use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Traits\IsOrganizationUser;
 use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
 use App\Containers\CommunitySection\OrganizationClient\Facades\Container;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
@@ -32,6 +33,7 @@ use App\Ship\Collections\ValidationRules;
  */
 abstract class OrganizationClientApiRequest extends ApiRequest implements GettableTransformer
 {
+    use IsOrganizationUser;
     use OrganizationValidationRules;
     use OrganizationClientValidationRules;
 
@@ -67,6 +69,13 @@ abstract class OrganizationClientApiRequest extends ApiRequest implements Gettab
     {
         $this->merge([
             OrganizationClient::ORGANIZATION_ID => $this->user()->getHashedKey(User::ORGANIZATION_ID)
+        ]);
+    }
+
+    protected function getCheckAuthorizeMethods(): array
+    {
+        return array_merge(parent::getCheckAuthorizeMethods(), [
+            'isOrganizationUser'
         ]);
     }
 }

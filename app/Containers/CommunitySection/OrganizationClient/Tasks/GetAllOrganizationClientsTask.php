@@ -15,6 +15,8 @@
 
 namespace App\Containers\CommunitySection\OrganizationClient\Tasks;
 
+use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
+use App\Ship\Criterias\ThisEqualThatCriteria;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
@@ -28,5 +30,20 @@ class GetAllOrganizationClientsTask extends OrganizationClientTask
     public function run(mixed $limit = null): LengthAwarePaginator
     {
         return $this->repository->paginate($limit);
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     * @throws RepositoryException
+     */
+    public function organization(int $id): self
+    {
+        $this->repository
+            ->pushCriteria(
+                new ThisEqualThatCriteria(OrganizationClient::ORGANIZATION_ID, $id)
+            );
+
+        return $this;
     }
 }

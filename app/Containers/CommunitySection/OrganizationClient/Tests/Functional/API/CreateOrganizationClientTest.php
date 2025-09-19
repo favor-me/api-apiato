@@ -21,6 +21,7 @@ use App\Containers\CommunitySection\OrganizationClient\Facades\Container;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
 use App\Containers\CommunitySection\OrganizationClient\Tests\Functional\ApiTestCase;
+use App\Ship\Utils\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class CreateOrganizationClientTest extends ApiTestCase
@@ -105,7 +106,10 @@ final class CreateOrganizationClientTest extends ApiTestCase
                     ->where('data.' . OrganizationClient::NAME, $data[OrganizationClient::NAME])
                     ->where('data.' . OrganizationClient::PATRONYMIC, $data[OrganizationClient::PATRONYMIC])
                     ->where('data.' . OrganizationClient::NOTE, $data[OrganizationClient::NOTE])
-                    ->where('data.' . OrganizationClient::PHONE_NUMBER, $data[OrganizationClient::PHONE_NUMBER])
+                    ->where(
+                        'data.' . OrganizationClient::PHONE_NUMBER,
+                        (string)Str::toPhoneNumber($data[OrganizationClient::PHONE_NUMBER])
+                    )
                     ->where('data.' . OrganizationClient::ORGANIZATION_ID, $user->getHashedKey(User::ORGANIZATION_ID))
                     ->has('meta')
                     ->where('meta.include', [

@@ -39,6 +39,8 @@ final class FindOrganizationClientByIdTest extends ApiTestCase
 
     public function testNotFind(): void
     {
+        $this->getTestingOrganizationUser();
+
         $this
             ->injectId(555)
             ->makeCall();

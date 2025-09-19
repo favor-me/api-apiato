@@ -44,7 +44,11 @@ final class GetAllOrganizationClientsTest extends ApiTestCase
     {
         $user = $this->getTestingOrganizationUser();
 
-        $models = OrganizationClientModel::factory()
+        OrganizationClientModel::factory()
+            ->count(4)
+            ->create();
+
+        $ownModels = OrganizationClientModel::factory()
             ->count(3)
             ->create([
                 OrganizationClient::ORGANIZATION_ID => $user->organization_id
@@ -57,7 +61,7 @@ final class GetAllOrganizationClientsTest extends ApiTestCase
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
-                    ->where('meta.pagination.total', $models->count())
+                    ->where('meta.pagination.total', $ownModels->count())
                     ->etc()
             );
     }

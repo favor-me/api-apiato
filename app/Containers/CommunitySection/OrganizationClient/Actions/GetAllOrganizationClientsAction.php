@@ -15,14 +15,17 @@
 
 namespace App\Containers\CommunitySection\OrganizationClient\Actions;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\CommunitySection\OrganizationClient\Tasks\GetAllOrganizationClientsTask;
 use App\Ship\Parents\Actions\Action;
-use Apiato\Core\Exceptions\CoreInternalErrorException;
+use App\Ship\Traits\Actions\SettableOrganization;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrganizationClientsAction extends Action
 {
+    use SettableOrganization;
+
     /**
      * @param bool $onlyTrashed
      * @param mixed|null $limit
@@ -36,6 +39,10 @@ class GetAllOrganizationClientsAction extends Action
 
         if ($onlyTrashed) {
             $task->onlyTrashed();
+        }
+
+        if (!is_null($this->organizationId)) {
+            $task->organization($this->organizationId);
         }
 
         return $task->addRequestCriteria()->run($limit);
