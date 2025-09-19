@@ -20,10 +20,8 @@ trait HasTrashedState
 {
     public function trashed(): self
     {
-        return $this->state(function () {
-            return [
-                DELETED_AT => Carbon::now()
-            ];
-        });
+        return $this->state(fn() => [
+            DELETED_AT => Carbon::now()
+        ]);
     }
 }
