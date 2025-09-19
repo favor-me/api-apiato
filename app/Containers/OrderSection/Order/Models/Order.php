@@ -69,6 +69,10 @@ class Order extends Model
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;
 
+    protected $with = [
+        BaseOrder::ITEMS
+    ];
+
     protected $fillable = [
         BaseOrder::ORGANIZATION_ID,
         BaseOrder::OID,

@@ -18,13 +18,19 @@ namespace App\Containers\OrderSection\Order\UI\API\Transformers;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
 use App\Containers\CommunitySection\OrganizationClient\UI\API\Transformers\OrganizationClientTransformer;
+use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformer;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Ship\Parents\Transformers\Transformer;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
 class OrderTransformer extends Transformer
 {
+    protected array $defaultIncludes = [
+        Order::ITEMS
+    ];
+
     protected array $availableIncludes = [
         Order::CLIENT,
         Order::CREATOR,
@@ -70,5 +76,10 @@ class OrderTransformer extends Transformer
     protected function includeUpdater(OrderModel $order): Item
     {
         return $this->nullOrItem($order->updater, new UserTransformer());
+    }
+
+    protected function includeItems(OrderModel $order): Collection
+    {
+        return $this->collection($order->items, new ItemTransformer());
     }
 }
