@@ -36,6 +36,8 @@ final class TrashOrganizationUnitsTest extends ApiTestCase
 
     public function testFailedWithNoExistsIds(): void
     {
+        $this->getTestingOrganizationUser();
+
         $this->makeCall([
             IDS => [
                 hash_encode(123)
@@ -58,6 +60,8 @@ final class TrashOrganizationUnitsTest extends ApiTestCase
 
     public function testNotOwn(): void
     {
+        $this->getTestingOrganizationUser();
+
         $model = OrganizationUnitModel::factory()->create();
 
         $this->makeCall([

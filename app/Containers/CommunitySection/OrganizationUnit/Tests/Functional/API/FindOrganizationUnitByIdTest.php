@@ -39,6 +39,8 @@ final class FindOrganizationUnitByIdTest extends ApiTestCase
 
     public function testNotFind(): void
     {
+        $this->getTestingOrganizationUser();
+
         $this
             ->injectId(555)
             ->makeCall();
@@ -48,6 +50,8 @@ final class FindOrganizationUnitByIdTest extends ApiTestCase
 
     public function testNotOwn(): void
     {
+        $this->getTestingOrganizationUser();
+
         $model = OrganizationUnitModel::factory()->create();
 
         $this

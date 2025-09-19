@@ -53,15 +53,18 @@ final class CreateOrganizationUnitTest extends ApiTestCase
     public function testSuccess(): void
     {
         $this->getTestingOrganizationUser();
+
         $unit = Unit::factory()->create();
 
         $costPrice = 100;
         $priceUp = 12.2;
         $clientPrice = $costPrice + (($costPrice / 100) * $priceUp);
 
+        $type = new ProductType();
+
         $data = [
             OrganizationUnit::NAME => 'My product',
-            OrganizationUnit::TYPE => (new ProductType())->getName(),
+            OrganizationUnit::TYPE => $type->getName(),
             OrganizationUnit::SKU => 'sk-45t',
             OrganizationUnit::ORDERING => 10,
             OrganizationUnit::COST_PRICE => $costPrice,
@@ -78,7 +81,7 @@ final class CreateOrganizationUnitTest extends ApiTestCase
                     ->has('data')
                     ->where('data.' . OBJECT, OrganizationUnitModel::RESOURCE_KEY)
                     ->where('data.' . OrganizationUnit::NAME, $data[OrganizationUnit::NAME])
-                    ->where('data.' . OrganizationUnit::TYPE, $data[OrganizationUnit::TYPE])
+                    ->where('data.' . OrganizationUnit::TYPE, $type->toArray())
                     ->where('data.' . OrganizationUnit::SKU, $data[OrganizationUnit::SKU])
                     ->where('data.' . OrganizationUnit::ORDERING, $data[OrganizationUnit::ORDERING])
                     ->where('data.' . OrganizationUnit::PRICE_UP, $data[OrganizationUnit::PRICE_UP])

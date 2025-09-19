@@ -17,6 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationUnit\Models;
 
 use App\Containers\CommunitySection\OrganizationUnit\Data\Factories\OrganizationUnitFactory;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit as BaseOrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnitType\Casts\OrganizationUnitType;
 use App\Containers\CommunitySection\OrganizationUnitType\Manager;
 use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\Vendor\Unit\Models\Unit;
@@ -86,17 +87,11 @@ class OrganizationUnit extends Model
         PARAMS => JsonCast::class,
         BaseOrganizationUnit::PRICE_UP => 'float',
         BaseOrganizationUnit::BALANCE => 'float',
+        BaseOrganizationUnit::TYPE => OrganizationUnitType::class,
         BaseOrganizationUnit::COST_PRICE => MoneyCast::class,
         BaseOrganizationUnit::CLIENT_PRICE => MoneyCast::class,
         BaseOrganizationUnit::IS_INFINITY_BALANCE => 'boolean'
     ];
-
-    public function type(): Attribute
-    {
-        return Attribute::make(
-            get: fn(string $type) => Manager::getInstance()->get($type)
-        );
-    }
 
     public function systemUnit(): BelongsTo
     {

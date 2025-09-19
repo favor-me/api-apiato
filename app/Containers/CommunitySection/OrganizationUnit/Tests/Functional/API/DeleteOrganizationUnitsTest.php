@@ -37,6 +37,8 @@ final class DeleteOrganizationUnitsTest extends ApiTestCase
 
     public function testNotOwnAndNotTrashed(): void
     {
+        $this->getTestingOrganizationUser();
+
         $model = OrganizationUnitModel::factory()->create();
 
         $this->makeCall([
@@ -61,6 +63,8 @@ final class DeleteOrganizationUnitsTest extends ApiTestCase
 
     public function testWithNotTrashed(): void
     {
+        $this->getTestingOrganizationUser();
+
         $user = $this->getTestingOrganizationUser();
 
         $model = OrganizationUnitModel::factory()
@@ -90,6 +94,8 @@ final class DeleteOrganizationUnitsTest extends ApiTestCase
 
     public function testWithNoExistsIds(): void
     {
+        $this->getTestingOrganizationUser();
+
         $this->makeCall([
             IDS => [
                 hash_encode(123)

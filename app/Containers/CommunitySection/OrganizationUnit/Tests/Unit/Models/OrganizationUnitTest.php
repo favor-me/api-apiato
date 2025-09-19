@@ -15,9 +15,9 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Unit\Models;
 
-use App\Containers\CommunitySection\OrganizationUnit\Tests\UnitTestCase;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\CommunitySection\OrganizationUnit\Tests\UnitTestCase;
 use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\Vendor\Unit\Models\Unit;
 use App\Ship\SimpleTypes\Type\Money;
@@ -74,7 +74,7 @@ final class OrganizationUnitTest extends UnitTestCase
 
     public function testCasts(): void
     {
-        $this->assertIsBool($this->model->is);
+        $this->assertInstanceOf(Type::class, $this->model->type);
         $this->assertInstanceOf(Money::class, $this->model->cost_price);
         $this->assertInstanceOf(Money::class, $this->model->client_price);
         $this->assertInstanceOf(JSON::class, $this->model->params);

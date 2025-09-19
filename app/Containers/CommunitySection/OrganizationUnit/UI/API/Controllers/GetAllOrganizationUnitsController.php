@@ -38,7 +38,7 @@ class GetAllOrganizationUnitsController extends ApiController
     ): JsonResponse
     {
         $models = $action
-            ->setOrganizationId($request->organization_id)
+            ->organization($request->organization_id)
             ->run($request->isOnlyTrashed());
 
         return Response::create(

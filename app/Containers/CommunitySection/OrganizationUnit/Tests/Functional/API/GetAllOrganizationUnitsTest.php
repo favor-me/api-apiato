@@ -42,6 +42,8 @@ final class GetAllOrganizationUnitsTest extends ApiTestCase
 
     public function testNowOwn(): void
     {
+        $this->getTestingOrganizationUser();
+
         OrganizationUnitModel::factory()
             ->count(3)
             ->create();
@@ -60,6 +62,10 @@ final class GetAllOrganizationUnitsTest extends ApiTestCase
     public function testOwnSuccess(): void
     {
         $user = $this->getTestingOrganizationUser();
+
+        OrganizationUnitModel::factory()
+            ->count(2)
+            ->create();
 
         $models = OrganizationUnitModel::factory()
             ->count(3)

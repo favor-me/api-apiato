@@ -48,6 +48,8 @@ final class RestoreOrganizationUnitsTest extends ApiTestCase
 
     public function testWithNotOwnTrashed(): void
     {
+        $this->getTestingOrganizationUser();
+
         $models = OrganizationUnitModel::factory()
             ->count(2)
             ->trashed()

@@ -36,6 +36,8 @@ final class UpdateOrganizationUnitTest extends ApiTestCase
 
     public function testWithEmptyData(): void
     {
+        $this->getTestingOrganizationUser();
+
         $this
             ->injectId(416346)
             ->makeCall();

@@ -33,15 +33,15 @@ class GetAllOrganizationUnitsTask extends OrganizationUnitTask
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
      * @return $this
      * @throws RepositoryException
      */
-    public function organization(mixed $id): self
+    public function organization(int $id): self
     {
         $this->repository
             ->pushCriteria(
-                new ThisEqualThatCriteria(OrganizationUnit::ORGANIZATION_ID, (int)$id)
+                new ThisEqualThatCriteria(OrganizationUnit::ORGANIZATION_ID, $id)
             );
 
         return $this;

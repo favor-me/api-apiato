@@ -49,7 +49,7 @@ final class OrganizationUnitFactory extends Factory
             OrganizationUnit::COST_PRICE => null,
             OrganizationUnit::SKU => uniqid('sku-'),
             OrganizationUnit::SYSTEM_UNIT_ID => UnitModel::factory(),
-            OrganizationUnit::TYPE => Manager::getInstance()->get(ProductType::class),
+            OrganizationUnit::TYPE => Manager::getInstance()->get(ProductType::class)->getName(),
             PARAMS => []
         ];
     }

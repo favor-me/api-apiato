@@ -18,18 +18,13 @@ namespace App\Containers\CommunitySection\OrganizationUnit\Actions;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\CommunitySection\OrganizationUnit\Tasks\GetAllOrganizationUnitsTask;
 use App\Ship\Parents\Actions\Action;
+use App\Ship\Traits\Actions\SettableOrganization;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrganizationUnitsAction extends Action
 {
-    protected mixed $organizationId;
-
-    public function setOrganizationId(mixed $id): self
-    {
-        $this->organizationId = $id;
-        return $this;
-    }
+    use SettableOrganization;
 
     /**
      * @param bool $onlyTrashed
@@ -46,9 +41,12 @@ class GetAllOrganizationUnitsAction extends Action
             $task->onlyTrashed();
         }
 
+        if (!is_null($this->organizationId)) {
+            $task->organization($this->organizationId);
+        }
+
         return $task
             ->addRequestCriteria()
-            ->organization($this->organizationId)
             ->run($limit);
     }
 }

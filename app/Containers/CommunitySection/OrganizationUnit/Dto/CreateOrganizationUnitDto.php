@@ -26,7 +26,7 @@ class CreateOrganizationUnitDto extends Dto
     public ?string $name;
     public int $ordering = ZERO;
     public ?int $organization_id;
-    public ?string $params;
+    public ?array $params = [];
     public ?string $price_up;
     public ?string $sku;
     public ?int $system_unit_id;
