@@ -15,9 +15,34 @@
 
 namespace App\Containers\OrderSection\Item\Tasks;
 
-use App\Ship\Traits\Task\DeleteRun;
+use App\Ship\Exceptions\DeleteResourceFailedException;
+use Exception;
 
 class DeleteItemsTask extends ItemTask
 {
-    use DeleteRun;
+    /**
+     * @param array $ids
+     * @return int
+     * @throws DeleteResourceFailedException
+     */
+    public function run(array $ids): int
+    {
+        try {
+            return $this->delete($ids);
+        } catch (Exception) {
+            throw new DeleteResourceFailedException();
+        }
+    }
+
+    protected function delete(array $ids): int
+    {
+        $count = 0;
+        collect($ids)
+            ->each(function ($id) use (&$count) {
+                $this->repository->delete($id);
+                $count++;
+            });
+
+        return $count;
+    }
 }

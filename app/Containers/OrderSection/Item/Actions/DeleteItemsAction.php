@@ -16,7 +16,7 @@
 namespace App\Containers\OrderSection\Item\Actions;
 
 use App\Containers\OrderSection\Item\Tasks\DeleteItemsTask;
-use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Exceptions\DeleteResourceFailedException;
 use App\Ship\Parents\Actions\Action;
 
 class DeleteItemsAction extends Action
@@ -24,7 +24,7 @@ class DeleteItemsAction extends Action
     /**
      * @param array $ids
      * @return int|null
-     * @throws NotFoundException
+     * @throws DeleteResourceFailedException
      */
     public function run(array $ids): ?int
     {
