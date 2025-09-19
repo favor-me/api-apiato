@@ -111,4 +111,18 @@ final class ItemTest extends UnitTestCase
         $this->assertInstanceOf(Money::class, $profit);
         $this->assertSame(210.0, $profit->val());
     }
+
+    public function testGetTotalClientPrice(): void
+    {
+        $item = new ItemModel([
+            Item::COST_PRICE => 100,
+            Item::CLIENT_PRICE => 205,
+            Item::AMOUNT => 2
+        ]);
+
+        $result = $item->getTotalClientPrice();
+
+        $this->assertInstanceOf(Money::class, $result);
+        $this->assertSame(410.0, $result->val());
+    }
 }

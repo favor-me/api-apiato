@@ -75,6 +75,15 @@ class Item extends Model
             ->calculate();
     }
 
+    public function getTotalClientPrice(): Money
+    {
+        if ($this->amount > 0) {
+            return $this->client_price->multiply($this->amount, true);
+        }
+
+        return $this->client_price;
+    }
+
     public function newCollection(array $models = []): EloquentCollection
     {
         return new ItemEloquentCollection($models);
