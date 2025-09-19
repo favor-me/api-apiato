@@ -19,12 +19,13 @@ use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Tasks\GetAllOrdersTask;
 use App\Ship\Parents\Actions\Action;
+use App\Ship\Traits\Actions\SettableOrganization;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrdersAction extends Action
 {
-    protected ?int $organizationId = null;
+    use SettableOrganization;
 
     /**
      * @param bool $onlyTrashed
@@ -53,11 +54,5 @@ class GetAllOrdersAction extends Action
                 UPDATED_BY
             ])
             ->run($limit);
-    }
-
-    public function organization(int $id): self
-    {
-        $this->organizationId = $id;
-        return $this;
     }
 }
