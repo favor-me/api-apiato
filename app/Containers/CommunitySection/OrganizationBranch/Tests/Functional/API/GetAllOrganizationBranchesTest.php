@@ -17,6 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationBranch\Tests\Functional\AP
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationBranch\Facades\Container;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\CommunitySection\OrganizationBranch\Tests\Functional\ApiTestCase;
 use App\Ship\Parents\Requests\Request;
@@ -28,7 +29,6 @@ final class GetAllOrganizationBranchesTest extends ApiTestCase
 {
     protected array $access = [
         ROLES => [
-            RoleModel::ADMIN,
             RoleModel::ORGANIZATION_OWNER
         ]
     ];
@@ -41,9 +41,17 @@ final class GetAllOrganizationBranchesTest extends ApiTestCase
 
     public function testSuccess(): void
     {
-        $models = OrganizationBranchModel::factory()
-            ->count(2)
+        $user = $this->getTestingOrganizationUser();
+
+        OrganizationBranchModel::factory()
+            ->count(3)
             ->create();
+
+        $ownModels = OrganizationBranchModel::factory()
+            ->count(2)
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this->makeCall();
 
@@ -51,24 +59,26 @@ final class GetAllOrganizationBranchesTest extends ApiTestCase
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', $models->count())
+                    ->has('data', $ownModels->count())
                     ->etc()
             );
     }
 
     public function testOnlyTrashed(): void
     {
-        $this->getTestingUser(null, [
-            ROLES => RoleModel::ADMIN
-        ]);
+        $user = $this->getTestingOrganizationUser();
 
         OrganizationBranchModel::factory()
             ->count(3)
-            ->create();
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $trashedModels = OrganizationBranchModel::factory()
             ->trashed()
-            ->create();
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
@@ -86,7 +96,7 @@ final class GetAllOrganizationBranchesTest extends ApiTestCase
 
     public function testCanReadOnlyTrashedList(): void
     {
-        $this->getTestingUser(null, [
+        $user = $this->getTestingOrganizationUser(null, [
             ROLES => [
                 RoleModel::ADMIN,
                 RoleModel::ORGANIZATION_OWNER
@@ -96,11 +106,15 @@ final class GetAllOrganizationBranchesTest extends ApiTestCase
         $trashedModels = OrganizationBranchModel::factory()
             ->count(3)
             ->trashed()
-            ->create();
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         OrganizationBranchModel::factory()
             ->count(2)
-            ->create();
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
@@ -115,45 +129,15 @@ final class GetAllOrganizationBranchesTest extends ApiTestCase
             );
     }
 
-    public function testCantReadOnlyTrashedList(): void
-    {
-        $this->getTestingUser(null, [
-            ROLES => [
-                RoleModel::ORGANIZATION_OWNER
-            ]
-        ]);
-
-        $baseCount = OrganizationBranchModel::count();
-
-        OrganizationBranchModel::factory()
-            ->count(5)
-            ->trashed()
-            ->create();
-
-        $models = OrganizationBranchModel::factory()
-            ->count(6)
-            ->create();
-
-        $this
-            ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
-            ->makeCall();
-
-        $this->response
-            ->assertOk()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', $baseCount + $models->count())
-                    ->etc()
-            );
-    }
-
     public function testToList(): void
     {
-        $defaultCount = OrganizationBranchModel::count();
+        $user = $this->getTestingOrganizationUser();
 
         $models = OrganizationBranchModel::factory()
             ->count(3)
-            ->create();
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->endpoint($this->endpoint . '?to=' . ApiRequest::TO_LIST_VALUE)
@@ -163,12 +147,12 @@ final class GetAllOrganizationBranchesTest extends ApiTestCase
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
-                    ->where('meta.pagination.total', $defaultCount + $models->count())
+                    ->where('meta.pagination.total', $models->count())
                     ->where('data', function (Collection $statuses) {
                         $statuses->each(function ($status) {
                             $this->assertSame([
                                 'value',
-                                'title',
+                                'title'
                             ], array_keys($status));
                         });
 

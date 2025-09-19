@@ -16,17 +16,38 @@
 namespace App\Containers\CommunitySection\OrganizationBranch\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
-use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
-use App\Ship\Requests\ApiRestoreRequest;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Requests\OrganizationBranchApiRequest;
+use App\Ship\Traits\Request\HasInputIds;
+use Illuminate\Validation\Rules\Exists;
 
-class RestoreOrganizationBranchesRequest extends ApiRestoreRequest
+class RestoreOrganizationBranchesRequest extends OrganizationBranchApiRequest
 {
+    use HasInputIds;
+
     protected array $access = [
-        ROLES => RoleModel::ADMIN
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER
+        ]
     ];
 
-    public function getTableName(): string
+    protected function afterInitialize(): void
     {
-        return OrganizationBranchModel::TABLE;
+        parent::afterInitialize();
+        $this->mergeDecode(IDS . '.*');
+    }
+
+    public function rules(): array
+    {
+        return [
+            IDS . '.*' => $this->getOrganizationBranchIdValidationRules()
+        ];
+    }
+
+    public function getOrganizationBranchIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationBranchIdExistsValidationRule($column)
+            ->where(OrganizationBranch::ORGANIZATION_ID, $this->organization_id)
+            ->whereNotNull(DELETED_AT);
     }
 }

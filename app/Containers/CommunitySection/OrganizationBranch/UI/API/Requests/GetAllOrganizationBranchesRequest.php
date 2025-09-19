@@ -27,19 +27,9 @@ class GetAllOrganizationBranchesRequest extends OrganizationBranchApiRequest imp
 
     protected array $access = [
         ROLES => [
-            RoleModel::ADMIN,
             RoleModel::ORGANIZATION_OWNER
         ]
     ];
-
-    public function isOnlyTrashed(): bool
-    {
-        if (!$this->user()->hasAdminRole()) {
-            return false;
-        }
-
-        return parent::isOnlyTrashed();
-    }
 
     public function getToListTransformer(): OrganizationBranchToListTransformer
     {

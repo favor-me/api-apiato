@@ -16,6 +16,7 @@
 namespace App\Containers\CommunitySection\OrganizationBranch\Tests\Functional\API;
 
 use App\Containers\CommunitySection\OrganizationBranch\Facades\Container;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\CommunitySection\OrganizationBranch\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -30,7 +31,12 @@ final class FindOrganizationBranchByIdTest extends ApiTestCase
 
     public function testSuccess(): void
     {
-        $model = OrganizationBranchModel::factory()->create();
+        $user = $this->getTestingOrganizationUser();
+
+        $model = OrganizationBranchModel::factory()
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this
             ->injectId($model->id)

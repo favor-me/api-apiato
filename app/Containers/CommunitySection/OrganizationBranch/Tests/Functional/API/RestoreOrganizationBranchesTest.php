@@ -17,6 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationBranch\Tests\Functional\AP
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationBranch\Facades\Container;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\CommunitySection\OrganizationBranch\Tests\Functional\ApiTestCase;
 use Illuminate\Http\Response;
@@ -25,7 +26,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 final class RestoreOrganizationBranchesTest extends ApiTestCase
 {
     protected array $access = [
-        ROLES => RoleModel::ADMIN
+        ROLES => RoleModel::ORGANIZATION_OWNER
     ];
 
     public function setUp(): void
@@ -47,10 +48,14 @@ final class RestoreOrganizationBranchesTest extends ApiTestCase
 
     public function testWithTrashed(): void
     {
+        $user = $this->getTestingOrganizationUser();
+
         $models = OrganizationBranchModel::factory()
             ->count(2)
             ->trashed()
-            ->create();
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this->makeCall([
             IDS => $models
@@ -70,9 +75,13 @@ final class RestoreOrganizationBranchesTest extends ApiTestCase
 
     public function testWithNotTrashed(): void
     {
+        $user = $this->getTestingOrganizationUser();
+
         $models = OrganizationBranchModel::factory()
             ->count(2)
-            ->create();
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this->makeCall([
             IDS => $models
@@ -99,11 +108,18 @@ final class RestoreOrganizationBranchesTest extends ApiTestCase
 
     public function testWithOneTrashedAndOneIsNotTrashed(): void
     {
-        $model = OrganizationBranchModel::factory()->create();
+        $user = $this->getTestingOrganizationUser();
+
+        $model = OrganizationBranchModel::factory()
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $modelTrashed = OrganizationBranchModel::factory()
             ->trashed()
-            ->create();
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $user->organization_id
+            ]);
 
         $this->makeCall([
             IDS => [

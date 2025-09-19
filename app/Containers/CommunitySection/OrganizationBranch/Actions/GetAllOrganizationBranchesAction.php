@@ -15,15 +15,18 @@
 
 namespace App\Containers\CommunitySection\OrganizationBranch\Actions;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Tasks\GetAllOrganizationBranchesTask;
 use App\Ship\Parents\Actions\Action;
-use Apiato\Core\Exceptions\CoreInternalErrorException;
+use App\Ship\Traits\Actions\SettableOrganization;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrganizationBranchesAction extends Action
 {
+    use SettableOrganization;
+
     /**
      * @param bool $onlyTrashed
      * @param mixed|null $limit
@@ -37,6 +40,10 @@ class GetAllOrganizationBranchesAction extends Action
 
         if ($onlyTrashed) {
             $task->onlyTrashed();
+        }
+
+        if (!is_null($this->organizationId)) {
+            $task->organization($this->organizationId);
         }
 
         return $task
