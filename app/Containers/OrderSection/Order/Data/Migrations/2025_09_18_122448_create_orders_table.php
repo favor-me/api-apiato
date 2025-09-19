@@ -16,6 +16,8 @@
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
+use App\Containers\OrderSection\Order\Foundation\Order;
+use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Ship\Database\Migrations\CreateSchemaTable;
 use App\Ship\Database\Migrations\CreateTableMigration;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,34 +25,34 @@ use Illuminate\Database\Schema\Blueprint;
 return new class extends CreateTableMigration {
     public function getTableName(): string
     {
-        return 'orders';
+        return OrderModel::TABLE;
     }
 
     public function addTableColumns(Blueprint $table): CreateSchemaTable
     {
         $table->id();
 
-        $table->unsignedBigInteger('organization_id');
+        $table->unsignedBigInteger(Order::ORGANIZATION_ID);
 
         $table
-            ->unsignedBigInteger('oid')
+            ->unsignedBigInteger(Order::OID)
             ->default(ZERO)
             ->comment('Organization order number');
 
         $table
-            ->string('payment_type')
+            ->string(Order::PAYMENT_TYPE)
             ->nullable();
 
         $table
-            ->unsignedBigInteger('total')
+            ->unsignedBigInteger(Order::TOTAL)
             ->default(ZERO);
 
         $table
-            ->string('comment')
+            ->string(Order::COMMENT)
             ->nullable();
 
         $table
-            ->unsignedBigInteger('client_id')
+            ->unsignedBigInteger(Order::CLIENT_ID)
             ->nullable();
 
         $table
@@ -69,12 +71,15 @@ return new class extends CreateTableMigration {
 
     public function addTableColumnsForeign(Blueprint $table): CreateSchemaTable
     {
-        $table->foreign('organization_id', $this->getFieldForeignKeyName('organization_id'))
+        $table->foreign(
+            Order::ORGANIZATION_ID,
+            $this->getFieldForeignKeyName(Order::ORGANIZATION_ID)
+        )
             ->on(OrganizationModel::TABLE)
             ->references(ID)
             ->cascadeOnDelete();
 
-        $table->foreign('client_id', $this->getFieldForeignKeyName('client_id'))
+        $table->foreign(Order::CLIENT_ID, $this->getFieldForeignKeyName(Order::CLIENT_ID))
             ->on(OrganizationClientModel::TABLE)
             ->references(ID)
             ->nullOnDelete();
@@ -94,8 +99,8 @@ return new class extends CreateTableMigration {
 
     public function addTableColumnsIndex(Blueprint $table): CreateSchemaTable
     {
-        $table->index('organization_id', $this->getFieldIndexName('organization_id'));
-        $table->index('client_id', $this->getFieldIndexName('client_id'));
+        $table->index(Order::ORGANIZATION_ID, $this->getFieldIndexName(Order::ORGANIZATION_ID));
+        $table->index(Order::CLIENT_ID, $this->getFieldIndexName(Order::CLIENT_ID));
         $table->index(CREATED_BY, $this->getFieldIndexName(CREATED_BY));
         $table->index(UPDATED_BY, $this->getFieldIndexName(UPDATED_BY));
 
