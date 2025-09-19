@@ -84,6 +84,28 @@ class Order extends Model
         BaseOrder::PROFIT => MoneyCast::class
     ];
 
+    public function calculateTotal(bool $write = false): self
+    {
+        $total = app('money');
+        $profit = app('money');
+
+        $this->items
+            ->each(function (ItemModel $item) use (&$total, &$profit) {
+                $total->add($item->getTotalClientPrice());
+                $profit->add($item->getProfit());
+            });
+
+        $this->setAttribute(BaseOrder::TOTAL, $total);
+        $this->setAttribute(BaseOrder::PROFIT, $profit);
+
+        if ($write) {
+            $this->update();
+            $this->refresh();
+        }
+
+        return $this;
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(ItemModel::class, Item::ORDER_ID, ID);
