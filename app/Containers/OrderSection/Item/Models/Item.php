@@ -19,6 +19,7 @@ use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit;
 use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
 use App\Containers\OrderSection\Item\Data\Factories\ItemFactory;
 use App\Containers\OrderSection\Item\Foundation\Item as BaseItem;
+use App\Containers\OrderSection\Item\Services\ProfitService;
 use App\Containers\OrderSection\Order\Models\Order;
 use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Parents\Collections\EloquentCollection;
@@ -66,6 +67,13 @@ class Item extends Model
         BaseItem::COST_PRICE => MoneyCast::class,
         BaseItem::CLIENT_PRICE => MoneyCast::class
     ];
+
+    public function getProfit(): Money
+    {
+        return (new ProfitService())
+            ->fromItem($this)
+            ->calculate();
+    }
 
     public function newCollection(array $models = []): EloquentCollection
     {

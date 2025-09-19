@@ -97,4 +97,18 @@ final class ItemTest extends UnitTestCase
     {
         $this->assertInstanceOf(ItemEloquentCollection::class, $this->model->newCollection());
     }
+
+    public function testGetProfit(): void
+    {
+        $item = new ItemModel([
+            Item::COST_PRICE => 100,
+            Item::CLIENT_PRICE => 205,
+            Item::AMOUNT => 2
+        ]);
+
+        $profit = $item->getProfit();
+
+        $this->assertInstanceOf(Money::class, $profit);
+        $this->assertSame(210.0, $profit->val());
+    }
 }
