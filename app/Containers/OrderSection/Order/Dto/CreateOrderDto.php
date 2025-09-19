@@ -24,4 +24,5 @@ class CreateOrderDto extends Dto
     public ?int $organization_id;
     public ?string $payment_type;
     public ?string $total;
+    public ?string $profit;
 }

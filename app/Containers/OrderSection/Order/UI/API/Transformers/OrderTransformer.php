@@ -41,6 +41,7 @@ class OrderTransformer extends Transformer
             Order::OID => $order->oid,
             Order::PAYMENT_TYPE => $order->payment_type,
             Order::TOTAL => $this->money($order->total),
+            Order::PROFIT => $this->money($order->profit),
             Order::COMMENT => $order->comment,
             Order::CLIENT_ID => $order->getHashedKey(Order::CLIENT_ID),
             CREATED_BY => $order->getHashedKey(CREATED_BY),

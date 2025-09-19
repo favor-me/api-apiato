@@ -25,6 +25,7 @@ final class Order extends SectionContainer
     public const ORGANIZATION_ID = 'organization_id';
     public const PAYMENT_TYPE = 'payment_type';
     public const TOTAL = 'total';
+    public const PROFIT = 'profit';
     public const CREATOR = 'creator';
     public const CLIENT = 'client';
     public const UPDATER = 'updater';

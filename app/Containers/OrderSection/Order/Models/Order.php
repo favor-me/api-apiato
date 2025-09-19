@@ -36,6 +36,7 @@ use Illuminate\Support\Carbon;
  * @property-read int $oid Уникальный идентификатор.
  * @property-read null|string $payment_type Тип оплаты.
  * @property-read Money $total Итоговая сумма.
+ * @property-read Money $profit Прибыль.
  * @property-read null|string $comment Комментарий.
  * @property-read null|int $client_id Уникальный идентификатор.
  * @property-read null|int $created_by Уникальный идентификатор.
@@ -68,12 +69,14 @@ class Order extends Model
         BaseOrder::OID,
         BaseOrder::PAYMENT_TYPE,
         BaseOrder::TOTAL,
+        BaseOrder::PROFIT,
         BaseOrder::COMMENT,
         BaseOrder::CLIENT_ID
     ];
 
     protected $casts = [
-        BaseOrder::TOTAL => MoneyCast::class
+        BaseOrder::TOTAL => MoneyCast::class,
+        BaseOrder::PROFIT => MoneyCast::class
     ];
 
     public function organization(): BelongsTo

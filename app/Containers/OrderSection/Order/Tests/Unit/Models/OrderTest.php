@@ -61,6 +61,7 @@ final class OrderTest extends UnitTestCase
             Order::OID,
             Order::PAYMENT_TYPE,
             Order::TOTAL,
+            Order::PROFIT,
             Order::COMMENT,
             Order::CLIENT_ID
         ], $this->model->getFillable());
@@ -69,6 +70,7 @@ final class OrderTest extends UnitTestCase
     public function testCasts(): void
     {
         $this->assertInstanceOf(Money::class, $this->model->total);
+        $this->assertInstanceOf(Money::class, $this->model->profit);
     }
 
     public function testBelongsToOrganization(): void

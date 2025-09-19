@@ -49,7 +49,8 @@ final class OrderFactory extends Factory
             Order::COMMENT => $this->faker->text(50),
             Order::ORGANIZATION_ID => $organization->id,
             Order::PAYMENT_TYPE => $this->faker->text(50),
-            Order::TOTAL => ZERO
+            Order::TOTAL => ZERO,
+            Order::PROFIT => ZERO
         ];
     }
 }

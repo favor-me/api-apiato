@@ -48,6 +48,10 @@ return new class extends CreateTableMigration {
             ->default(ZERO);
 
         $table
+            ->unsignedBigInteger(Order::PROFIT)
+            ->default(ZERO);
+
+        $table
             ->string(Order::COMMENT)
             ->nullable();
 
