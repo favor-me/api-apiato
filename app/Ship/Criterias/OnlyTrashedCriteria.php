@@ -15,19 +15,25 @@
 namespace App\Ship\Criterias;
 
 use App\Ship\Parents\Criterias\Criteria;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Prettus\Repository\Contracts\RepositoryInterface as PrettusRepositoryInterface;
 
 class OnlyTrashedCriteria extends Criteria
 {
     /**
-     * @param Builder $model
+     * @param Builder|Model $model
      * @param PrettusRepositoryInterface $repository
      * @return Builder
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function apply($model, PrettusRepositoryInterface $repository)
     {
-        return $model->onlyTrashed();
+        if (in_array(SoftDeletes::class, class_uses_recursive($model))) {
+            return $model->onlyTrashed();
+        }
+
+        return $model;
     }
 }
