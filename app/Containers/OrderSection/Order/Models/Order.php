@@ -18,6 +18,9 @@ namespace App\Containers\OrderSection\Order\Models;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient;
+use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
+use App\Containers\OrderSection\Item\Foundation\Item;
+use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Data\Factories\OrderFactory;
 use App\Containers\OrderSection\Order\Foundation\Order as BaseOrder;
 use App\Ship\Database\Casts\Money as MoneyCast;
@@ -27,6 +30,7 @@ use App\Ship\Parents\Models\Model;
 use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Model\IsNumbered;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -48,6 +52,7 @@ use Illuminate\Support\Carbon;
  * @property-read OrganizationClient $client Связанная модель клиента.
  * @property-read null|User $creator Связанная модель пользователя который создал заказ.
  * @property-read null|User $updater Связанная модель пользователя который обновил заказ.
+ * @property-read ItemEloquentCollection $items Коллекция позиций заказа.
  *
  * @method static OrderFactory factory(...$parameters)
  */
@@ -78,6 +83,11 @@ class Order extends Model
         BaseOrder::TOTAL => MoneyCast::class,
         BaseOrder::PROFIT => MoneyCast::class
     ];
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(ItemModel::class, Item::ORDER_ID, ID);
+    }
 
     public function organization(): BelongsTo
     {

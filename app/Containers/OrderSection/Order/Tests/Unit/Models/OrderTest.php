@@ -16,6 +16,8 @@
 namespace App\Containers\OrderSection\Order\Tests\Unit\Models;
 
 use App\Containers\AppSection\User\Models\User;
+use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
+use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient;
 use App\Containers\OrderSection\Order\Foundation\Order;
@@ -23,6 +25,7 @@ use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\UnitTestCase;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 final class OrderTest extends UnitTestCase
 {
@@ -154,5 +157,26 @@ final class OrderTest extends UnitTestCase
 
         $this->assertSame($user->id, $order->created_by);
         $this->assertSame($user->id, $order->updated_by);
+    }
+
+    public function testHasManyItems(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        ItemModel::factory()->create();
+
+        $items = ItemModel::factory()
+            ->count(3)
+            ->order($order)
+            ->create();
+
+        $this->assertInstanceOf(HasMany::class, $order->items());
+        $this->assertInstanceOf(ItemEloquentCollection::class, $order->items);
+        $this->assertCount($items->count(), $order->items);
     }
 }
