@@ -16,6 +16,7 @@ namespace App\Containers\OrderSection\PaymentType\Validation\Rules;
 
 use App\Containers\OrderSection\PaymentType\Facades\Container;
 use App\Containers\OrderSection\PaymentType\Manager;
+use App\Containers\OrderSection\PaymentType\Type;
 use App\Ship\Validation\ValidationRule;
 use Closure;
 
@@ -25,6 +26,7 @@ class ExistsPaymentTypeRule extends ValidationRule
     {
         $types = $this->getManager()
             ->all()
+            ->map(fn(Type $type) => $type->getName())
             ->implode(', ');
 
         return Container::trans('container.validation.exists', [
