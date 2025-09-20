@@ -93,7 +93,9 @@ class Order extends Model
         $total = app('money');
         $profit = app('money');
 
-        $this->items
+        $this
+            ->items()
+            ->get()
             ->each(function (ItemModel $item) use (&$total, &$profit) {
                 $total->add($item->getTotalClientPrice());
                 $profit->add($item->getProfit());
