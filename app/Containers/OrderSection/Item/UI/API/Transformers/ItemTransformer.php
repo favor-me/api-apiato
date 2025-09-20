@@ -30,8 +30,8 @@ class ItemTransformer extends Transformer
             Item::UNIT_ID => $item->getHashedKey(Item::UNIT_ID),
             Item::NAME => $item->name,
             Item::SKU => $item->sku,
-            Item::COST_PRICE => $item->cost_price,
-            Item::CLIENT_PRICE => $item->client_price,
+            Item::COST_PRICE => $this->money($item->cost_price),
+            Item::CLIENT_PRICE => $this->money($item->client_price),
             Item::AMOUNT => $item->amount
         ];
     }
