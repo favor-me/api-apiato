@@ -14,29 +14,96 @@
  *
  * @apiDefine OrganizationUnitSuccessSingleResponse
  * @apiSuccessExample {json} Успешный ответ:
-* HTTP/1.1 200 OK
-* {
-    * "data": {
-        * "object": "OrganizationUnit",
-        * "id": null,
-        * "name": "Mr.",
-        * "type": "Quo sint omnis illo adipisci.",
-        * "sku": "Corrupti vitae sed atque libero maxime.",
-        * "ordering": 0,
-        * "params": null,
-        * "cost_price": null,
-        * "price_up": null,
-        * "client_price": null,
+ * HTTP/1.1 200 OK
+ * {
+ * "data": {
+ * "object": "OrganizationUnit",
+ * "id": "rozlAYyzQOd3RqGx",
+ * "number": 2,
+ * "name": "Баланчировка",
+ * "type": {
+ * "title": "Услуга",
+ * "name": "service"
+ * },
+ * "sku": null,
+ * "ordering": 0,
+ * "params": {},
+ * "cost_price": {
+ * "currency": {
+ * "value": 0,
+ * "symbol": "руб.",
+ * "text": "0,00 руб.",
+ * "no_style": "0,00",
+ * "rule": "currency"
+ * },
+ * "exchange": {
+ * "value": 0,
+ * "symbol": "коп.",
+ * "text": "0 коп.",
+ * "no_style": "0",
+ * "rule": "exchange"
+ * }
+ * },
+ * "price_up": null,
+ * "client_price": {
+ * "currency": {
+ * "value": 0,
+ * "symbol": "руб.",
+ * "text": "0,00 руб.",
+ * "no_style": "0,00",
+ * "rule": "currency"
+ * },
+ * "exchange": {
+ * "value": 0,
+ * "symbol": "коп.",
+ * "text": "0 коп.",
+ * "no_style": "0",
+ * "rule": "exchange"
+ * }
+ * },
  * "balance": null,
  * "is_infinity_balance": false,
- * "organization_id": null,
- * "system_unit_id": null,
-        * "created_at": null,
-        * "updated_at": null,
-        * "deleted_at": null
-    * },
-    * "meta": {
-        * "include": []
-    * }
-* }
+ * "organization_id": "Ab9G2gOomNdWkKEz",
+ * "system_unit_id": "rozlAYyzQOd3RqGx",
+ * "created_at": {
+ * "timestamp": 1758384668,
+ * "diff_for_humans": "2 минуты назад",
+ * "date_for_human": "2025-09-20",
+ * "date_for_human_full": "20 сентября 2025г.",
+ * "date_for_human_full_with_time": "20 сентября 2025г. в 19:11:08",
+ * "iso": "2025-09-20T19:11:08.000000+03:00",
+ * "time": "19:11:08",
+ * "timezone": "Europe/Moscow",
+ * "timezone_type": 3,
+ * "time_short": "19:11",
+ * "is_future": false
+ * },
+ * "updated_at": {
+ * "timestamp": 1758384668,
+ * "diff_for_humans": "2 минуты назад",
+ * "date_for_human": "2025-09-20",
+ * "date_for_human_full": "20 сентября 2025г.",
+ * "date_for_human_full_with_time": "20 сентября 2025г. в 19:11:08",
+ * "iso": "2025-09-20T19:11:08.000000+03:00",
+ * "time": "19:11:08",
+ * "timezone": "Europe/Moscow",
+ * "timezone_type": 3,
+ * "time_short": "19:11",
+ * "is_future": false
+ * },
+ * "deleted_at": null,
+ * "systemUnit": {
+ * "data": {
+ * "object": "Unit",
+ * "id": "rozlAYyzQOd3RqGx",
+ * "name": "упак.",
+ * "deleted_at": null
+ * }
+ * }
+ * },
+ * "meta": {
+ * "include": [],
+ * "custom": []
+ * }
+ * }
  */
