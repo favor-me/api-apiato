@@ -16,12 +16,18 @@
 namespace App\Containers\OrderSection\Order\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Containers\OrderSection\Item\Foundation\Item;
+use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Dto\CreateOrderDto;
+use App\Containers\OrderSection\Order\Facades\Container;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Requests\OrderApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
+use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Request\CanPrepareMoney;
+use Illuminate\Validation\Rules\Exists;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class CreateOrderRequest extends OrderApiRequest implements GettableDto
@@ -34,6 +40,8 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
             RoleModel::ORGANIZATION_OWNER
         ]
     ];
+
+    protected ?Money $total = null;
 
     protected function afterInitialize(): void
     {
@@ -49,7 +57,83 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
             Order::TOTAL => $this->getOrderTotalValidationRules(),
             Order::COMMENT => $this->getOrderCommentValidationRules(),
             Order::CLIENT_ID => $this->getOrganizationClientIdValidationRules(),
+            Order::ITEMS => $this->getOrderItemsValidationRules(),
+            Order::ITEMS . '.*.' . Item::AMOUNT => $this->getItemAmountValidationRules(),
+            Order::ITEMS . '.*.' . Item::NAME => $this->getItemNameValidationRules(),
+            Order::ITEMS . '.*.' . Item::CLIENT_PRICE => $this->getItemClientPriceValidationRules(),
+            Order::ITEMS . '.*.' . Item::COST_PRICE => $this->getItemCostPriceValidationRules(),
+            Order::ITEMS . '.*.' . Item::SKU => $this->getOrganizationUnitSkuValidationRules(),
+            Order::ITEMS . '.*.' . Item::UNIT_ID => $this->getOrganizationUnitIdValidationRules(),
         ];
+    }
+
+    public function getOrderTotalValidationRules(): ValidationRules
+    {
+        $rules = parent::getOrderTotalValidationRules()
+            ->addRequired();
+
+        if (!is_null($this->total)) {
+            $rules->add('size:' . $this->total->val());
+        }
+
+        return $rules;
+    }
+
+    public function getOrganizationUnitSkuValidationRules(): ValidationRules
+    {
+        return validation_rules([
+            $this->getOrganizationUnitSkuExistsValidationRule()
+        ])->addRequired();
+    }
+
+    public function getOrganizationUnitSkuExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationUnitSkuExistsValidationRule($column)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id);
+    }
+
+    public function getOrganizationUnitIdValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitIdValidationRules()
+            ->addRequired();
+    }
+
+    public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationUnitIdExistsValidationRule($column)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id);
+    }
+
+    public function getItemNameValidationRules(): ValidationRules
+    {
+        return parent::getItemNameValidationRules()
+            ->addRequired();
+    }
+
+    public function getItemCostPriceValidationRules(): ValidationRules
+    {
+        return parent::getItemCostPriceValidationRules()
+            ->addRequired();
+    }
+
+    public function getItemClientPriceValidationRules(): ValidationRules
+    {
+        return parent::getItemClientPriceValidationRules()
+            ->addRequired();
+    }
+
+    public function getItemAmountValidationRules(): ValidationRules
+    {
+        return parent::getItemAmountValidationRules()
+            ->addRequired();
+    }
+
+    public function getOrderItemsValidationRules(): ValidationRules
+    {
+        return validation_rules([
+            'required',
+            'array'
+        ]);
     }
 
     public function getOrganizationClientIdValidationRules(): ValidationRules
@@ -89,10 +173,63 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         return new CreateOrderDto($data);
     }
 
+    public function messages(): array
+    {
+        $messages = parent::messages();
+
+        if (!is_null($this->total)) {
+            $messages[Order::TOTAL . '.size'] = Container::trans('validation.total.size', [
+                'size' => $this->total->currency()->text()
+            ]);
+        }
+
+        return $messages;
+    }
+
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
+        $this->prepareItemsPrices();
         $this->prepareForValidationTotal();
+    }
+
+    protected function prepareItemsPrices(): void
+    {
+        $total = app('money');
+
+        $items = collect((array)$this->get(Order::ITEMS))
+            ->map(function (array $item) use (&$total) {
+                if (array_key_exists(Item::COST_PRICE, $item)) {
+                    $item[Item::COST_PRICE] = app('money')
+                        ->addCurrency($item[Item::COST_PRICE])
+                        ->val();
+                }
+
+                if (array_key_exists(Item::CLIENT_PRICE, $item)) {
+                    $item[Item::CLIENT_PRICE] = app('money')
+                        ->addCurrency($item[Item::CLIENT_PRICE])
+                        ->val();
+
+                    if (array_key_exists(Item::AMOUNT, $item)) {
+                        $clientItemTotalPrice = (new ItemModel([
+                            Item::CLIENT_PRICE => $item[Item::CLIENT_PRICE],
+                            Item::AMOUNT => $item[Item::AMOUNT]
+                        ]))->getTotalClientPrice();
+
+                        $total->add($clientItemTotalPrice);
+                    }
+                }
+
+                return $item;
+            });
+
+        $this->total = $total;
+
+        if ($items->isNotEmpty()) {
+            $this->merge([
+                Order::ITEMS => $items->toArray()
+            ]);
+        }
     }
 
     protected function prepareForValidationTotal(): void

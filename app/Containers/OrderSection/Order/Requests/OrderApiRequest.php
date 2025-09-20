@@ -19,6 +19,8 @@ use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Traits\IsOrganizationUser;
 use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
 use App\Containers\CommunitySection\OrganizationClient\Traits\OrganizationClientValidationRules;
+use App\Containers\CommunitySection\OrganizationUnit\Traits\OrganizationUnitValidationRules;
+use App\Containers\OrderSection\Item\Traits\ItemValidationRules;
 use App\Containers\OrderSection\Order\Facades\Container;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Traits\OrderValidationRules;
@@ -34,8 +36,10 @@ use App\Ship\Requests\ApiRequest;
 abstract class OrderApiRequest extends ApiRequest implements GettableTransformer
 {
     use IsOrganizationUser;
+    use ItemValidationRules;
     use OrderValidationRules;
     use OrganizationValidationRules;
+    use OrganizationUnitValidationRules;
     use OrganizationClientValidationRules;
 
     protected array $decode = [
