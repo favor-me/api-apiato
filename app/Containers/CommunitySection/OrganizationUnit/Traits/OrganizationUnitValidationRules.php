@@ -95,4 +95,9 @@ trait OrganizationUnitValidationRules
     {
         return Rule::exists(OrganizationUnitModel::TABLE, $column);
     }
+
+    public function getOrganizationUnitSkuExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return Rule::exists(OrganizationUnitModel::TABLE, $column);
+    }
 }
