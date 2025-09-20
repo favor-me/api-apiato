@@ -49,9 +49,9 @@ class Money extends Type
     {
         $ruleParams = $this->formatter->get($this->rule);
 
-        $value = $this->val();
+        $value = $this->value;
         if ($this->rule === MoneyConfig::EXCHANGE) {
-            $value = (int) $value;
+            $value = (int)$value;
         }
 
         return [
