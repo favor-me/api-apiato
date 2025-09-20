@@ -49,7 +49,11 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
     protected function afterInitialize(): void
     {
         parent::afterInitialize();
-        $this->mergeDecode(Order::CLIENT_ID);
+
+        $this->mergeDecode([
+            Order::CLIENT_ID,
+            Order::ITEMS . '.*.' . Item::UNIT_ID
+        ]);
     }
 
     public function rules(): array
@@ -86,7 +90,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
     {
         return validation_rules([
             $this->getOrganizationUnitSkuExistsValidationRule()
-        ])->addRequired();
+        ]);
     }
 
     public function getOrganizationUnitSkuExistsValidationRule(string $column = 'NULL'): Exists
@@ -201,14 +205,14 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         $total = app('money');
 
         $items = collect((array)$this->get(Order::ITEMS))
-            ->map(function (array $item) use (&$total) {
-                if (array_key_exists(Item::COST_PRICE, $item)) {
+            ->map(function ($item) use (&$total) {
+                if (array_key_exists(Item::COST_PRICE, (array)$item)) {
                     $item[Item::COST_PRICE] = app('money')
                         ->addCurrency($item[Item::COST_PRICE])
                         ->val();
                 }
 
-                if (array_key_exists(Item::CLIENT_PRICE, $item)) {
+                if (array_key_exists(Item::CLIENT_PRICE, (array)$item)) {
                     $item[Item::CLIENT_PRICE] = app('money')
                         ->addCurrency($item[Item::CLIENT_PRICE])
                         ->val();

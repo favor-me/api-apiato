@@ -113,7 +113,7 @@ final class CreateOrderTest extends ApiTestCase
             Order::ITEMS => [
                 [
                     Item::NAME => $unitA->name,
-                    Item::UNIT_ID => $unitA->id,
+                    Item::UNIT_ID => $unitA->getHashedKey(),
                     Item::SKU => $unitA->sku,
                     Item::COST_PRICE => $unitA->cost_price->currency()->val(),
                     Item::CLIENT_PRICE => $unitA->client_price->currency()->val(),

@@ -151,9 +151,9 @@ final class UpdateOrderTest extends ApiTestCase
             Order::COMMENT => 'Comment',
             Order::ITEMS => [
                 [
-                    ID => $itemA->id,
+                    ID => $itemA->getHashedKey(),
                     Item::NAME => $itemA->name,
-                    Item::UNIT_ID => $itemA->id,
+                    Item::UNIT_ID => $unitA->getHashedKey(),
                     Item::SKU => $itemA->sku,
                     Item::COST_PRICE => $itemA->cost_price->currency()->val(),
                     Item::CLIENT_PRICE => $itemA->client_price->currency()->val(),

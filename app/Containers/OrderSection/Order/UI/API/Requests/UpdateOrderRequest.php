@@ -47,7 +47,12 @@ class UpdateOrderRequest extends CreateOrderRequest
 
     protected function afterInitialize(): void
     {
-        $this->mergeDecode(ID);
+        parent::afterInitialize();
+
+        $this->mergeDecode([
+            ID,
+            Order::ITEMS . '.*.' . ID
+        ]);
     }
 
     public function rules(): array
