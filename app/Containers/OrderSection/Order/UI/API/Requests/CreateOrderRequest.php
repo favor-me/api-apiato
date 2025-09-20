@@ -30,6 +30,9 @@ use App\Ship\Traits\Request\CanPrepareMoney;
 use Illuminate\Validation\Rules\Exists;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
+/**
+ * @property-read mixed $items
+ */
 class CreateOrderRequest extends OrderApiRequest implements GettableDto
 {
     use CanPrepareMoney;
