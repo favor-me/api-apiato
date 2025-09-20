@@ -41,7 +41,7 @@ class OrganizationUnitTransformer extends Transformer
             OrganizationUnit::COST_PRICE => $this->money($organizationUnit->cost_price),
             OrganizationUnit::PRICE_UP => $organizationUnit->price_up,
             OrganizationUnit::CLIENT_PRICE => $this->money($organizationUnit->client_price),
-            OrganizationUnit::BALANCE => $organizationUnit->balance,
+            OrganizationUnit::BALANCE => (float)$organizationUnit->balance,
             OrganizationUnit::IS_INFINITY_BALANCE => $organizationUnit->is_infinity_balance,
             OrganizationUnit::ORGANIZATION_ID => $organizationUnit->getHashedKey(OrganizationUnit::ORGANIZATION_ID),
             OrganizationUnit::SYSTEM_UNIT_ID => $organizationUnit->getHashedKey(OrganizationUnit::SYSTEM_UNIT_ID),
