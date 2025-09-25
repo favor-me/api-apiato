@@ -16,12 +16,14 @@
 namespace App\Containers\CommunitySection\OrganizationClient\Models;
 
 use App\Containers\CommunitySection\Organization\Traits\BelongsToOrganization;
-use Illuminate\Support\Carbon;
-use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient as BaseOrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Data\Factories\OrganizationClientFactory;
+use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient as BaseOrganizationClient;
 use App\Ship\Parents\Models\Model;
 use App\Ship\Traits\Model\IsNumbered;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * @property-read int $id Уникальный идентификатор.
@@ -29,6 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read string $name Имя.
  * @property-read mixed $patronymic Отчество.
  * @property-read mixed $surname Фамилия.
+ * @property-read string $full_name Полное имя.
  * @property-read mixed $phone_number Номер телефона.
  * @property-read mixed $note Заметка.
  * @property-read Carbon|null $created_at Дата и время создания.
@@ -57,4 +60,15 @@ class OrganizationClient extends Model
         BaseOrganizationClient::PHONE_NUMBER,
         BaseOrganizationClient::NOTE
     ];
+
+    public function fullName(): Attribute
+    {
+        $fullName = implode(' ', [
+            Str::ucfirst($this->surname),
+            Str::ucfirst($this->name),
+            Str::ucfirst($this->patronymic)
+        ]);
+
+        return Attribute::make(get: fn() => $fullName);
+    }
 }
