@@ -15,14 +15,23 @@
 
 namespace App\Containers\CommunitySection\OrganizationClient\UI\API\Transformers;
 
+use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Ship\Transformers\ToListTransformer;
 use Illuminate\Database\Eloquent\Model;
 
 class OrganizationClientToListTransformer extends ToListTransformer
 {
-    public function getDefaultTitle(Model $model): string
+    public function transform(Model $model): array
     {
-        return $model->getAttribute(OrganizationClient::NAME);
+        return parent::transform($model) +
+            [
+                OrganizationClient::PHONE_NUMBER => $model->getAttribute(OrganizationClient::PHONE_NUMBER)
+            ];
+    }
+
+    public function getDefaultTitle(Model|OrganizationClientModel $model): string
+    {
+        return $model->full_name;
     }
 }
