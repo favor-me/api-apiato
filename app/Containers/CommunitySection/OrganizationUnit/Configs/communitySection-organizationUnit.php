@@ -26,6 +26,7 @@ return [
             new ExistsOrganizationUnitTypeRule()
         ],
         OrganizationUnit::SKU => [
+            'nullable',
             'string',
             'no_spaces'
         ],
