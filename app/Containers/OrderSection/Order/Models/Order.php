@@ -23,6 +23,8 @@ use App\Containers\OrderSection\Item\Foundation\Item;
 use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Data\Factories\OrderFactory;
 use App\Containers\OrderSection\Order\Foundation\Order as BaseOrder;
+use App\Containers\OrderSection\PaymentType\Casts\PaymentType as PaymentTypeCast;
+use App\Containers\OrderSection\PaymentType\Type as PaymentType;
 use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Database\Eloquent\Concerns\HasUpdatedBy;
@@ -38,7 +40,7 @@ use Illuminate\Support\Carbon;
  * @property-read int $id Уникальный идентификатор.
  * @property-read int $organization_id Уникальный идентификатор.
  * @property-read int $oid Уникальный идентификатор.
- * @property-read null|string $payment_type Тип оплаты.
+ * @property-read null|PaymentType $payment_type Тип оплаты.
  * @property-read Money $total Итоговая сумма.
  * @property-read Money $profit Прибыль.
  * @property-read null|string $comment Комментарий.
@@ -85,7 +87,8 @@ class Order extends Model
 
     protected $casts = [
         BaseOrder::TOTAL => MoneyCast::class,
-        BaseOrder::PROFIT => MoneyCast::class
+        BaseOrder::PROFIT => MoneyCast::class,
+        BaseOrder::PAYMENT_TYPE => PaymentTypeCast::class
     ];
 
     public function calculateTotal(bool $write = false): self

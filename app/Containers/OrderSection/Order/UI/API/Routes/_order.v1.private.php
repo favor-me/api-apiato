@@ -21,7 +21,10 @@
  * "id": "noa8G5O6GybxKjA6",
  * "organization_id": "Ab9G2gOomNdWkKEz",
  * "oid": 1,
- * "payment_type": "cash",
+ * "payment_type": {
+ * "title": "Наличные",
+ * "name": "cash"
+ * },
  * "total": {
  * "currency": {
  * "value": 300,
@@ -60,7 +63,7 @@
  * "updated_by": "Q9V2RLOKZ0wEm1qY",
  * "created_at": {
  * "timestamp": 1758385422,
- * "diff_for_humans": "1 секунду назад",
+ * "diff_for_humans": "2 недели назад",
  * "date_for_human": "2025-09-20",
  * "date_for_human_full": "20 сентября 2025г.",
  * "date_for_human_full_with_time": "20 сентября 2025г. в 19:23:42",
@@ -73,7 +76,7 @@
  * },
  * "updated_at": {
  * "timestamp": 1758385422,
- * "diff_for_humans": "1 секунду назад",
+ * "diff_for_humans": "2 недели назад",
  * "date_for_human": "2025-09-20",
  * "date_for_human_full": "20 сентября 2025г.",
  * "date_for_human_full_with_time": "20 сентября 2025г. в 19:23:42",

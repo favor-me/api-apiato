@@ -20,6 +20,7 @@ use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationCl
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
+use App\Containers\OrderSection\PaymentType\CashType;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
 use App\Ship\Traits\Factory\HasTrashedState;
@@ -48,7 +49,7 @@ final class OrderFactory extends Factory
             Order::CLIENT_ID => $client->id,
             Order::COMMENT => $this->faker->text(50),
             Order::ORGANIZATION_ID => $organization->id,
-            Order::PAYMENT_TYPE => $this->faker->text(50),
+            Order::PAYMENT_TYPE => CashType::class,
             Order::TOTAL => ZERO,
             Order::PROFIT => ZERO
         ];

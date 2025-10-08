@@ -23,6 +23,7 @@ use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\UnitTestCase;
+use App\Containers\OrderSection\PaymentType\Type;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -74,6 +75,7 @@ final class OrderTest extends UnitTestCase
     {
         $this->assertInstanceOf(Money::class, $this->model->total);
         $this->assertInstanceOf(Money::class, $this->model->profit);
+        $this->assertInstanceOf(Type::class, $this->model->payment_type);
     }
 
     public function testBelongsToOrganization(): void
