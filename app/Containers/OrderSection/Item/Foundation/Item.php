@@ -27,5 +27,7 @@ final class Item extends SectionContainer
     public const SKU = 'sku';
     public const UNIT_ID = 'unit_id';
 
+    protected string $gender = 'female';
+
     protected string $apiBaseUri = 'order/items';
 }

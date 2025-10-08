@@ -18,7 +18,7 @@ namespace App\Containers\OrderSection\Item\UI\API\Controllers;
 use App\Containers\OrderSection\Item\Actions\DeleteItemsAction;
 use App\Containers\OrderSection\Item\Facades\Container;
 use App\Containers\OrderSection\Item\UI\API\Requests\DeleteItemsRequest;
-use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Exceptions\DeleteResourceFailedException;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 
@@ -28,7 +28,7 @@ class DeleteItemsController extends ApiController
      * @param DeleteItemsRequest $request
      * @param DeleteItemsAction $action
      * @return JsonResponse
-     * @throws NotFoundException
+     * @throws DeleteResourceFailedException
      */
     public function __invoke(
         DeleteItemsRequest $request,
