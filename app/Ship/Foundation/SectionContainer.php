@@ -31,6 +31,7 @@ abstract class SectionContainer
     protected string $apiBaseUri;
 
     protected ?string $configName = null;
+    protected string $gender = 'male';
 
     protected string $transMultipleItemsKey = 'container.items';
 
@@ -124,7 +125,7 @@ abstract class SectionContainer
     public function transMultipleDeleted(int $count): string
     {
         return trans_choice('action.deleted_multiple', $count, [
-            'deletes' => $this->transLowerChoice('core.male_deletes', $count),
+            'deletes' => $this->transLowerChoice('core.' . $this->gender . '_deletes', $count),
             'items' => $this->transLowerChoice($this->getTransMultipleItemsKey(), $count)
         ]);
     }
@@ -132,7 +133,7 @@ abstract class SectionContainer
     public function transMultipleRestored(int $count): string
     {
         return trans_choice('action.restored_multiple', $count, [
-            'restores' => $this->transLowerChoice('core.male_restored', $count),
+            'restores' => $this->transLowerChoice('core.' . $this->gender . '_restored', $count),
             'items' => $this->transLowerChoice($this->getTransMultipleItemsKey(), $count)
         ]);
     }
@@ -140,7 +141,7 @@ abstract class SectionContainer
     public function transMultipleTrashed(int $count): string
     {
         return trans_choice('action.trashed_multiple', $count, [
-            'moved' => $this->transLowerChoice('core.male_moved', $count),
+            'moved' => $this->transLowerChoice('core.' . $this->gender . '_moved', $count),
             'items' => $this->transLowerChoice($this->getTransMultipleItemsKey(), $count)
         ]);
     }
@@ -148,7 +149,7 @@ abstract class SectionContainer
     public function transMultipleUpdated(int $count): string
     {
         return trans_choice('action.updated_multiple', $count, [
-            'updates' => $this->transLowerChoice('core.male_updates', $count),
+            'updates' => $this->transLowerChoice('core.' . $this->gender . '_updates', $count),
             'items' => $this->transLowerChoice($this->getTransMultipleItemsKey(), $count)
         ]);
     }
