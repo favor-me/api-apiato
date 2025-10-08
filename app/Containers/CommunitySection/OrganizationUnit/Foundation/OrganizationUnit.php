@@ -31,7 +31,7 @@ final class OrganizationUnit extends SectionContainer
     public const SYSTEM_UNIT_ID = 'system_unit_id';
     public const TYPE = 'type';
     public const INCLUDE_SYSTEM_UNIT = 'systemUnit';
-    public const PRICE_MAX_LENGTH = 200000;
+    public const PRICE_MAX_LENGTH = 200000 * 100;
 
     protected string $apiBaseUri = 'community/organization-units';
 }
