@@ -63,12 +63,6 @@ class UpdateOrderRequest extends CreateOrderRequest
         ]);
     }
 
-    public function getItemIdValidationRules(): ValidationRules
-    {
-        return parent::getItemIdValidationRules()
-            ->addRequired();
-    }
-
     public function getOrderTotalValidationRules(): ValidationRules
     {
         $rules = parent::getOrderTotalValidationRules();
@@ -115,9 +109,13 @@ class UpdateOrderRequest extends CreateOrderRequest
         parent::prepareItemsPrices();
 
         $items = collect((array)$this->items);
+
         if ($items->isNotEmpty()) {
             $requestItemIds = $items
                 ->pluck(ID)
+                ->where(function (mixed $id) {
+                    return !is_null($id);
+                })
                 ->toArray();
 
             /** @var OrderModel $order */
@@ -139,7 +137,9 @@ class UpdateOrderRequest extends CreateOrderRequest
     {
         if ($items->isNotEmpty()) {
             $items->each(
-                fn(Item $item) => $this->total->add($item->getTotalClientPrice())
+                function (Item $item) {
+                    $this->total->add($item->getTotalClientPrice());
+                }
             );
         }
     }

@@ -126,6 +126,13 @@ final class UpdateOrderTest extends ApiTestCase
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
+        $unitC = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::COST_PRICE => app('money')->addCurrency(100)->val(),
+                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(110)->val(),
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
+
         $order = OrderModel::factory()
             ->create([
                 Order::ORGANIZATION_ID => $user->organization_id
@@ -147,9 +154,17 @@ final class UpdateOrderTest extends ApiTestCase
         $this->assertCount(2, $order->items);
 
         $data = [
-            Order::TOTAL => 570,
+            Order::TOTAL => 900, // (210 * 2) + 150 + (110 * 3) = 900
             Order::COMMENT => 'Comment',
             Order::ITEMS => [
+                [
+                    Item::NAME => $unitC->name,
+                    Item::UNIT_ID => $unitC->getHashedKey(),
+                    Item::SKU => $unitC->sku,
+                    Item::COST_PRICE => $unitC->cost_price->currency()->val(),
+                    Item::CLIENT_PRICE => $unitC->client_price->currency()->val(),
+                    Item::AMOUNT => 3
+                ],
                 [
                     ID => $itemA->getHashedKey(),
                     Item::NAME => $itemA->name,
@@ -173,13 +188,16 @@ final class UpdateOrderTest extends ApiTestCase
                     ->has('data')
                     ->where('data.' . ID, $order->getHashedKey())
                     ->where('data.' . Order::COMMENT, $data[Order::COMMENT])
-                    ->where('data.' . Order::TOTAL . '.currency.value', 570)
-                    ->has('data.' . Order::ITEMS . '.data', 2)
-                    ->where('data.' . Order::ITEMS . '.data', function (Collection $items) use ($itemA) {
+                    ->where('data.' . Order::TOTAL . '.currency.value', $data[Order::TOTAL])
+                    ->has('data.' . Order::ITEMS . '.data', 3)
+                    ->where('data.' . Order::ITEMS . '.data', function (Collection $items) use ($itemA, $unitC) {
                         $items
-                            ->each(function (array $item) use ($itemA) {
+                            ->each(function (array $item) use ($itemA, $unitC) {
                                 if ($item[ID] === $itemA->getHashedKey()) {
                                     self::assertSame(2, $item[Item::AMOUNT]);
+                                }
+                                if ($item[ID] === $unitC->getHashedKey()) {
+                                    self::assertSame(3, $item[Item::AMOUNT]);
                                 }
                             });
 
