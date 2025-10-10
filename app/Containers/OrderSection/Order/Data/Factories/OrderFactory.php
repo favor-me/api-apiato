@@ -21,6 +21,8 @@ use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\PaymentType\CashType;
+use App\Containers\OrderSection\Status\Foundation\Status;
+use App\Containers\OrderSection\Status\Models\Status as StatusModel;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
 use App\Ship\Traits\Factory\HasTrashedState;
@@ -53,5 +55,23 @@ final class OrderFactory extends Factory
             Order::TOTAL => ZERO,
             Order::PROFIT => ZERO
         ];
+    }
+
+    public function completed(): self
+    {
+        $status = StatusModel::where(Status::SLUG, StatusModel::COMPLETED)->first();
+
+        return $this->state(fn() => [
+            Order::STATUS_ID => $status->id
+        ]);
+    }
+
+    public function canceled(): self
+    {
+        $status = StatusModel::where(Status::SLUG, StatusModel::CANCELED)->first();
+
+        return $this->state(fn() => [
+            Order::STATUS_ID => $status->id
+        ]);
     }
 }
