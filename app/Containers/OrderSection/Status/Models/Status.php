@@ -15,13 +15,11 @@
 
 namespace App\Containers\OrderSection\Status\Models;
 
-use App\Containers\OrderSection\Status\Facades\Container;
-use App\Containers\OrderSection\Status\Foundation\Status as BaseStatus;
 use App\Containers\OrderSection\Status\Data\Factories\StatusFactory;
+use App\Containers\OrderSection\Status\Facades\Container;
 use App\Ship\Parents\Models\Model;
 use App\Ship\Traits\Model\IsNumbered;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property-read int $id Уникальный идентификатор.
@@ -34,7 +32,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Status extends Model
 {
-    use SoftDeletes;
     use IsNumbered;
 
     public const TABLE = 'order_statuses';

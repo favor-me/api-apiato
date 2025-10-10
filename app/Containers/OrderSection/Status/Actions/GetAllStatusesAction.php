@@ -15,29 +15,24 @@
 
 namespace App\Containers\OrderSection\Status\Actions;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\OrderSection\Status\Tasks\GetAllStatusesTask;
 use App\Ship\Parents\Actions\Action;
-use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllStatusesAction extends Action
 {
     /**
-     * @param bool $onlyTrashed
      * @param mixed|null $limit
      * @return LengthAwarePaginator
      * @throws CoreInternalErrorException
      * @throws RepositoryException
      */
-    public function run(bool $onlyTrashed = false, mixed $limit = null): LengthAwarePaginator
+    public function run(mixed $limit = null): LengthAwarePaginator
     {
-        $task = app(GetAllStatusesTask::class);
-
-        if ($onlyTrashed) {
-            $task->onlyTrashed();
-        }
-
-        return $task->addRequestCriteria()->run($limit);
+        return app(GetAllStatusesTask::class)
+            ->addRequestCriteria()
+            ->run($limit);
     }
 }
