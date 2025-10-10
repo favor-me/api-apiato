@@ -21,7 +21,10 @@ final class Order extends SectionContainer
 {
     public const CLIENT_ID = 'client_id';
     public const COMMENT = 'comment';
+    public const COMPLETED_AT = 'completed_at';
+    public const CANCELED_AT = 'canceled_at';
     public const OID = 'oid';
+    public const STATUS_ID = 'status_id';
     public const ORGANIZATION_ID = 'organization_id';
     public const PAYMENT_TYPE = 'payment_type';
     public const TOTAL = 'total';
