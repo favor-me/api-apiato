@@ -24,9 +24,12 @@ use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\UnitTestCase;
 use App\Containers\OrderSection\PaymentType\Type;
+use App\Containers\OrderSection\Status\Foundation\Status;
+use App\Containers\OrderSection\Status\Models\Status as StatusModel;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 final class OrderTest extends UnitTestCase
 {
@@ -67,7 +70,10 @@ final class OrderTest extends UnitTestCase
             Order::TOTAL,
             Order::PROFIT,
             Order::COMMENT,
-            Order::CLIENT_ID
+            Order::CLIENT_ID,
+            Order::STATUS_ID,
+            Order::COMPLETED_AT,
+            Order::CANCELED_AT,
         ], $this->model->getFillable());
     }
 
@@ -118,6 +124,20 @@ final class OrderTest extends UnitTestCase
         $this->assertInstanceOf(User::class, $order->creator);
     }
 
+    public function testBelongsToStatus(): void
+    {
+        $this->assertInstanceOf(BelongsTo::class, $this->model->status());
+        $this->assertInstanceOf(StatusModel::class, $this->model->status()->getModel());
+
+        $this->assertNull($this->model->status);
+
+        $model = OrderModel::factory()
+            ->for(StatusModel::factory())
+            ->create();
+
+        $this->assertInstanceOf(StatusModel::class, $model->status);
+    }
+
     public function testSetCreatedByUpdatedByWithNotAuth(): void
     {
         $order = OrderModel::factory()->create();
@@ -146,6 +166,86 @@ final class OrderTest extends UnitTestCase
 
         $this->assertSame(1, $orderA->oid);
         $this->assertSame(2, $orderAb->oid);
+    }
+
+    public function testSetCompletedAtOnCreate(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $orderA = OrderModel::factory()
+            ->completed()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $this->assertInstanceOf(Carbon::class, $orderA->completed_at);
+
+        $orderB = OrderModel::factory()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $this->assertNull($orderB->completed_at);
+    }
+
+    public function testSetCompletedAtOnUpdate(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $orderA = OrderModel::factory()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $this->assertNull($orderA->completed_at);
+
+        $status = StatusModel::where(Status::SLUG, StatusModel::COMPLETED)->first();
+
+        $orderA->setAttribute(Order::STATUS_ID, $status->id);
+        $orderA->save();
+        $orderA->refresh();
+
+        $this->assertInstanceOf(Carbon::class, $orderA->completed_at);
+    }
+
+    public function testSetCanceledAtOnCreate(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $orderA = OrderModel::factory()
+            ->canceled()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $this->assertInstanceOf(Carbon::class, $orderA->canceled_at);
+
+        $orderB = OrderModel::factory()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $this->assertNull($orderB->canceled_at);
+    }
+
+    public function testSetCanceledAtOnUpdate(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $orderA = OrderModel::factory()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $this->assertNull($orderA->canceled_at);
+
+        $status = StatusModel::where(Status::SLUG, StatusModel::CANCELED)->first();
+
+        $orderA->setAttribute(Order::STATUS_ID, $status->id);
+        $orderA->save();
+        $orderA->refresh();
+
+        $this->assertInstanceOf(Carbon::class, $orderA->canceled_at);
     }
 
     public function testSetCreatedByUpdatedByWithAuth(): void

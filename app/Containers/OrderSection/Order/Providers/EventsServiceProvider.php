@@ -15,6 +15,7 @@
 namespace App\Containers\OrderSection\Order\Providers;
 
 use App\Containers\OrderSection\Order\Events\Handlers\OrderCreatingEventHandler;
+use App\Containers\OrderSection\Order\Events\Handlers\OrderUpdatingEventHandler;
 use App\Containers\OrderSection\Order\Models\Order;
 use App\Ship\Parents\Providers\EventsServiceProvider as ShipEventsServiceProvider;
 
@@ -23,6 +24,9 @@ class EventsServiceProvider extends ShipEventsServiceProvider
     protected $listen = [
         'eloquent.creating: ' . Order::class => [
             OrderCreatingEventHandler::class
+        ],
+        'eloquent.updating: ' . Order::class => [
+            OrderUpdatingEventHandler::class
         ]
     ];
 }

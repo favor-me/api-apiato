@@ -14,31 +14,19 @@
 
 namespace App\Containers\OrderSection\Order\Events\Handlers;
 
-use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Traits\SetCanceledAt;
 use App\Containers\OrderSection\Order\Traits\SetCompletedAt;
 use App\Ship\Parents\Events\Event;
-use Illuminate\Support\Facades\DB;
 
-class OrderCreatingEventHandler extends Event
+class OrderUpdatingEventHandler extends Event
 {
     use SetCompletedAt;
     use SetCanceledAt;
 
     public function handle(OrderModel $order): void
     {
-        $this->setOid($order);
         $this->setCompletedAt($order);
         $this->setCanceledAt($order);
-    }
-
-    protected function setOid(OrderModel $order)
-    {
-        $lastOid = DB::table($order::TABLE)
-            ->where(Order::ORGANIZATION_ID, $order->organization_id)
-            ->max(Order::OID);
-
-        $order->setAttribute(Order::OID, (int)$lastOid + 1);
     }
 }
