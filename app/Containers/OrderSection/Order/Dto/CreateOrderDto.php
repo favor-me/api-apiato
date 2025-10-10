@@ -25,6 +25,7 @@ class CreateOrderDto extends Dto
     public ?string $payment_type;
     public ?string $total;
     public ?string $profit;
+    public ?string $status_id;
     public array $items = [];
 
     public function hasItems(): bool

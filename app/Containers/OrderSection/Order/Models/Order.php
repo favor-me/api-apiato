@@ -25,6 +25,7 @@ use App\Containers\OrderSection\Order\Data\Factories\OrderFactory;
 use App\Containers\OrderSection\Order\Foundation\Order as BaseOrder;
 use App\Containers\OrderSection\PaymentType\Casts\PaymentType as PaymentTypeCast;
 use App\Containers\OrderSection\PaymentType\Type as PaymentType;
+use App\Containers\OrderSection\Status\Models\Status;
 use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Database\Eloquent\Concerns\HasUpdatedBy;
@@ -47,13 +48,17 @@ use Illuminate\Support\Carbon;
  * @property-read null|int $client_id Уникальный идентификатор.
  * @property-read null|int $created_by Уникальный идентификатор.
  * @property-read null|int $updated_by Уникальный идентификатор.
+ * @property-read null|int $status_id Уникальный идентификатор статуса.
  * @property-read Carbon|null $created_at Дата и время создания.
+ * @property-read Carbon|null $completed_at Дата и время завершения.
+ * @property-read Carbon|null $canceled_at Дата и время отмены.
  * @property-read Carbon|null $updated_at Дата и время обновления.
  * @property-read Carbon|null $deleted_at Дата и время удаления.
  * @property-read Organization $organization Связанная модель организации.
  * @property-read OrganizationClient $client Связанная модель клиента.
  * @property-read null|User $creator Связанная модель пользователя который создал заказ.
  * @property-read null|User $updater Связанная модель пользователя который обновил заказ.
+ * @property-read null|Status $status Связанная модель статуса.
  * @property-read ItemEloquentCollection $items Коллекция позиций заказа.
  *
  * @method static OrderFactory factory(...$parameters)
@@ -82,13 +87,18 @@ class Order extends Model
         BaseOrder::TOTAL,
         BaseOrder::PROFIT,
         BaseOrder::COMMENT,
-        BaseOrder::CLIENT_ID
+        BaseOrder::CLIENT_ID,
+        BaseOrder::STATUS_ID,
+        BaseOrder::COMPLETED_AT,
+        BaseOrder::CANCELED_AT
     ];
 
     protected $casts = [
         BaseOrder::TOTAL => MoneyCast::class,
         BaseOrder::PROFIT => MoneyCast::class,
-        BaseOrder::PAYMENT_TYPE => PaymentTypeCast::class
+        BaseOrder::PAYMENT_TYPE => PaymentTypeCast::class,
+        BaseOrder::COMPLETED_AT => 'datetime',
+        BaseOrder::CANCELED_AT => 'datetime'
     ];
 
     public function calculateTotal(bool $write = false): self
@@ -138,5 +148,22 @@ class Order extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, UPDATED_BY, ID);
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class, BaseOrder::STATUS_ID, ID);
+    }
+
+    public function setCompletedAt(): self
+    {
+        $this->setAttribute(BaseOrder::COMPLETED_AT, $this->freshTimestamp());
+        return $this;
+    }
+
+    public function setCanceledAt(): self
+    {
+        $this->setAttribute(BaseOrder::CANCELED_AT, $this->freshTimestamp());
+        return $this;
     }
 }
