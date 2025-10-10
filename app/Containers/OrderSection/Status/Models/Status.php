@@ -34,6 +34,8 @@ class Status extends Model
 {
     use IsNumbered;
 
+    public const COMPLETED = 'completed';
+    public const CANCELED = 'canceled';
     public const TABLE = 'order_statuses';
     public const RESOURCE_KEY = 'Status';
 
