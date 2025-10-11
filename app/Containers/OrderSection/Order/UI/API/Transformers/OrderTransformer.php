@@ -25,6 +25,7 @@ use App\Containers\OrderSection\Status\UI\API\Transformers\StatusTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 
 class OrderTransformer extends Transformer
 {
@@ -66,22 +67,22 @@ class OrderTransformer extends Transformer
         return $this->item($order->organization, new OrganizationTransformer());
     }
 
-    protected function includeClient(OrderModel $order): Item
+    protected function includeClient(OrderModel $order): Item|NullResource
     {
         return $this->nullOrItem($order->client, new OrganizationClientTransformer());
     }
 
-    protected function includeCreator(OrderModel $order): Item
+    protected function includeCreator(OrderModel $order): Item|NullResource
     {
         return $this->nullOrItem($order->creator, new UserTransformer());
     }
 
-    protected function includeUpdater(OrderModel $order): Item
+    protected function includeUpdater(OrderModel $order): Item|NullResource
     {
         return $this->nullOrItem($order->updater, new UserTransformer());
     }
 
-    protected function includeStatus(OrderModel $order): Item
+    protected function includeStatus(OrderModel $order): Item|NullResource
     {
         return $this->nullOrItem($order->status, new StatusTransformer());
     }
