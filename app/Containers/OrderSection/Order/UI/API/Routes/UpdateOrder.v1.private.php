@@ -17,7 +17,7 @@
  * @apiGroup Order
  * @apiName updateOrderOrder
  * @api {post} /v1/order/orders/:id Изменить
- * @apiDescription Изменить.
+ * @apiDescription Изменить. Внимание!!! Завершенные или отмененные заказы невозможно обновлять.
  *
  * @apiVersion 1.0.0
  * @apiPermission Аутентифицированный пользователь
@@ -28,6 +28,7 @@
  * @apiBody {String} [total] Итоговая цена
  * @apiBody {String} [comment] Комментарий
  * @apiBody {String} [client_id] Уникальный идентификатор клиента
+ * @apiBody {String} [status_id] Уникальный идентификатор статуса
  *
  * @apiUse OrderSuccessSingleResponse
  *

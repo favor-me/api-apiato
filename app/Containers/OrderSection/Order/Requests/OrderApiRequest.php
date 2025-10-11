@@ -26,6 +26,7 @@ use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Traits\OrderValidationRules;
 use App\Containers\OrderSection\Order\UI\API\Transformers\AdminOrderTransformer;
 use App\Containers\OrderSection\Order\UI\API\Transformers\OrderTransformer;
+use App\Containers\OrderSection\Status\Traits\StatusValidationRules;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
@@ -41,6 +42,7 @@ abstract class OrderApiRequest extends ApiRequest implements GettableTransformer
     use OrganizationValidationRules;
     use OrganizationUnitValidationRules;
     use OrganizationClientValidationRules;
+    use StatusValidationRules;
 
     protected array $decode = [
         Order::ORGANIZATION_ID

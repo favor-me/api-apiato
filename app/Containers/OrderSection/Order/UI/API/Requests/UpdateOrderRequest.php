@@ -20,10 +20,16 @@ use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
 use App\Containers\OrderSection\Item\Models\Item;
 use App\Containers\OrderSection\Order\Data\Repositories\OrderRepository;
 use App\Containers\OrderSection\Order\Dto\UpdateOrderDto;
+use App\Containers\OrderSection\Order\Facades\Container;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
+use App\Containers\OrderSection\Order\Tasks\FindOrderByIdTask;
+use App\Containers\OrderSection\Order\Tasks\OrderHasStatusTask;
+use App\Containers\OrderSection\Status\Models\Status;
 use App\Ship\Collections\ValidationRules;
+use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Exceptions\ValidationFailedException;
+use Exception;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
 
@@ -45,22 +51,42 @@ class UpdateOrderRequest extends CreateOrderRequest
         ID
     ];
 
+    protected array $cantUpdateWithStatuses = [
+        Status::CANCELED,
+        Status::COMPLETED
+    ];
+
     protected function afterInitialize(): void
     {
         parent::afterInitialize();
 
         $this->mergeDecode([
             ID,
+            Order::STATUS_ID,
             Order::ITEMS . '.*.' . ID
         ]);
     }
 
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
+        $rules = array_merge(parent::rules(), [
             ID => $this->getOrderIdValidationRules(),
             Order::ITEMS . '.*.' . ID => $this->getItemIdValidationRules(),
         ]);
+
+        if ($this->has(Order::STATUS_ID)) {
+            if (!app(OrderHasStatusTask::class)->run($this->id)) {
+                $rules[Order::STATUS_ID] = $this->getStatusIdValidationRules();
+            }
+        }
+
+        return $rules;
+    }
+
+    public function getStatusIdValidationRules(): ValidationRules
+    {
+        return parent::getStatusIdValidationRules()
+            ->addRequired();
     }
 
     public function getOrderTotalValidationRules(): ValidationRules
@@ -102,6 +128,34 @@ class UpdateOrderRequest extends CreateOrderRequest
     public function newDto(array $data = []): UpdateOrderDto
     {
         return new UpdateOrderDto($data);
+    }
+
+    /**
+     * @return void
+     * @throws UpdateResourceFailedException
+     */
+    protected function prepareForValidation(): void
+    {
+        $order = $this->getOrder();
+
+        if (!is_null($order)) {
+            if ($order->status_id && in_array($order->status->slug, $this->cantUpdateWithStatuses)) {
+                throw new UpdateResourceFailedException(
+                    Container::trans('container.cant_update')
+                );
+            }
+        }
+
+        parent::prepareForValidation();
+    }
+
+    protected function getOrder(): ?OrderModel
+    {
+        try {
+            return app(FindOrderByIdTask::class)->run($this->id);
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
     protected function prepareItemsPrices(): void

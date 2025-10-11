@@ -24,6 +24,7 @@ use App\Containers\OrderSection\Order\Facades\Container;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\Functional\ApiTestCase;
+use App\Containers\OrderSection\Status\Models\Status as StatusModel;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -203,6 +204,120 @@ final class UpdateOrderTest extends ApiTestCase
 
                         return true;
                     })
+                    ->etc()
+            );
+    }
+
+    public function testCanUpdateStatus(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $status = StatusModel::factory()->create();
+
+        $data = [
+            Order::STATUS_ID => $status->getHashedKey()
+        ];
+
+        $this
+            ->injectId($order->id)
+            ->makeCall($data);
+
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . Order::STATUS_ID, $status->getHashedKey())
+                    ->etc()
+            );
+    }
+
+    public function testCantUpdateStatus(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $statusA = StatusModel::factory()->create();
+        $statusB = StatusModel::factory()->create();
+
+        $order = OrderModel::factory()
+            ->create([
+                Order::STATUS_ID => $statusA->id,
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $data = [
+            Order::STATUS_ID => $statusB->getHashedKey()
+        ];
+
+        $this
+            ->injectId($order->id)
+            ->makeCall($data);
+
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . Order::STATUS_ID, $statusA->getHashedKey())
+                    ->etc()
+            );
+    }
+
+    public function testCantUpdateCompletedOrder(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->completed()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $data = [
+            Order::COMMENT => 'Comment'
+        ];
+
+        $this
+            ->injectId($order->id)
+            ->makeCall($data);
+
+        $this->response
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('message')
+                    ->where('message', Container::trans('container.cant_update'))
+                    ->etc()
+            );
+    }
+
+    public function testCantUpdateCanceledOrder(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->canceled()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $data = [
+            Order::COMMENT => 'Comment'
+        ];
+
+        $this
+            ->injectId($order->id)
+            ->makeCall($data);
+
+        $this->response
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('message')
+                    ->where('message', Container::trans('container.cant_update'))
                     ->etc()
             );
     }
