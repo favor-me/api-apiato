@@ -29,18 +29,18 @@
  * @apiBody {Array} items Позиции заказа.
  *
  * @apiParamExample {json} Пример для items:
- * {
- * "items": [
- * {
- * "name": "Item unit name", // Название unit в заказе
- * "unit_id": "aYOxlpzRMwrX3gD7", // Уникальный идентификатор unit
- * "sku": "rt-13", // Артикул unit
- * "cost_price": "150", // Себестоимость unit
- * "client_price": "200", // Цена для клиента unit
- * "amount": 2 // Количество в заказе
- * }
- * ]
- * }
+{
+    "items": [
+        {
+            "name": "Item unit name", // Название unit в заказе
+            "unit_id": "aYOxlpzRMwrX3gD7", // Уникальный идентификатор unit
+            "sku": "rt-13", // Артикул unit
+            "cost_price": "150", // Себестоимость unit
+            "client_price": "200", // Цена для клиента unit
+            "amount": 2 // Количество в заказе
+        }
+    ]
+}
  * @apiUse OrderSuccessSingleResponse
  */
 

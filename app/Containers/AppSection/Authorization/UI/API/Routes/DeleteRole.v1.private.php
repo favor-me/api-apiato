@@ -22,10 +22,10 @@
  * @apiParam            {String} id Уникальный идентификатор роли.
  *
  * @apiSuccessExample  {json}       Success-Response:
- * HTTP/1.1 202 OK
- * {
- * "message": "Role (manager) Deleted Successfully."
- * }
+HTTP/1.1 202 OK
+{
+    "message": "Role (manager) Deleted Successfully."
+}
  */
 
 use Illuminate\Support\Facades\Route;

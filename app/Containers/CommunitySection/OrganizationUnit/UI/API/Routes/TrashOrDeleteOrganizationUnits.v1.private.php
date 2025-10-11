@@ -24,10 +24,10 @@
  * @apiBody {String="1"} [force-delete] Произвести жёсткое удаление (удаляется запись из базы).
  *
  * @apiSuccessExample {json} Успешный ответ:
- * HTTP/1.1 200 OK
- * {
- * "message": "Успешно перемещены в корзину 4 товара."
- * }
+HTTP/1.1 200 OK
+{
+    "message": "Успешно перемещены в корзину 4 товара."
+}
  */
 
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;

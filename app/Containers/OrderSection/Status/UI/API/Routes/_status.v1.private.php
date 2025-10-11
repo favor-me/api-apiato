@@ -14,18 +14,18 @@
  *
  * @apiDefine StatusSuccessSingleResponse
  * @apiSuccessExample {json} Успешный ответ:
- * HTTP/1.1 200 OK
- * {
- * "data": {
- * "object": "Status",
- * "id": null,
- * "name": "Mrs.",
- * "slug": "mrs",
- * "is_base": true,
- * "params": null
- * },
- * "meta": {
- * "include": []
- * }
- * }
+HTTP/1.1 200 OK
+{
+    "data": {
+        "object": "Status",
+        "id": null,
+        "name": "Mrs.",
+        "slug": "mrs",
+        "is_base": true,
+        "params": null
+    },
+    "meta": {
+        "include": []
+    }
+}
  */

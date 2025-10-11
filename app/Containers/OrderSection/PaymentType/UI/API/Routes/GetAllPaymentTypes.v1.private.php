@@ -21,39 +21,39 @@
  * @apiPermission Аутентифицированный пользователь
  *
  * @apiSuccessExample {json} Успешный ответ:
- * HTTP/1.1 200 OK
- * {
- * "data": [
- * {
- * "name": "cash",
- * "title": "Наличные"
- * },
- * {
- * "name": "cashless",
- * "title": "Безналичный расчёт"
- * }
- * ],
- * "meta": {
- * "include": []
- * }
- * }
+HTTP/1.1 200 OK
+{
+    "data": [
+        {
+            "name": "cash",
+            "title": "Наличные"
+        },
+        {
+            "name": "cashless",
+            "title": "Безналичный расчёт"
+        }
+    ],
+    "meta": {
+        "include": []
+    }
+}
  * @apiSuccessExample {json} Успешный ответ списка to=list:
- * HTTP/1.1 200 OK
- * {
- * "data": [
- * {
- * "value": "cash",
- * "title": "Наличные"
- * },
- * {
- * "value": "cashless",
- * "title": "Безналичный расчёт"
- * }
- * ],
- * "meta": {
- * "include": []
- * }
- * }
+HTTP/1.1 200 OK
+{
+    "data": [
+        {
+            "value": "cash",
+            "title": "Наличные"
+        },
+        {
+            "value": "cashless",
+            "title": "Безналичный расчёт"
+        }
+    ],
+    "meta": {
+        "include": []
+    }
+}
  */
 
 use App\Containers\OrderSection\PaymentType\Facades\Container;
