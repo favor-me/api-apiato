@@ -26,6 +26,7 @@ use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\Primitive;
 
 class OrderTransformer extends Transformer
 {
@@ -67,27 +68,27 @@ class OrderTransformer extends Transformer
         return $this->item($order->organization, new OrganizationTransformer());
     }
 
-    protected function includeClient(OrderModel $order): Item|NullResource
+    protected function includeClient(OrderModel $order): Item|Primitive
     {
-        return $this->nullOrItem($order->client, new OrganizationClientTransformer());
+        return $this->primitiveNullOrItem($order->client, new OrganizationClientTransformer());
     }
 
-    protected function includeCreator(OrderModel $order): Item|NullResource
+    protected function includeCreator(OrderModel $order): Item|Primitive
     {
-        return $this->nullOrItem($order->creator, new UserTransformer());
+        return $this->primitiveNullOrItem($order->creator, new UserTransformer());
     }
 
-    protected function includeUpdater(OrderModel $order): Item|NullResource
+    protected function includeUpdater(OrderModel $order): Item|Primitive
     {
-        return $this->nullOrItem($order->updater, new UserTransformer());
+        return $this->primitiveNullOrItem($order->updater, new UserTransformer());
     }
 
-    protected function includeStatus(OrderModel $order): Item|NullResource
+    protected function includeStatus(OrderModel $order): Item|Primitive
     {
-        return $this->nullOrItem($order->status, new StatusTransformer());
+        return $this->primitiveNullOrItem($order->status, new StatusTransformer());
     }
 
-    protected function includeItems(OrderModel $order): Collection
+    protected function includeItems(OrderModel $order): Collection|NullResource
     {
         return $this->collection($order->items, new ItemTransformer());
     }
