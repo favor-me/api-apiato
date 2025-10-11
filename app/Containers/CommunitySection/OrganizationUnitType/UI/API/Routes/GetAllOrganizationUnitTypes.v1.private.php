@@ -22,38 +22,38 @@
  *
  * @apiSuccessExample {json} Успешный ответ:
  * HTTP/1.1 200 OK
-* {
-    * "data": [
-        * {
-            * "name": "product",
-            * "title": "Продукт"
-        * },
-        * {
-            * "name": "service",
-            * "title": "Услуга"
- * }
- * ],
- * "meta": {
- * "include": []
- * }
- * }
+{
+    "data": [
+        {
+            "name": "product",
+            "title": "Продукт"
+        },
+        {
+            "name": "service",
+            "title": "Услуга"
+        }
+    ],
+    "meta": {
+        "include": []
+    }
+}
  * @apiSuccessExample {json} Успешный ответ списка to=list:
  * HTTP/1.1 200 OK
- * {
- * "data": [
- * {
- * "value": "product",
- * "title": "Продукт"
- * },
- * {
- * "value": "service",
- * "title": "Услуга"
- * }
- * ],
-    * "meta": {
-        * "include": []
-    * }
-* }
+{
+    "data": [
+        {
+            "value": "product",
+            "title": "Продукт"
+        },
+        {
+            "value": "service",
+            "title": "Услуга"
+        }
+    ],
+    "meta": {
+        "include": []
+    }
+}
  */
 
 use App\Containers\CommunitySection\OrganizationUnitType\Facades\Container;
