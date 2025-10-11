@@ -33,6 +33,7 @@ final class Order extends SectionContainer
     public const CREATOR = 'creator';
     public const CLIENT = 'client';
     public const UPDATER = 'updater';
+    public const STATUS = 'status';
     public const ORGANIZATION = 'organization';
 
     protected string $apiBaseUri = 'order/orders';

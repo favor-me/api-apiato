@@ -21,6 +21,7 @@ use App\Containers\CommunitySection\OrganizationClient\UI\API\Transformers\Organ
 use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformer;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
+use App\Containers\OrderSection\Status\UI\API\Transformers\StatusTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -35,6 +36,7 @@ class OrderTransformer extends Transformer
         Order::CLIENT,
         Order::CREATOR,
         Order::UPDATER,
+        Order::STATUS,
         Order::ORGANIZATION
     ];
 
@@ -45,6 +47,7 @@ class OrderTransformer extends Transformer
             ID => $order->getHashedKey(),
             Order::ORGANIZATION_ID => $order->getHashedKey(Order::ORGANIZATION_ID),
             Order::OID => $order->oid,
+            Order::STATUS_ID => $order->getHashedKey(Order::STATUS_ID),
             Order::PAYMENT_TYPE => $order->payment_type->toArray(),
             Order::TOTAL => $this->money($order->total),
             Order::PROFIT => $this->money($order->profit),
@@ -76,6 +79,11 @@ class OrderTransformer extends Transformer
     protected function includeUpdater(OrderModel $order): Item
     {
         return $this->nullOrItem($order->updater, new UserTransformer());
+    }
+
+    protected function includeStatus(OrderModel $order): Item
+    {
+        return $this->nullOrItem($order->status, new StatusTransformer());
     }
 
     protected function includeItems(OrderModel $order): Collection

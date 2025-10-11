@@ -26,9 +26,10 @@ class AdminOrderTransformer extends OrderTransformer
             [
                 $this->realKey(ID) => $order->id,
                 $this->realKey(Order::ORGANIZATION_ID) => $order->organization_id,
+                $this->realKey(Order::STATUS_ID) => $order->status_id,
                 $this->realKey(Order::CLIENT_ID) => $order->client_id,
-                $this->realKey('created_by') => $order->created_by,
-                $this->realKey('updated_by') => $order->updated_by
+                $this->realKey(CREATED_BY) => $order->created_by,
+                $this->realKey(UPDATED_BY) => $order->updated_by
             ];
     }
 }
