@@ -29,6 +29,7 @@ use League\Fractal\Resource\Item;
 class OrderTransformer extends Transformer
 {
     protected array $defaultIncludes = [
+        Order::STATUS,
         Order::ITEMS
     ];
 
@@ -36,7 +37,6 @@ class OrderTransformer extends Transformer
         Order::CLIENT,
         Order::CREATOR,
         Order::UPDATER,
-        Order::STATUS,
         Order::ORGANIZATION
     ];
 
