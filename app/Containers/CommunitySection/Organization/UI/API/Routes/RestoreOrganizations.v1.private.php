@@ -26,14 +26,14 @@
  * "ids": [
  * "NxOpZowo9GmjKqdR",
  * "XbPW7awNkzl83LD6",
-    * "KJqn4Z26Owdlv6MB"
-* ]
+ * "KJqn4Z26Owdlv6MB"
+ * ]
  *
  * @apiSuccessExample {json} Успешный ответ:
-* HTTP/1.1 202 Accepted
-* {
-    * "message": "Успешно восстановлены 3 элемента."
-* }
+ * HTTP/1.1 202 Accepted
+ * {
+ * "message": "Успешно восстановлены 3 элемента."
+ * }
  */
 
 use App\Containers\CommunitySection\Organization\Facades\Container;

@@ -30,10 +30,10 @@
  * ]
  *
  * @apiSuccessExample {json} Успешный ответ:
-* HTTP/1.1 202 Accepted
-* {
-    * "message": "Успешно восстановлены 3 элемента."
-* }
+ * HTTP/1.1 202 Accepted
+ * {
+ * "message": "Успешно восстановлены 3 элемента."
+ * }
  */
 
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
