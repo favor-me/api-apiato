@@ -14,6 +14,7 @@
 
 namespace App\Ship\Criterias;
 
+use App\Ship\Contracts\Database\Eloquent\MutateSearchBuilder;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Prettus\Repository\Contracts\RepositoryInterface;
@@ -53,6 +54,11 @@ class RequestCriteria extends BaseRequestCriteria
         $this->setFilter($model);
         $this->setWith($model);
         $this->setWithCount($model);
+
+        if (is_subclass_of($repository, MutateSearchBuilder::class)) {
+            $searchData = $this->parserSearchData($this->search);
+            $model = $repository->mutateSearchBuilder($model, (array)$searchData);
+        }
 
         return $model;
     }
