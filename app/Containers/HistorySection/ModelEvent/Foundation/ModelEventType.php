@@ -56,8 +56,8 @@ abstract class ModelEventType implements Namebled
         return $this->getModelData()->getAttribute(ID);
     }
 
-    abstract public function getDataChanges(): mixed;
-    abstract public function getData(): mixed;
+    abstract public function getDataChanges(): array;
+    abstract public function getData(): array;
 
     abstract public function getModelNoteType(): ModelNoteType;
     abstract public function getModelNoteTypeParams(): array;

@@ -29,9 +29,9 @@ use Symfony\Component\Finder\Finder;
  */
 class ModelEventManager extends AbstractManager
 {
-    public const CONTAINER_EVENT_TYPE_PATH = 'Events/Types';
+    public const CONTAINER_EVENT_TYPE_PATH = 'History/Events';
 
-    public const PREFIX = 'EventType';
+    public const PREFIX = 'Event';
 
     /**
      * @param string|ModelEventType $eventType
