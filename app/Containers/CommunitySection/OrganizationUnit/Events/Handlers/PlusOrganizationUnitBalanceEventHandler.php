@@ -49,6 +49,7 @@ class PlusOrganizationUnitBalanceEventHandler extends Event
         ModelEventManager::getInstance()
             ->run(HistoryEvent::class, [
                 ModelEvent::MODEL => $event->getUnit(),
+                HistoryEvent::IS_INFINITY_BALANCE => $event->isInfinity(),
                 HistoryEvent::OLD_BALANCE_VALUE => $event->getOldBalanceValue()
             ]);
     }

@@ -21,8 +21,14 @@ class PlusOrganizationUnitBalanceEvent
     public function __construct(
         protected OrganizationUnitModel $unit,
         protected float $addBalanceValue,
-        protected ?float $oldBalanceValue
+        protected ?float $oldBalanceValue,
+        protected bool $isInfinity
     ) {
+    }
+
+    public function isInfinity(): bool
+    {
+        return $this->isInfinity;
     }
 
     public function getOldBalanceValue(): float

@@ -14,6 +14,7 @@
 
 return [
     'plus_organization_unit_balance' => [
-        'note_message' => 'Обновлено значение баланса. Предыдущее значение «:old_value», новое значение «:new_value»'
+        'note_message' => 'Обновлено значение баланса. Предыдущее значение «:old_value», новое значение «:new_value».',
+        'infinity_note_message' => 'Установлено бесконечное значение баланса.'
     ]
 ];

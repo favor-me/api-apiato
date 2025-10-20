@@ -25,6 +25,7 @@ use App\Containers\HistorySection\ModelNote\Types\SystemMessageModelNoteType;
 class PlusOrganizationUnitBalanceEvent extends OrganizationUnitEvent
 {
     public const OLD_BALANCE_VALUE = 'oldBalanceValue';
+    public const IS_INFINITY_BALANCE = 'isInfinityBalance';
 
     public function getDataChanges(): array
     {
@@ -42,22 +43,36 @@ class PlusOrganizationUnitBalanceEvent extends OrganizationUnitEvent
 
     public function getModelNoteTypeParams(): array
     {
+        $message = $this->isInfinityBalance() ? $this->getModelNoteInfinityMessage() : $this->getModelNoteMessage();
+
         return [
-            SystemMessageModelNoteType::PARAM_KEY_MESSAGE => $this->getModelNoteMessage(),
+            SystemMessageModelNoteType::PARAM_KEY_MESSAGE => $message,
             SystemMessageModelNoteType::PARAM_KEY_MESSAGE_ARGS => $this->getModelNoteMessageArgs()
         ];
     }
 
     protected function getModelNoteMessageArgs(): array
     {
+        $newValue = !$this->isInfinityBalance() ? $this->getModelData()->balance : '∞';
+
         return [
             'old_value' => $this->data->get(self::OLD_BALANCE_VALUE),
-            'new_value' => $this->getModelData()->balance
+            'new_value' => $newValue
         ];
     }
 
     protected function getModelNoteMessage(): string
     {
         return Container::transFullKey('history.' . self::getType() . '.note_message');
+    }
+
+    protected function getModelNoteInfinityMessage(): string
+    {
+        return Container::transFullKey('history.' . self::getType() . '.infinity_note_message');
+    }
+
+    protected function isInfinityBalance(): bool
+    {
+        return $this->data->get(self::IS_INFINITY_BALANCE) === true;
     }
 }

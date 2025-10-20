@@ -45,7 +45,7 @@ class PlusOrganizationUnitBalanceTask extends OrganizationUnitTask
 
             $resultUnit = $this->repository->update($data, $unit->id);
 
-            event(new PlusOrganizationUnitBalanceEvent($resultUnit, $balance, $unit->balance));
+            event(new PlusOrganizationUnitBalanceEvent($resultUnit, $balance, $unit->balance, $isInfinity));
 
             return $resultUnit;
         } catch (Exception $e) {
