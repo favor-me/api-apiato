@@ -14,7 +14,9 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Providers;
 
+use App\Containers\CommunitySection\OrganizationUnit\Events\Handlers\MinusOrganizationUnitBalanceEventHandler;
 use App\Containers\CommunitySection\OrganizationUnit\Events\Handlers\PlusOrganizationUnitBalanceEventHandler;
+use App\Containers\CommunitySection\OrganizationUnit\Events\MinusOrganizationUnitBalanceEvent;
 use App\Containers\CommunitySection\OrganizationUnit\Events\PlusOrganizationUnitBalanceEvent;
 use App\Ship\Parents\Providers\EventsServiceProvider as ShipEventServiceProvider;
 
@@ -23,6 +25,9 @@ final class EventServiceProvider extends ShipEventServiceProvider
     protected $listen = [
         PlusOrganizationUnitBalanceEvent::class => [
             PlusOrganizationUnitBalanceEventHandler::class
+        ],
+        MinusOrganizationUnitBalanceEvent::class => [
+            MinusOrganizationUnitBalanceEventHandler::class
         ]
     ];
 }

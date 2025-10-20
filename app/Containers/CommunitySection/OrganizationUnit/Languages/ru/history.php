@@ -10,11 +10,17 @@
  * @license YouBM license.
  * @copyright Copyright (C) YouBM.ru, All rights reserved.
  * @link https://youbm.ru
+ *
+ * @codingStandardsIgnoreStart
  */
 
 return [
     'plus_organization_unit_balance' => [
         'note_message' => 'Обновлено значение баланса. Предыдущее значение «:old_value», новое значение «:new_value».',
         'infinity_note_message' => 'Установлено бесконечное значение баланса.'
+    ],
+    'minus_organization_unit_balance' => [
+        'note_message' => 'Списание баланса из заказа №:order_id. Предыдущее значение «:old_value», новое значение «:new_value».',
+        'infinity_note_message' => 'Списание баланса(-:minus_balance) из заказа №:order_id.'
     ]
 ];
