@@ -17,15 +17,16 @@ namespace App\Containers\HistorySection\ModelNote\Types;
 use App\Containers\HistorySection\ModelEvent\Models\ModelEvent;
 use App\Containers\HistorySection\ModelNote\Dto\CreateModelNoteDto;
 use App\Containers\HistorySection\ModelNote\Facades\Container;
-use App\Containers\HistorySection\ModelNote\Models\ModelNote;
 use App\Containers\HistorySection\ModelNote\Foundation\ModelNote as BaseModelNote;
+use App\Containers\HistorySection\ModelNote\Models\ModelNote;
+use App\Containers\HistorySection\ModelNote\Tasks\CreateModelNoteTask;
 use App\Ship\Contracts\Namebled;
 use App\Ship\Exceptions\CreateResourceFailedException;
-use App\Containers\HistorySection\ModelNote\Tasks\CreateModelNoteTask;
 use Illuminate\Contracts\Support\Arrayable;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use ReflectionClass;
 use Illuminate\Support\Str;
+use JBZoo\Data\JSON;
+use ReflectionClass;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 abstract class ModelNoteType implements Namebled, Arrayable
 {
@@ -47,6 +48,8 @@ abstract class ModelNoteType implements Namebled, Arrayable
     }
 
     abstract public function factoryParamsDefinition(array $params = []): array;
+
+    abstract public function getTransformerParams(JSON $params): array;
 
     /**
      * @param ModelEvent $modelEvent

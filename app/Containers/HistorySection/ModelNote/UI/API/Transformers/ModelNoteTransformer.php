@@ -36,10 +36,16 @@ class ModelNoteTransformer extends Transformer
             ModelNote::MODEL => $modelNote->model,
             ModelNote::MODEL_ID => $modelNote->getHashedKey(ModelNote::MODEL_ID),
             ModelNote::EVENT_ID => $modelNote->getHashedKey(ModelNote::EVENT_ID),
-            PARAMS => $modelNote->params,
+            PARAMS => $this->transformParams($modelNote),
             CREATED_AT => $this->nullOrTimestamp($modelNote->created_at),
             CREATED_BY => $modelNote->getHashedKey(CREATED_BY)
         ];
+    }
+
+    protected function transformParams(ModelNoteModel $modelNote): array
+    {
+        $type = $modelNote->getType();
+        return $type->getTransformerParams($modelNote->params);
     }
 
     protected function includeCreatedBy(ModelNoteModel $modelNote): Item|Primitive
