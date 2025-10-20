@@ -20,14 +20,17 @@ use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as 
 use App\Containers\HistorySection\ModelNote\UI\API\Transformers\ModelNoteTransformer;
 use App\Containers\Vendor\Unit\UI\API\Transformers\UnitTransformer;
 use App\Ship\Parents\Transformers\Transformer;
-use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 
 class OrganizationUnitTransformer extends Transformer
 {
     protected array $defaultIncludes = [
-        OrganizationUnit::INCLUDE_MODEL_NOTES,
         OrganizationUnit::INCLUDE_SYSTEM_UNIT
+    ];
+
+    protected array $availableIncludes = [
+        OrganizationUnit::INCLUDE_MODEL_NOTES
     ];
 
     public function transform(OrganizationUnitModel $organizationUnit): array
