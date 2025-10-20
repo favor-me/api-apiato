@@ -14,6 +14,7 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tasks;
 
+use App\Containers\CommunitySection\OrganizationUnit\Events\PlusOrganizationUnitBalanceEvent;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Ship\Exceptions\UpdateResourceFailedException;
@@ -42,7 +43,11 @@ class PlusOrganizationUnitBalanceTask extends OrganizationUnitTask
                 OrganizationUnit::IS_INFINITY_BALANCE => $isInfinity
             ];
 
-            return $this->repository->update($data, $unit->id);
+            $resultUnit = $this->repository->update($data, $unit->id);
+
+            event(new PlusOrganizationUnitBalanceEvent($resultUnit, $balance, $unit->balance));
+
+            return $resultUnit;
         } catch (Exception $e) {
             throw new UpdateResourceFailedException();
         }
