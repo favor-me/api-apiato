@@ -32,7 +32,6 @@ return new class extends CreateTableMigration
         $table->unsignedBigInteger(ModelNote::EVENT_ID);
         $table->text(PARAMS)->nullable();
         $table->unsignedBigInteger(CREATED_BY)->nullable();
-        $table->unsignedBigInteger(UPDATED_BY)->nullable();
         $table->timestamps();
 
         return $this;
@@ -52,12 +51,6 @@ return new class extends CreateTableMigration
             ->on(User::TABLE)
             ->nullOnDelete();
 
-        $table
-            ->foreign(UPDATED_BY)
-            ->references(ID)
-            ->on(User::TABLE)
-            ->nullOnDelete();
-
         return $this;
     }
 
@@ -65,7 +58,6 @@ return new class extends CreateTableMigration
     {
         $table->index(ModelNote::EVENT_ID, $this->getFieldIndexName(ModelNote::EVENT_ID));
         $table->index(CREATED_BY, $this->getFieldIndexName(CREATED_BY));
-        $table->index(UPDATED_BY, $this->getFieldIndexName(UPDATED_BY));
 
         return $this;
     }

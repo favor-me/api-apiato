@@ -37,7 +37,6 @@ use JBZoo\Data\JSON;
  * @property-read int $event_id Уникальный идентификатор события модели.
  * @property-read JSON $params Дополнительные параметры.
  * @property-read null|int $created_by Уникальный идентификатор пользователя который создал.
- * @property-read null|int $updated_by Уникальный идентификатор пользователя который обновил.
  * @property-read Carbon $created_at Дата и время создания.
  * @property-read Carbon $updated_at Дата и время обновления.
  * @property-read null|User $createdBy Объект пользователя совершивший действие.
