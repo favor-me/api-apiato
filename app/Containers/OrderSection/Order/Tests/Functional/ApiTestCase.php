@@ -16,7 +16,13 @@
 namespace App\Containers\OrderSection\Order\Tests\Functional;
 
 use App\Containers\OrderSection\Order\Tests\FunctionalTestCase;
+use App\Containers\OrderSection\Status\Foundation\Status;
+use App\Containers\OrderSection\Status\Models\Status as StatusModel;
 
 abstract class ApiTestCase extends FunctionalTestCase
 {
+    public function getCompletedStatus(): StatusModel
+    {
+        return StatusModel::where(Status::SLUG, StatusModel::COMPLETED)->first();
+    }
 }

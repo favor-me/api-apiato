@@ -18,12 +18,16 @@ namespace App\Containers\OrderSection\Order\Tests\Functional\API;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\HistorySection\ModelNote\Models\ModelNote;
+use App\Containers\HistorySection\ModelNote\Types\SystemMessageModelNoteType;
 use App\Containers\OrderSection\Item\Foundation\Item;
 use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Facades\Container;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\Functional\ApiTestCase;
+use App\Containers\OrderSection\Status\Foundation\Status;
+use App\Containers\CommunitySection\OrganizationUnit\Facades\Container as OrganizationUnitContainer;
 use App\Containers\OrderSection\Status\Models\Status as StatusModel;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -320,5 +324,105 @@ final class UpdateOrderTest extends ApiTestCase
                     ->where('message', Container::trans('container.cant_update'))
                     ->etc()
             );
+    }
+
+    public function testSuccessCompletedOrder(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->create([
+                Order::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $unitA = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::BALANCE => 17,
+                OrganizationUnit::COST_PRICE => app('money')->addCurrency(50)->val(),
+                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(60)->val(),
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $unitInfinityBalance = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::BALANCE => 0,
+                OrganizationUnit::IS_INFINITY_BALANCE => true,
+                OrganizationUnit::COST_PRICE => app('money')->addCurrency(50)->val(),
+                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(60)->val(),
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $itemA = ItemModel::factory()
+            ->unit($unitA)
+            ->order($order)
+            ->create();
+
+        ItemModel::factory()
+            ->unit($unitInfinityBalance)
+            ->order($order)
+            ->create();
+
+        $data = [
+            Order::STATUS_ID => $this->getCompletedStatus()->getHashedKey()
+        ];
+
+        $this
+            ->injectId($order->id)
+            ->makeCall($data);
+
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . Order::STATUS_ID, $data[Order::STATUS_ID])
+                    ->etc()
+            );
+
+        /** Start Test Unit A  */
+        $oldUnitA = clone $unitA;
+        $unitA->refresh();
+
+        $newUnitABalance = $oldUnitA->balance - $itemA->amount;
+
+        $this->assertSame($newUnitABalance, $unitA->balance);
+
+        $unitAFirstNote = $unitA->modelNotes->first();
+
+        $this->assertInstanceOf(ModelNote::class, $unitAFirstNote);
+        $this->assertSame(OrganizationUnitModel::class, $unitAFirstNote->model);
+        $this->assertSame($unitA->id, $unitAFirstNote->model_id);
+        $this->assertSame(
+            OrganizationUnitContainer::transFullKey('history.minus_organization_unit_balance.note_message'),
+            $unitAFirstNote->params->get(SystemMessageModelNoteType::PARAM_KEY_MESSAGE)
+        );
+
+        $this->assertSame([
+            'old_value' => (int)$oldUnitA->balance,
+            'new_value' => (int)$newUnitABalance
+        ], $unitAFirstNote->params->get(SystemMessageModelNoteType::PARAM_KEY_MESSAGE_ARGS));
+        /** End Test Unit A  */
+
+        /** Start Test Unit infinity  */
+        $oldUnitInfinityBalance = clone $unitInfinityBalance;
+        $unitInfinityBalance->refresh();
+        $this->assertSame($oldUnitInfinityBalance->balance, $unitInfinityBalance->balance);
+
+        $unitInfinityFirstNote = $unitInfinityBalance->modelNotes->first();
+
+        $this->assertInstanceOf(ModelNote::class, $unitInfinityFirstNote);
+        $this->assertSame(OrganizationUnitModel::class, $unitInfinityFirstNote->model);
+        $this->assertSame($unitInfinityBalance->id, $unitInfinityFirstNote->model_id);
+
+        $this->assertSame(
+            OrganizationUnitContainer::transFullKey('history.minus_organization_unit_balance.note_message'),
+            $unitInfinityFirstNote->params->get(SystemMessageModelNoteType::PARAM_KEY_MESSAGE)
+        );
+
+        $this->assertSame([
+            'old_value' => 0,
+            'new_value' => 0
+        ], $unitInfinityFirstNote->params->get(SystemMessageModelNoteType::PARAM_KEY_MESSAGE_ARGS));
+        /** Finish Test Unit infinity  */
     }
 }
