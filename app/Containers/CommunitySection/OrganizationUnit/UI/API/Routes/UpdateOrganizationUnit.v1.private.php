@@ -12,6 +12,8 @@
  * @link __PROJECT_URL__
  * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
  *
+ * @codingStandardsIgnoreStart
+ *
  * @apiGroup CommunityOrganizationUnit
  * @apiName updateCommunityOrganizationUnit
  * @api {post} /v1/community/organization-units/:id Изменить
