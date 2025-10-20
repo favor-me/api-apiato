@@ -18,6 +18,7 @@ use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\HistorySection\ModelNote\Types\SystemMessageModelNoteType;
+use App\Containers\OrderSection\Order\Models\Order;
 
 /**
  * @method null|OrganizationUnitModel getModelData()
@@ -26,7 +27,7 @@ class MinusOrganizationUnitBalanceEvent extends OrganizationUnitEvent
 {
     public const OLD_BALANCE_VALUE = 'oldBalanceValue';
     public const MINUS_BALANCE_VALUE = 'minusBalanceValue';
-    public const ORDER_ID = 'orderId';
+    public const ORDER = 'order';
 
     public function getDataChanges(): array
     {
@@ -65,11 +66,15 @@ class MinusOrganizationUnitBalanceEvent extends OrganizationUnitEvent
 
     protected function getModelNoteMessageArgs(): array
     {
+        /** @var Order $order */
+        $order = $this->data->get(self::ORDER);
+
         return [
             'old_value' => $this->data->get(self::OLD_BALANCE_VALUE),
             'new_value' => $this->getModelData()->balance,
-            'order_id' => $this->data->get(self::ORDER_ID),
-            'minus_balance' => $this->data->get(self::MINUS_BALANCE_VALUE)
+            'minus_balance' => $this->data->get(self::MINUS_BALANCE_VALUE),
+            'order_number' => $order->id,
+            'order_id' => $order->getHashedKey(),
         ];
     }
 }

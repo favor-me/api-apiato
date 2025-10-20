@@ -49,7 +49,7 @@ class MinusOrganizationUnitBalanceEventHandler extends Event
         ModelEventManager::getInstance()
             ->run(HistoryEvent::class, [
                 ModelEvent::MODEL => $event->getUnit(),
-                HistoryEvent::ORDER_ID => $event->getOrderId(),
+                HistoryEvent::ORDER => $event->getOrder(),
                 HistoryEvent::OLD_BALANCE_VALUE => $event->getOldBalanceValue(),
                 HistoryEvent::MINUS_BALANCE_VALUE => $event->getMinusBalanceValue()
             ]);

@@ -53,7 +53,7 @@ class OrderUpdatedEventHandler extends Event
     protected function orderItemMinusBalance(Item $item, OrderModel $order): void
     {
         if (!is_null($item->unit_id)) {
-            app(MinusOrganizationUnitBalanceTask::class)->run($item->unit, $item->amount, $order->id);
+            app(MinusOrganizationUnitBalanceTask::class)->run($item->unit, $item->amount, $order);
         }
     }
 }

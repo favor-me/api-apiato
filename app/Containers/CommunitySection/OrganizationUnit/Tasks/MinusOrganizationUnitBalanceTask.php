@@ -17,6 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationUnit\Tasks;
 use App\Containers\CommunitySection\OrganizationUnit\Events\MinusOrganizationUnitBalanceEvent;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use Exception;
 
@@ -25,11 +26,11 @@ class MinusOrganizationUnitBalanceTask extends OrganizationUnitTask
     /**
      * @param OrganizationUnitModel $unit
      * @param float $minusBalance
-     * @param int $orderId
+     * @param OrderModel $order
      * @return OrganizationUnitModel
      * @throws UpdateResourceFailedException
      */
-    public function run(OrganizationUnitModel $unit, float $minusBalance, int $orderId): OrganizationUnitModel
+    public function run(OrganizationUnitModel $unit, float $minusBalance, OrderModel $order): OrganizationUnitModel
     {
         try {
             $newBalance = (float)$unit->balance - $minusBalance;
@@ -44,7 +45,7 @@ class MinusOrganizationUnitBalanceTask extends OrganizationUnitTask
 
             $resultUnit = $this->repository->update($data, $unit->id);
 
-            event(new MinusOrganizationUnitBalanceEvent($resultUnit, $minusBalance, $unit->balance, $orderId));
+            event(new MinusOrganizationUnitBalanceEvent($resultUnit, $minusBalance, $unit->balance, $order));
 
             return $resultUnit;
         } catch (Exception $e) {

@@ -21,6 +21,6 @@ return [
     ],
     'minus_organization_unit_balance' => [
         'note_message' => 'Списание баланса из заказа №:order_id. Предыдущее значение «:old_value», новое значение «:new_value».',
-        'infinity_note_message' => 'Списание баланса(-:minus_balance) из заказа №:order_id.'
+        'infinity_note_message' => 'Списание баланса(-:minus_balance) из заказа №:order_number.'
     ]
 ];

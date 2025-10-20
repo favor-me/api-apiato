@@ -15,6 +15,7 @@
 namespace App\Containers\CommunitySection\OrganizationUnit\Events;
 
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\OrderSection\Order\Models\Order;
 
 class MinusOrganizationUnitBalanceEvent
 {
@@ -22,13 +23,13 @@ class MinusOrganizationUnitBalanceEvent
         protected OrganizationUnitModel $unit,
         protected float $minusBalanceValue,
         protected ?float $oldBalanceValue,
-        protected int $orderId
+        protected Order $order
     ) {
     }
 
-    public function getOrderId(): int
+    public function getOrder(): Order
     {
-        return $this->orderId;
+        return $this->order;
     }
 
     public function getOldBalanceValue(): float
