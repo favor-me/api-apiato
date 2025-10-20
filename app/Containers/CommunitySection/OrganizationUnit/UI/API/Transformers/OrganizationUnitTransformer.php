@@ -17,13 +17,16 @@ namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers;
 
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\HistorySection\ModelNote\UI\API\Transformers\ModelNoteTransformer;
 use App\Containers\Vendor\Unit\UI\API\Transformers\UnitTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Collection;
 
 class OrganizationUnitTransformer extends Transformer
 {
     protected array $defaultIncludes = [
+        OrganizationUnit::INCLUDE_MODEL_NOTES,
         OrganizationUnit::INCLUDE_SYSTEM_UNIT
     ];
 
@@ -54,5 +57,10 @@ class OrganizationUnitTransformer extends Transformer
     protected function includeSystemUnit(OrganizationUnitModel $organizationUnit): Item
     {
         return $this->item($organizationUnit->systemUnit, new UnitTransformer());
+    }
+
+    protected function includeModelNotes(OrganizationUnitModel $organizationUnit): Collection
+    {
+        return $this->collection($organizationUnit->modelNotes, new ModelNoteTransformer());
     }
 }

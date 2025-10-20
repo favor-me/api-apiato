@@ -24,7 +24,7 @@ use App\Containers\HistorySection\ModelNote\Types\SystemMessageModelNoteType;
  */
 class PlusOrganizationUnitBalanceEvent extends OrganizationUnitEvent
 {
-    public const OLD_BALANCE_VALUE = 'addBalanceValue';
+    public const OLD_BALANCE_VALUE = 'oldBalanceValue';
 
     public function getDataChanges(): array
     {
@@ -43,7 +43,16 @@ class PlusOrganizationUnitBalanceEvent extends OrganizationUnitEvent
     public function getModelNoteTypeParams(): array
     {
         return [
-            SystemMessageModelNoteType::PARAM_KEY_MESSAGE => $this->getModelNoteMessage()
+            SystemMessageModelNoteType::PARAM_KEY_MESSAGE => $this->getModelNoteMessage(),
+            SystemMessageModelNoteType::PARAM_KEY_MESSAGE_ARGS => $this->getModelNoteMessageArgs()
+        ];
+    }
+
+    protected function getModelNoteMessageArgs(): array
+    {
+        return [
+            'old_value' => $this->data->get(self::OLD_BALANCE_VALUE),
+            'new_value' => $this->getModelData()->balance
         ];
     }
 
