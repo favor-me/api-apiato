@@ -20,14 +20,18 @@ use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit
 use App\Containers\CommunitySection\OrganizationUnitType\Casts\OrganizationUnitType;
 use App\Containers\CommunitySection\OrganizationUnitType\Manager;
 use App\Containers\CommunitySection\OrganizationUnitType\Type;
-use App\Containers\Vendor\Unit\Models\Unit;
+use App\Containers\HistorySection\ModelNote\Foundation\ModelNote;
+use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
+use App\Containers\Vendor\Unit\Models\Unit as UnitModel;
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Database\Casts\Money as MoneyCast;
+use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\Model;
 use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Model\IsNumbered;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use JBZoo\Data\JSON;
@@ -49,7 +53,8 @@ use JBZoo\Data\JSON;
  * @property-read Carbon $created_at Дата и время создания.
  * @property-read Carbon $updated_at Дата и время обновления.
  * @property-read null|Carbon $deleted_at Дата и время удаления.
- * @property-read Unit $systemUnit Связанная модель еденицы измерения.
+ * @property-read UnitModel $systemUnit Связанная модель еденицы измерения.
+ * @property-read Collection $modelNotes Колекция заметок для событий модели (История).
  *
  * @method static OrganizationUnitFactory factory(...$parameters)
  */
@@ -95,6 +100,15 @@ class OrganizationUnit extends Model
 
     public function systemUnit(): BelongsTo
     {
-        return $this->belongsTo(Unit::class, BaseOrganizationUnit::SYSTEM_UNIT_ID, ID);
+        return $this->belongsTo(UnitModel::class, BaseOrganizationUnit::SYSTEM_UNIT_ID, ID);
+    }
+
+    public function modelNotes(int $limit = 10): HasMany
+    {
+        return $this->hasMany(ModelNoteModel::class, ModelNote::MODEL_ID, ID)
+            ->where(ModelNote::MODEL, self::class)
+            ->orderByDesc(ID)
+            ->orderByDesc(self::CREATED_AT)
+            ->limit($limit);
     }
 }

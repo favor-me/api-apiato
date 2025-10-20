@@ -17,11 +17,15 @@ namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Unit\Models;
 
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\CommunitySection\OrganizationUnit\Tasks\PlusOrganizationUnitBalanceTask;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\UnitTestCase;
 use App\Containers\CommunitySection\OrganizationUnitType\Type;
+use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
 use App\Containers\Vendor\Unit\Models\Unit;
+use App\Ship\Database\Eloquent\Collection;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use JBZoo\Data\JSON;
 
 final class OrganizationUnitTest extends UnitTestCase
@@ -98,5 +102,19 @@ final class OrganizationUnitTest extends UnitTestCase
     public function testAttributeType(): void
     {
         $this->assertInstanceOf(Type::class, $this->model->type);
+    }
+
+    public function testHasManyModelNotes(): void
+    {
+        $model = OrganizationUnitModel::factory()->create();
+
+        app(PlusOrganizationUnitBalanceTask::class)->run($model, 11);
+
+        $model->refresh();
+
+        $this->assertInstanceOf(HasMany::class, $model->modelNotes());
+        $this->assertInstanceOf(ModelNoteModel::class, $model->modelNotes()->getModel());
+        $this->assertInstanceOf(Collection::class, $model->modelNotes);
+        $this->assertCount(1, $model->modelNotes);
     }
 }
