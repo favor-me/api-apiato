@@ -26,6 +26,5 @@ class CreateModelEventDto extends Dto implements ToData
     public string $model;
     public int $model_id;
     public array $data = [];
-    public ?int $created_by = null;
     public array $data_changes = [];
 }

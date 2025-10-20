@@ -26,6 +26,5 @@ class CreateModelNoteDto extends Dto implements ToData
     public ?string $model;
     public ?int $model_id;
     public ?int $event_id;
-    public ?int $created_by = null;
     public array $params = [];
 }
