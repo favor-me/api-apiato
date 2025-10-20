@@ -21,13 +21,13 @@ class PlusOrganizationUnitBalanceEvent
     public function __construct(
         protected OrganizationUnitModel $unit,
         protected float $addBalanceValue,
-        protected float $oldBalanceValue
+        protected ?float $oldBalanceValue
     ) {
     }
 
     public function getOldBalanceValue(): float
     {
-        return $this->oldBalanceValue;
+        return (float)$this->oldBalanceValue;
     }
 
     public function getAddBalanceValue(): float
