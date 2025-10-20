@@ -15,7 +15,6 @@
 namespace App\Containers\HistorySection\ModelNote\Types;
 
 use App\Containers\HistorySection\ModelNote\Facades\Container;
-use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
 use JBZoo\Data\JSON;
 
 class SystemMessageModelNoteType extends ModelNoteType
@@ -45,7 +44,8 @@ class SystemMessageModelNoteType extends ModelNoteType
         $messageTransKeyArgs = $params->get(self::PARAM_KEY_MESSAGE_ARGS);
 
         return [
-            self::PARAM_KEY_MESSAGE => __($messageTransKey, $messageTransKeyArgs)
+            self::PARAM_KEY_MESSAGE => __($messageTransKey, $messageTransKeyArgs),
+            self::PARAM_KEY_MESSAGE_ARGS => $messageTransKeyArgs
         ];
     }
 }
