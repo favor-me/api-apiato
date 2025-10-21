@@ -57,7 +57,6 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
             OrganizationUnit::COST_PRICE => $this->getOrganizationUnitCostPriceValidationRules(),
             OrganizationUnit::PRICE_UP => $this->getOrganizationUnitPriceUpValidationRules(),
             OrganizationUnit::CLIENT_PRICE => $this->getOrganizationUnitClientPriceValidationRules(),
-            OrganizationUnit::IS_INFINITY_BALANCE => $this->getOrganizationUnitIsInfinityBalanceValidationRules(),
             OrganizationUnit::ORGANIZATION_ID => $this->getOrganizationUnitOrganizationIdValidationRules(),
             OrganizationUnit::SYSTEM_UNIT_ID => $this->getOrganizationUnitSystemUnitIdValidationRules(),
         ];
