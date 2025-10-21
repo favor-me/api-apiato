@@ -15,6 +15,7 @@
 namespace App\Containers\HistorySection\ModelNote\UI\API\Transformers;
 
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
+use App\Containers\HistorySection\ModelEvent\UI\API\Transformers\ModelEventTransformer;
 use App\Containers\HistorySection\ModelNote\Foundation\ModelNote;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
 use App\Ship\Parents\Transformers\Transformer;
@@ -59,6 +60,6 @@ class ModelNoteTransformer extends Transformer
 
     protected function includeEvent(ModelNoteModel $modelNote): Item|Primitive
     {
-        return $this->primitiveNullOrItem($modelNote->event, new UserTransformer());
+        return $this->primitiveNullOrItem($modelNote->event, new ModelEventTransformer());
     }
 }
