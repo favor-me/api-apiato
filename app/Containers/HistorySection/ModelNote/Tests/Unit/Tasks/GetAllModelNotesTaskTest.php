@@ -18,9 +18,9 @@ use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote;
 use App\Containers\HistorySection\ModelNote\Tasks\GetAllModelNotesTask;
-use App\Containers\HistorySection\ModelNote\Tests\TestCase;
+use App\Containers\HistorySection\ModelNote\Tests\UnitTestCase;
 
-final class GetAllModelNotesTaskTest extends TestCase
+final class GetAllModelNotesTaskTest extends UnitTestCase
 {
     public function testAll(): void
     {

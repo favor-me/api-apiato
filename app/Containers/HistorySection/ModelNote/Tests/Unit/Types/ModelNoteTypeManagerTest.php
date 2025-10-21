@@ -14,11 +14,11 @@
 
 namespace App\Containers\HistorySection\ModelNote\Tests\Unit\Types;
 
-use App\Containers\HistorySection\ModelNote\Tests\TestCase;
+use App\Containers\HistorySection\ModelNote\Tests\UnitTestCase;
 use App\Containers\HistorySection\ModelNote\Types\ModelNoteTypeManager;
 use App\Containers\HistorySection\ModelNote\Types\SystemMessageModelNoteType;
 
-final class ModelNoteTypeManagerTest extends TestCase
+final class ModelNoteTypeManagerTest extends UnitTestCase
 {
     public function testGet(): void
     {

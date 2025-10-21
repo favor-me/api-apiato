@@ -14,6 +14,6 @@
 
 namespace App\Containers\HistorySection\ModelNote\Tests;
 
-abstract class TestCase extends ContainerTestCase
+abstract class UnitTestCase extends ContainerTestCase
 {
 }

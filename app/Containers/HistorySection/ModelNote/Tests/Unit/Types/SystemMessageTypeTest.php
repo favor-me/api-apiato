@@ -17,11 +17,11 @@ namespace App\Containers\HistorySection\ModelNote\Tests\Unit\Types;
 use App\Containers\HistorySection\ModelEvent\Models\ModelEvent;
 use App\Containers\HistorySection\ModelNote\Facades\Container;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote;
-use App\Containers\HistorySection\ModelNote\Tests\TestCase;
+use App\Containers\HistorySection\ModelNote\Tests\UnitTestCase;
 use App\Containers\HistorySection\ModelNote\Types\ModelNoteTypeManager;
 use App\Containers\HistorySection\ModelNote\Types\SystemMessageModelNoteType;
 
-final class SystemMessageTypeTest extends TestCase
+final class SystemMessageTypeTest extends UnitTestCase
 {
     protected ?SystemMessageModelNoteType $type;
 

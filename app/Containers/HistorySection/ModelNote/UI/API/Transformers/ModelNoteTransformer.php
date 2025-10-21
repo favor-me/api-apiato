@@ -27,6 +27,10 @@ class ModelNoteTransformer extends Transformer
         CREATED_BY
     ];
 
+    protected array $defaultIncludes = [
+        ModelNote::INCLUDE_EVENT
+    ];
+
     public function transform(ModelNoteModel $modelNote): array
     {
         return [
@@ -37,8 +41,8 @@ class ModelNoteTransformer extends Transformer
             ModelNote::MODEL_ID => $modelNote->getHashedKey(ModelNote::MODEL_ID),
             ModelNote::EVENT_ID => $modelNote->getHashedKey(ModelNote::EVENT_ID),
             PARAMS => $this->transformParams($modelNote),
-            CREATED_AT => $this->nullOrTimestamp($modelNote->created_at),
-            CREATED_BY => $modelNote->getHashedKey(CREATED_BY)
+            CREATED_BY => $modelNote->getHashedKey(CREATED_BY),
+            CREATED_AT => $this->time($modelNote->created_at)
         ];
     }
 
@@ -51,5 +55,10 @@ class ModelNoteTransformer extends Transformer
     protected function includeCreatedBy(ModelNoteModel $modelNote): Item|Primitive
     {
         return $this->primitiveNullOrItem($modelNote->createdBy, new UserTransformer());
+    }
+
+    protected function includeEvent(ModelNoteModel $modelNote): Item|Primitive
+    {
+        return $this->primitiveNullOrItem($modelNote->event, new UserTransformer());
     }
 }

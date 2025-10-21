@@ -16,6 +16,7 @@ namespace App\Containers\HistorySection\ModelNote\Models;
 
 use Apiato\Core\Contracts\HasResourceKey;
 use App\Containers\AppSection\User\Models\User;
+use App\Containers\HistorySection\ModelEvent\Models\ModelEvent as ModelEventModel;
 use App\Containers\HistorySection\ModelNote\Data\Factories\ModelNoteFactory;
 use App\Containers\HistorySection\ModelNote\Foundation\ModelNote as BaseModelNote;
 use App\Containers\HistorySection\ModelNote\Types\ModelNoteType;
@@ -28,8 +29,6 @@ use Illuminate\Support\Carbon;
 use JBZoo\Data\JSON;
 
 /**
- * Class ModelNote - Примечание модели.
- *
  * @property-read int $id Уникальный идентификатор.
  * @property-read string $type Тип.
  * @property-read string $model Класс модели (контекст).
@@ -40,7 +39,7 @@ use JBZoo\Data\JSON;
  * @property-read Carbon $created_at Дата и время создания.
  * @property-read Carbon $updated_at Дата и время обновления.
  * @property-read null|User $createdBy Объект пользователя совершивший действие.
- *
+ * @property-read ModelEventModel $event Объект события модели.
  * @method static ModelNoteFactory factory(...$parameters)
  */
 final class ModelNote extends Model implements HasResourceKey
@@ -52,6 +51,10 @@ final class ModelNote extends Model implements HasResourceKey
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;
+
+    protected $with = [
+        BaseModelNote::INCLUDE_EVENT
+    ];
 
     protected $fillable = [
         BaseModelNote::TYPE,
@@ -73,8 +76,11 @@ final class ModelNote extends Model implements HasResourceKey
 
     public function createdBy(): BelongsTo
     {
-        return $this
-            ->setConnection(config('database.default'))
-            ->belongsTo(User::class, $this->getCreatedByColumn(), ID);
+        return $this->belongsTo(User::class, $this->getCreatedByColumn(), ID);
+    }
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(ModelEventModel::class, BaseModelNote::EVENT_ID, ID);
     }
 }
