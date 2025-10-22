@@ -18,6 +18,7 @@ use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit;
 use App\Containers\HistorySection\ModelNote\Tasks\GetAllModelNotesTask;
 use App\Ship\Parents\Actions\Action;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrganizationUnitHistoryNotesAction extends Action
@@ -26,11 +27,13 @@ class GetAllOrganizationUnitHistoryNotesAction extends Action
      * @param string|int $id
      * @param int|string|null $limit
      * @return LengthAwarePaginator
+     * @throws CoreInternalErrorException
      * @throws RepositoryException
      */
     public function run(string|int $id, null|int|string $limit = null): LengthAwarePaginator
     {
         return app(GetAllModelNotesTask::class)
+            ->addRequestCriteria()
             ->forModel(OrganizationUnit::class)
             ->modelId($id)
             ->run($limit);
