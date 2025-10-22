@@ -15,9 +15,9 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Controllers;
 
+use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Containers\CommunitySection\OrganizationUnit\Actions\FindOrganizationUnitByIdAction;
 use App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests\FindOrganizationUnitByIdRequest;
-use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
@@ -31,8 +31,10 @@ class FindOrganizationUnitByIdController extends ApiController
      * @throws InvalidTransformerException
      * @throws NotFoundException
      */
-    public function __invoke(FindOrganizationUnitByIdRequest $request, FindOrganizationUnitByIdAction $action): JsonResponse
-    {
+    public function __invoke(
+        FindOrganizationUnitByIdRequest $request,
+        FindOrganizationUnitByIdAction $action
+    ): JsonResponse {
         return $this->json(
             $this->transform(
                 $action->run($request->id),
