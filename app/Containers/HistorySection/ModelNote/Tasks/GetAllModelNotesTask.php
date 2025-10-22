@@ -16,6 +16,7 @@ namespace App\Containers\HistorySection\ModelNote\Tasks;
 
 use App\Containers\HistorySection\ModelNote\Data\Criterias\ModelNoteForModelCriteria;
 use App\Containers\HistorySection\ModelNote\Foundation\ModelNote;
+use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
 use App\Ship\Criterias\ThisEqualThatCriteria;
 use App\Ship\Parents\Criterias\Criteria;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -55,7 +56,7 @@ class GetAllModelNotesTask extends ModelNoteTask
     public function modelId(int|string $id): self
     {
         $this->repository->pushCriteria(
-            new ThisEqualThatCriteria(ModelNote::MODEL_ID, $id)
+            new ThisEqualThatCriteria(ModelNoteModel::TABLE . '.' . ModelNote::MODEL_ID, $id)
         );
 
         return $this;
