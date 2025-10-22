@@ -21,7 +21,12 @@ use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllModelNotesTask extends ModelNoteTask
 {
-    public function run($limit = null): LengthAwarePaginator
+    /**
+     * @param int|string|null $limit
+     * @return LengthAwarePaginator
+     * @throws RepositoryException
+     */
+    public function run(null|int|string $limit = null): LengthAwarePaginator
     {
         return $this->repository->paginate($limit);
     }
