@@ -21,6 +21,9 @@ use App\Ship\Parents\Seeders\Seeder;
 use App\Ship\Exceptions\CreateResourceFailedException;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
+/**
+ * @description use command a db:seed --class=\\App\\Containers\\OrderSection\\Status\\Data\\Seeders\\StatusesSeeder
+ */
 class StatusesSeeder extends Seeder
 {
     /**
