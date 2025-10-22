@@ -50,6 +50,7 @@ class GetAllOrdersAction extends Action
             ->addRequestCriteria(null, [
                 Order::ORGANIZATION_ID,
                 Order::CLIENT_ID,
+                Order::STATUS_ID,
                 CREATED_BY,
                 UPDATED_BY
             ])
