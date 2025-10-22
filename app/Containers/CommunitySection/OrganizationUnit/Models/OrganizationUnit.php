@@ -19,6 +19,7 @@ use App\Containers\CommunitySection\OrganizationUnit\Data\Factories\Organization
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit as BaseOrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnitType\Casts\OrganizationUnitType;
 use App\Containers\CommunitySection\OrganizationUnitType\Manager;
+use App\Containers\CommunitySection\OrganizationUnitType\ServiceType;
 use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\HistorySection\ModelNote\Foundation\ModelNote;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
@@ -29,7 +30,7 @@ use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\Model;
 use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Model\IsNumbered;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -110,5 +111,22 @@ class OrganizationUnit extends Model
             ->orderByDesc(ID)
             ->orderByDesc(self::CREATED_AT)
             ->limit($limit);
+    }
+
+    protected function performInsert(Builder $query): bool
+    {
+        $this->setIsInfinityBalanceIfServiceType();
+        return parent::performInsert($query);
+    }
+
+    private function setIsInfinityBalanceIfServiceType(): void
+    {
+        $serviceTypeName = Manager::getInstance()
+            ->get(ServiceType::class)
+            ->getName();
+
+        if ($this->type->getName() === $serviceTypeName) {
+            $this->setAttribute(BaseOrganizationUnit::IS_INFINITY_BALANCE, true);
+        }
     }
 }

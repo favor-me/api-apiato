@@ -19,6 +19,9 @@ use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\CommunitySection\OrganizationUnit\Tasks\PlusOrganizationUnitBalanceTask;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\UnitTestCase;
+use App\Containers\CommunitySection\OrganizationUnitType\Manager;
+use App\Containers\CommunitySection\OrganizationUnitType\ProductType;
+use App\Containers\CommunitySection\OrganizationUnitType\ServiceType;
 use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
 use App\Containers\Vendor\Unit\Models\Unit;
@@ -116,5 +119,19 @@ final class OrganizationUnitTest extends UnitTestCase
         $this->assertInstanceOf(ModelNoteModel::class, $model->modelNotes()->getModel());
         $this->assertInstanceOf(Collection::class, $model->modelNotes);
         $this->assertCount(1, $model->modelNotes);
+    }
+
+    public function testSetInfinityBalanceForServiceType(): void
+    {
+        $serviceTypeName = Manager::getInstance()
+            ->get(ServiceType::class)
+            ->getName();
+
+        $model = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::TYPE => $serviceTypeName
+            ]);
+
+        $this->assertTrue($model->is_infinity_balance);
     }
 }
