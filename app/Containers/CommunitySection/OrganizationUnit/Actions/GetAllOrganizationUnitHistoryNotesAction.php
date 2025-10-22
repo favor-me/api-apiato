@@ -23,14 +23,16 @@ use Prettus\Repository\Exceptions\RepositoryException;
 class GetAllOrganizationUnitHistoryNotesAction extends Action
 {
     /**
+     * @param string|int $id
      * @param int|string|null $limit
      * @return LengthAwarePaginator
      * @throws RepositoryException
      */
-    public function run(null|int|string $limit = null): LengthAwarePaginator
+    public function run(string|int $id, null|int|string $limit = null): LengthAwarePaginator
     {
         return app(GetAllModelNotesTask::class)
             ->forModel(OrganizationUnit::class)
+            ->modelId($id)
             ->run($limit);
     }
 }

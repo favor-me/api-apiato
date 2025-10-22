@@ -34,7 +34,10 @@ class GetAllOrganizationUnitHistoryNotesController extends ApiController
         GetAllOrganizationUnitHistoryNotesAction $action
     ): JsonResponse {
         return Response::create(
-            $action->run($request->getLimit()),
+            $action->run(
+                $request->getId(),
+                $request->getLimit()
+            ),
             $request->getTransformer()
         )->ok();
     }
