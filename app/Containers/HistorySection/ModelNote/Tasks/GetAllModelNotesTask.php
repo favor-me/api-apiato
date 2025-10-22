@@ -15,6 +15,8 @@
 namespace App\Containers\HistorySection\ModelNote\Tasks;
 
 use App\Containers\HistorySection\ModelNote\Data\Criterias\ModelNoteForModelCriteria;
+use App\Containers\HistorySection\ModelNote\Foundation\ModelNote;
+use App\Ship\Criterias\ThisEqualThatCriteria;
 use App\Ship\Parents\Criterias\Criteria;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
@@ -46,13 +48,30 @@ class GetAllModelNotesTask extends ModelNoteTask
     }
 
     /**
+     * @param int|string $id
+     * @return $this
+     * @throws RepositoryException
+     */
+    public function modelId(int|string $id): self
+    {
+        $this->repository->pushCriteria(
+            new ThisEqualThatCriteria(ModelNote::MODEL_ID, $id)
+        );
+
+        return $this;
+    }
+
+    /**
      * @param string $model
      * @return $this
      * @throws RepositoryException
      */
     public function forModel(string $model): self
     {
-        $this->repository->pushCriteria(new ModelNoteForModelCriteria($model));
+        $this->repository->pushCriteria(
+            new ModelNoteForModelCriteria($model)
+        );
+
         return $this;
     }
 }
