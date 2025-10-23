@@ -44,7 +44,9 @@ return [
     'allowed_origins' => [
         'http://localhost:3000',
         'https://test-crm.favor-me.ru',
-        'http://test-crm.favor-me.ru'
+        'http://test-crm.favor-me.ru',
+        'https://crm.favor-me.ru',
+        'http://crm.favor-me.ru'
     ],
 
     /*
