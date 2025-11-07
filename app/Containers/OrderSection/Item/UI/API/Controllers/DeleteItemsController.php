@@ -30,10 +30,7 @@ class DeleteItemsController extends ApiController
      * @return JsonResponse
      * @throws DeleteResourceFailedException
      */
-    public function __invoke(
-        DeleteItemsRequest $request,
-        DeleteItemsAction  $action
-    ): JsonResponse
+    public function __invoke(DeleteItemsRequest $request, DeleteItemsAction $action): JsonResponse
     {
         $result = $action->run($request->getIds());
         return $this->json([
