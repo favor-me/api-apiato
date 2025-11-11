@@ -14,6 +14,7 @@
  *
  * @apiDefine CounterpartySuccessSingleResponse
  * @apiSuccessExample {json} Успешный ответ:
+ *
 HTTP/1.1 200 OK
 {
     "data": {
@@ -65,7 +66,69 @@ HTTP/1.1 200 OK
             "time_short": "13:10",
             "is_future": false
         },
-        "deleted_at": null
+        "deleted_at": null,
+        "bank_data_schema": {
+            "inn": {
+                "type": "int",
+                "name": "inn",
+                "title": "ИНН",
+                "value": "1234567891"
+            },
+            "kpp": {
+                "type": "int",
+                "name": "kpp",
+                "title": "КПП",
+                "value": "187654321"
+            },
+            "orgnip": {
+                "type": "int",
+                "name": "orgnip",
+                "title": "ОРГНИП",
+                "value": "123456781098765"
+            },
+            "payment_account": {
+                "type": "int",
+                "name": "payment_account",
+                "title": "Расчётный счёт",
+                "value": "12345178909876543212"
+            },
+            "bank": {
+                "type": "string",
+                "name": "bank",
+                "title": "Название банка",
+                "value": "BEATAE Bank"
+            },
+            "correspondent_account": {
+                "type": "int",
+                "name": "correspondent_account",
+                "title": "Кор. счёт",
+                "value": "12345678909876513212"
+            },
+            "bik": {
+                "type": "int",
+                "name": "bik",
+                "title": "БИК",
+                "value": "123416434"
+            },
+            "okpo": {
+                "type": "int",
+                "name": "okpo",
+                "title": "ОКПО",
+                "value": "16547364"
+            },
+            "okved": {
+                "type": "string",
+                "name": "okved",
+                "title": "ОКВЭД",
+                "value": null
+            },
+            "okato": {
+                "type": "int",
+                "name": "okato",
+                "title": "ОКАТО",
+                "value": null
+            }
+        }
     },
     "meta": {
         "include": []

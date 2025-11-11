@@ -18,9 +18,14 @@ namespace App\Containers\CommunitySection\Counterparty\UI\API\Transformers;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Ship\Parents\Transformers\Transformer;
+use League\Fractal\Resource\Primitive;
 
 class CounterpartyTransformer extends Transformer
 {
+    protected array $defaultIncludes = [
+        Counterparty::BANK_DATA_SCHEMA
+    ];
+
     public function transform(CounterpartyModel $counterparty): array
     {
         return [
@@ -38,5 +43,14 @@ class CounterpartyTransformer extends Transformer
             UPDATED_AT => $this->time($counterparty->updated_at),
             DELETED_AT => $this->time($counterparty->deleted_at)
         ];
+    }
+
+    protected function includeBankDataSchema(CounterpartyModel $counterparty): Primitive
+    {
+        return $this->primitive(
+            $counterparty->country
+                ->getBankDataSchema($counterparty->bank_data)
+                ->toSchema()
+        );
     }
 }
