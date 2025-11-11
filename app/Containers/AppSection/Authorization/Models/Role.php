@@ -41,10 +41,10 @@ class Role extends SpatieRole
         FactoryLocatorTrait::newFactory insteadof HasFactory;
     }
 
-    public const ADMIN = 'admin';
-    public const ORGANIZATION_OWNER = 'organization_owner';
-    public const ORGANIZATION_WORKER = 'organization_worker';
-    public const SPECIALIST = 'specialist';
+    public const string ADMIN = 'admin';
+    public const string ORGANIZATION_OWNER = 'organization_owner';
+    public const string ORGANIZATION_WORKER = 'organization_worker';
+    public const string SPECIALIST = 'specialist';
 
     protected string $guard_name = 'api';
 
