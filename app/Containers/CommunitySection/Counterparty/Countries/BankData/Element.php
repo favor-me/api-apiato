@@ -17,10 +17,11 @@ namespace App\Containers\CommunitySection\Counterparty\Countries\BankData;
 
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
+use Illuminate\Contracts\Support\Arrayable;
 use JBZoo\Data\JSON;
 use JsonSerializable;
 
-abstract class Element implements JsonSerializable
+abstract class Element implements JsonSerializable, Arrayable
 {
     public const string TYPE_INT = 'int';
     public const string TYPE_STRING = 'string';
@@ -37,6 +38,7 @@ abstract class Element implements JsonSerializable
     {
         $this->data = $data;
         $this->title = $this->trans('title');
+        $this->bindValue();
     }
 
     public function trans(?string $key = null, array $replace = []): mixed
@@ -73,6 +75,11 @@ abstract class Element implements JsonSerializable
         ];
     }
 
+    public function toArray(): array
+    {
+        return $this->jsonSerialize();
+    }
+
     public function getValidationMessages(): array
     {
         return [];
@@ -81,5 +88,12 @@ abstract class Element implements JsonSerializable
     protected function validationRuleName(string $rule): string
     {
         return Counterparty::BANK_DATA . '.' . $this->name . '.' . $rule;
+    }
+
+    protected function bindValue(): void
+    {
+        if (!is_null($this->data)) {
+            $this->value = $this->data->get($this->name);
+        }
     }
 }

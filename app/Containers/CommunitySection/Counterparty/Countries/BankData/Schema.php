@@ -16,9 +16,10 @@
 namespace App\Containers\CommunitySection\Counterparty\Countries\BankData;
 
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
+use Illuminate\Contracts\Support\Arrayable;
 use JBZoo\Data\JSON;
 
-class Schema
+class Schema implements Arrayable
 {
     protected Collection $elements;
 
@@ -61,5 +62,21 @@ class Schema
             $this->elements->getElements()
         ))
             ->write();
+    }
+
+    public function toSchema(): array
+    {
+        $schema = [];
+        /** @var Element $element */
+        foreach ($this->elements->getElements() as $element) {
+            $schema[$element->getName()] = $element->toArray();
+        }
+
+        return $schema;
+    }
+
+    public function toArray(): array
+    {
+        return $this->elements->getElements();
     }
 }
