@@ -36,6 +36,7 @@ class GetAllOrganizationUnitsTask extends OrganizationUnitTask
      * @param int $id
      * @return $this
      * @throws RepositoryException
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function organization(int $id): self
     {

@@ -26,6 +26,7 @@ class FindOrganizationUnitByIdAction extends Action
      * @param int $id
      * @return OrganizationUnit
      * @throws NotFoundException
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function run(int $id): OrganizationUnit
     {

@@ -58,7 +58,7 @@ abstract class OrganizationUnitApiRequest extends ApiRequest implements Gettable
         ];
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         $this->prepareForValidationOrganizationId();
     }

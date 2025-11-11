@@ -35,8 +35,7 @@ class GetAllOrganizationUnitsController extends ApiController
     public function __invoke(
         GetAllOrganizationUnitsRequest $request,
         GetAllOrganizationUnitsAction  $action
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $models = $action
             ->organization($request->organization_id)
             ->run($request->isOnlyTrashed());
