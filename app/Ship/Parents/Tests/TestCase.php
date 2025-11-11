@@ -154,6 +154,13 @@ abstract class TestCase extends AbstractTestCase
         }
     }
 
+    public function getTestingOrganizationOwnerUser(?array $userDetails = null, ?array $access = null): UserModel
+    {
+        return $this->getTestingOrganizationUser(array_merge((array)$userDetails, [
+            User::IS_ORGANIZATION_OWNER => true
+        ]), $access);
+    }
+
     public function getTestingOrganizationUser(?array $userDetails = null, ?array $access = null): UserModel
     {
         $user = $this->getTestingUser($userDetails, $access);
