@@ -32,6 +32,9 @@ class ExistsOrganizationUnitTypeRule extends ValidationRule
         ]);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!$this->getManager()->has($value)) {
