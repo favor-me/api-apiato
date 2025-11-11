@@ -18,7 +18,7 @@ use App\Ship\Validation\Rules\PhoneNumber as PhoneNumberValidationRule;
 
 class PhoneNumber
 {
-    public const MAX_LENGTH = 14;
+    public const int MAX_LENGTH = 14;
 
     public static function getValidationRule(): PhoneNumberValidationRule
     {
