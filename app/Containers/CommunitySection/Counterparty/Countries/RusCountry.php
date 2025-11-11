@@ -15,7 +15,6 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Countries;
 
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\IntElement;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\BankElement;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\BikElement;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\CorrespondentAccountElement;
@@ -31,8 +30,6 @@ use JBZoo\Data\JSON;
 
 class RusCountry extends Country
 {
-    public const string INN = 'inn';
-
     public function getBankDataSchema(JSON $data = null): Schema
     {
         $schema = new Schema();
