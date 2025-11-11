@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * FavorMe system
+ *
+ * This file is part of the FavorMe system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
+ */
+
+namespace App\Containers\CommunitySection\Counterparty\UI\API\Transformers;
+
+use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
+use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
+use App\Ship\Parents\Transformers\Transformer;
+
+class CounterpartyTransformer extends Transformer
+{
+    public function transform(CounterpartyModel $counterparty): array
+    {
+        return [
+            OBJECT => $counterparty->getResourceKey(),
+            ID => $counterparty->getHashedKey(),
+            Counterparty::NAME => $counterparty->name,
+            Counterparty::LEGAL_ADDRESS => $counterparty->legal_address,
+            Counterparty::MAILING_ADDRESS => $counterparty->mailing_address,
+            Counterparty::PHONE_NUMBER => $counterparty->phone_number,
+            Counterparty::EMAIL => $counterparty->email,
+            Counterparty::COUNTRY => $counterparty->country->toArray(),
+            Counterparty::BANK_DATA => $counterparty->bank_data,
+            Counterparty::ORGANIZATION_ID => $counterparty->getHashedKey(Counterparty::ORGANIZATION_ID),
+            CREATED_AT => $this->time($counterparty->created_at),
+            UPDATED_AT => $this->time($counterparty->updated_at),
+            DELETED_AT => $this->time($counterparty->deleted_at)
+        ];
+    }
+}
