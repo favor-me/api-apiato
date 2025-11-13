@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Data\Repositories;
 
+use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Ship\Parents\Repositories\Repository;
 
@@ -24,7 +25,11 @@ use App\Ship\Parents\Repositories\Repository;
 final class CounterpartyRepository extends Repository
 {
     protected $fieldSearchable = [
-        ID => '='
+        ID => '=',
+        Counterparty::NAME => 'like',
+        Counterparty::PHONE_NUMBER => 'like',
+        Counterparty::LEGAL_ADDRESS => 'like',
+        Counterparty::MAILING_ADDRESS => 'like'
     ];
 
     public function model(): string
