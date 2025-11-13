@@ -23,6 +23,7 @@ use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\Unique;
 
 /**
  * @method UpdateCounterpartyDto getDto()
@@ -67,6 +68,12 @@ class UpdateCounterpartyRequest extends CreateCounterpartyRequest
     {
         return parent::getCounterpartyNameValidationRules()
             ->removeRequired();
+    }
+
+    protected function getCounterpartyNameUniqueValidationRules(): Unique
+    {
+        return parent::getCounterpartyNameUniqueValidationRules()
+            ->ignore($this->id);
     }
 
     public function getCounterpartyAddressValidationRules(): ValidationRules
