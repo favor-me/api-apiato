@@ -26,6 +26,7 @@ class OkvedElement extends Element
 
     protected array $rules = [
         'string',
+        'nullable',
         'max:' . self::MAX_LENGTH
     ];
 

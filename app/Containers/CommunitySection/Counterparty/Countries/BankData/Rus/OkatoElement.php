@@ -27,6 +27,7 @@ class OkatoElement extends Element
 
     protected array $rules = [
         'numeric',
+        'nullable',
         'min_digits:' . self::MIN_DIGITS,
         'max_digits:' . self::MAX_DIGITS
     ];
