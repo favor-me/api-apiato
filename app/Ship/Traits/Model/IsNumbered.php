@@ -16,6 +16,8 @@ namespace App\Ship\Traits\Model;
 
 trait IsNumbered
 {
+    public const string NUMBER = 'number';
+
     public function getNumber(): string|int
     {
         return $this->id;
