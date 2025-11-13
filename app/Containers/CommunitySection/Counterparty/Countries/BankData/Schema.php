@@ -69,7 +69,7 @@ class Schema implements Arrayable
         $schema = [];
         /** @var Element $element */
         foreach ($this->elements->getElements() as $element) {
-            $schema[$element->getName()] = $element->toArray();
+            $schema[] = $element->toArray();
         }
 
         return $schema;

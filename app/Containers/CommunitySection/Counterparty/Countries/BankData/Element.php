@@ -71,7 +71,8 @@ abstract class Element implements JsonSerializable, Arrayable
             'type' => $this->type,
             'name' => $this->name,
             'title' => $this->title,
-            'value' => $this->value
+            'value' => $this->value,
+            'rules' => $this->rules
         ];
     }
 

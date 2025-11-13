@@ -30,7 +30,7 @@ use JBZoo\Data\JSON;
 
 class RusCountry extends Country
 {
-    public function getBankDataSchema(JSON $data = null): Schema
+    public function getBankDataSchema(?JSON $data = null): Schema
     {
         $schema = new Schema();
 

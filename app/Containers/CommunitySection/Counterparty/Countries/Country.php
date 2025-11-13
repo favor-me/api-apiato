@@ -25,7 +25,7 @@ use ReflectionClass;
 
 abstract class Country implements Namebled, Arrayable
 {
-    abstract public function getBankDataSchema(JSON $data = null): Schema;
+    abstract public function getBankDataSchema(?JSON $data = null): Schema;
 
     public function getName(): string
     {
