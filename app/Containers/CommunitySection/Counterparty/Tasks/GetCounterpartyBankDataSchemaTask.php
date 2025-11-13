@@ -16,16 +16,32 @@
 namespace App\Containers\CommunitySection\Counterparty\Tasks;
 
 use App\Containers\CommunitySection\Counterparty\Countries\Manager;
+use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
+use JBZoo\Data\JSON;
 
 class GetCounterpartyBankDataSchemaTask extends CounterpartyTask
 {
-    public function run(string $country): ?array
+    public function run(string $country, bool $testData = false): ?array
     {
         $countryObj = Manager::getInstance()->get($country);
         if (!is_null($countryObj)) {
             return $countryObj
-                ->getBankDataSchema()
+                ->getBankDataSchema(
+                    $this->getTestBankData($testData)
+                )
                 ->toSchema();
+        }
+
+        return null;
+    }
+
+    protected function getTestBankData(bool $testData = false): ?JSON
+    {
+        if ($testData) {
+            return Counterparty::factory()
+                ->rus()
+                ->make()
+                ->bank_data;
         }
 
         return null;

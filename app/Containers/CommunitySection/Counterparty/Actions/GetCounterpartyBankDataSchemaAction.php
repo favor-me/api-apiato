@@ -20,8 +20,8 @@ use App\Ship\Parents\Actions\Action;
 
 class GetCounterpartyBankDataSchemaAction extends Action
 {
-    public function run(string $country): ?array
+    public function run(string $country, bool $testData = false): ?array
     {
-        return app(GetCounterpartyBankDataSchemaTask::class)->run($country);
+        return app(GetCounterpartyBankDataSchemaTask::class)->run($country, $testData);
     }
 }

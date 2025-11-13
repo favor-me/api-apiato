@@ -27,7 +27,10 @@ class GetCounterpartyBankDataSchemaController extends ApiController
         GetCounterpartyBankDataSchemaAction $action
     ): JsonResponse {
         return $this->json([
-            'data' => $action->run($request->country)
+            'data' => $action->run(
+                $request->country,
+                (bool)$request->get('test_data')
+            )
         ]);
     }
 }

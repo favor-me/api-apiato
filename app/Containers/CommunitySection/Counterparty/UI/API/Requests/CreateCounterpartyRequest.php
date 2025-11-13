@@ -21,9 +21,13 @@ use App\Containers\CommunitySection\Counterparty\Countries\Manager;
 use App\Containers\CommunitySection\Counterparty\Dto\CreateCounterpartyDto;
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
+use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Containers\CommunitySection\Counterparty\Requests\CounterpartyApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
+use App\Ship\Utils\Str;
+use App\Ship\Validation\Rule;
+use Illuminate\Validation\Rules\Unique;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class CreateCounterpartyRequest extends CounterpartyApiRequest implements GettableDto
@@ -66,10 +70,13 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
     public function messages(): array
     {
         return array_merge([
+            Counterparty::NAME . '.unique' => Container::trans(
+                'container.validation.name.unique'
+            ),
             Counterparty::LEGAL_ADDRESS . '.required' => Container::trans(
                 'container.validation.legal_address.required'
             ),
-            Counterparty::MAILING_ADDRESS . '.required'=> Container::trans(
+            Counterparty::MAILING_ADDRESS . '.required' => Container::trans(
                 'container.validation.mailing_address.required'
             ),
         ], $this->countryMessages);
@@ -84,7 +91,16 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
     public function getCounterpartyNameValidationRules(): ValidationRules
     {
         return parent::getCounterpartyNameValidationRules()
+            ->add(
+                $this->getCounterpartyNameUniqueValidationRules()
+            )
             ->addRequired();
+    }
+
+    protected function getCounterpartyNameUniqueValidationRules(): Unique
+    {
+        return Rule::unique(CounterpartyModel::TABLE)
+            ->where(Counterparty::ORGANIZATION_ID, $this->organization_id);
     }
 
     public function getCounterpartyAddressValidationRules(): ValidationRules
@@ -128,6 +144,23 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
     public function newDto(array $data = []): CreateCounterpartyDto
     {
         return new CreateCounterpartyDto($data);
+    }
+
+    protected function prepareForValidation(): void
+    {
+        parent::prepareForValidation();
+        $this->prepareForValidationPhoneNumber();
+    }
+
+    protected function prepareForValidationPhoneNumber(): void
+    {
+        if ($this->has(Counterparty::PHONE_NUMBER)) {
+            $this->merge([
+                Counterparty::PHONE_NUMBER => Str::toPhoneNumber(
+                    $this->get(Counterparty::PHONE_NUMBER)
+                )
+            ]);
+        }
     }
 
     protected function getCheckAuthorizeMethods(): array

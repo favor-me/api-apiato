@@ -31,6 +31,7 @@ class CounterpartyTransformer extends Transformer
         return [
             OBJECT => $counterparty->getResourceKey(),
             ID => $counterparty->getHashedKey(),
+            CounterpartyModel::NUMBER => $counterparty->getNumber(),
             Counterparty::NAME => $counterparty->name,
             Counterparty::LEGAL_ADDRESS => $counterparty->legal_address,
             Counterparty::MAILING_ADDRESS => $counterparty->mailing_address,
