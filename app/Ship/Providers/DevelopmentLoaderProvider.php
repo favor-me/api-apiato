@@ -54,7 +54,8 @@ class DevelopmentLoaderProvider extends ServiceProvider
     {
         $directories = collect([
             $this->getBasePath('src/Commands'),
-            $this->getBasePath('src/Generator/Commands')
+            $this->getBasePath('src/Generator/Commands'),
+            $this->getBasePath('src/Nuxt/Generator/Commands')
         ]);
 
         $directories
