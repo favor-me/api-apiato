@@ -33,7 +33,7 @@ class OrderCreatingEventHandler extends Event
         $this->setCanceledAt($order);
     }
 
-    protected function setOid(OrderModel $order)
+    protected function setOid(OrderModel $order): void
     {
         $lastOid = DB::table($order::TABLE)
             ->where(Order::ORGANIZATION_ID, $order->organization_id)
