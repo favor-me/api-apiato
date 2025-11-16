@@ -27,7 +27,7 @@ HTTP/1.1 200 OK
         "email": "sienna28@yahoo.com",
         "country": {
             "title": "Россия",
-            "name": "rus"
+            "name": "ru"
         },
         "bank_data": {
             "bik": "123416434",
