@@ -21,6 +21,7 @@ use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Ship\Database\Eloquent\Models\OrganizationModel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -34,6 +35,7 @@ use Illuminate\Support\Facades\Auth;
  * @property-read int $organization_id Уникальный идентификатор.
  * @property-read mixed $start_at Дата начала.
  * @property-read mixed $finish_at Дата завершения.
+ * @property-read bool $is_live_now Флаг действия договора в текущий момент. TODO write unit test
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $updated_at Дата и время обновления.
  * @property-read Carbon|null $deleted_at Дата и время удаления.
@@ -65,6 +67,14 @@ class Contract extends OrganizationModel
         BaseContract::START_AT => 'datetime',
         BaseContract::FINISH_AT => 'datetime'
     ];
+
+    public function isLiveNow(): Attribute
+    {
+        return Attribute::get(function () {
+            $now = Carbon::now();
+            return $now->gte($this->start_at) && $this->finish_at->gte($now->toDateString());
+        });
+    }
 
     public function counterparty(): BelongsTo
     {

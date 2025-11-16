@@ -27,6 +27,7 @@ final class Contract extends SectionContainer
     public const string ORGANIZATION_ID = 'organization_id';
     public const string ORGANIZATION = 'organization';
     public const string START_AT = 'start_at';
+    public const string IS_LIVE_NOW = 'is_live_now';
 
     protected string $apiBaseUri = 'accounting/contracts';
 }

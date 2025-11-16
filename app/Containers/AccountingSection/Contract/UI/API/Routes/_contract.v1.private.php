@@ -24,7 +24,7 @@ HTTP/1.1 200 OK
             "counterparty_id": "noa8G5O6GybxKjA6",
             "organization_id": "Ab9G2gOomNdWkKEz",
             "start_at": {
-            "timestamp": 1763154000,
+                "timestamp": 1763154000,
                 "date_for_human": "15.11.2025",
                 "date_for_human_full": "15 ноября 2025г.",
                 "iso": "2025-11-15T00:00:00.000000+03:00",
@@ -33,7 +33,7 @@ HTTP/1.1 200 OK
                 "is_future": false
             },
             "finish_at": {
-            "timestamp": 1763240400,
+                "timestamp": 1763240400,
                 "date_for_human": "16.11.2025",
                 "date_for_human_full": "16 ноября 2025г.",
                 "iso": "2025-11-16T00:00:00.000000+03:00",
@@ -42,7 +42,7 @@ HTTP/1.1 200 OK
                 "is_future": false
             },
             "created_at": {
-            "timestamp": 1763243185,
+                "timestamp": 1763243185,
                 "diff_for_humans": "1 секунду назад",
                 "date_for_human": "16.11.2025",
                 "date_for_human_full": "16 ноября 2025г.",
@@ -54,8 +54,9 @@ HTTP/1.1 200 OK
                 "time_short": "00:46",
                 "is_future": false
             },
+            "is_live_now": false,
             "updated_at": {
-            "timestamp": 1763243185,
+                "timestamp": 1763243185,
                 "diff_for_humans": "1 секунду назад",
                 "date_for_human": "16.11.2025",
                 "date_for_human_full": "16 ноября 2025г.",
@@ -69,8 +70,8 @@ HTTP/1.1 200 OK
             },
             "deleted_at": null,
             "counterparty": {
-            "data": {
-                "object": "Counterparty",
+                "data": {
+                    "object": "Counterparty",
                     "id": "noa8G5O6GybxKjA6",
                     "number": 1,
                     "name": "Mr.",
