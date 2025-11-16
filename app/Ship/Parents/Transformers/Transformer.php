@@ -24,6 +24,8 @@ use League\Fractal\Resource\NullResource;
 
 abstract class Transformer extends AbstractTransformer
 {
+    public const string HUMAN_DATE_FORMAT = 'd.m.Y';
+
     protected string $realKeyPrefix = 'real_';
 
     public function addDefaultIncludes($includes): self
@@ -84,7 +86,7 @@ abstract class Transformer extends AbstractTransformer
             return [
                 'timestamp' => $carbon->getTimestamp(),
                 'diff_for_humans' => $carbon->diffForHumans(),
-                'date_for_human' => $carbon->format('Y-m-d'),
+                'date_for_human' => $carbon->format(self::HUMAN_DATE_FORMAT),
                 'date_for_human_full' => $carbon->translatedFormat(__('time.full_to_human')),
                 'date_for_human_full_with_time' => $carbon->translatedFormat(__('time.full_to_human_with_time')),
                 'iso' => $carbon->toISOString(true),
@@ -92,6 +94,23 @@ abstract class Transformer extends AbstractTransformer
                 'timezone' => $carbon->getTimezone()->getName(),
                 'timezone_type' => $carbon->getTimezone()->getType(),
                 'time_short' => $carbon->format(TIME_FORMAT_SHORT),
+                'is_future' => $carbon->isFuture()
+            ];
+        }
+
+        return null;
+    }
+
+    public function date(?Carbon $carbon): ?array
+    {
+        if ($carbon instanceof Carbon) {
+            return [
+                'timestamp' => $carbon->getTimestamp(),
+                'date_for_human' => $carbon->format(self::HUMAN_DATE_FORMAT),
+                'date_for_human_full' => $carbon->translatedFormat(__('time.full_to_human')),
+                'iso' => $carbon->toISOString(true),
+                'timezone' => $carbon->getTimezone()->getName(),
+                'timezone_type' => $carbon->getTimezone()->getType(),
                 'is_future' => $carbon->isFuture()
             ];
         }
