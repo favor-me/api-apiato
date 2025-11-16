@@ -13,29 +13,30 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus;
+namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class OkvedElement extends Element
+class PaymentAccountElement extends Element
 {
-    public const int MAX_LENGTH = 50;
+    public const int DIGITS = 20;
 
-    protected string $type = Element::TYPE_STRING;
-    protected string $name = 'okved';
+    protected string $type = Element::TYPE_INT;
+    protected string $name = 'payment_account';
 
     protected array $rules = [
-        'string',
-        'nullable',
-        'max:' . self::MAX_LENGTH
+        'required',
+        'numeric',
+        'digits:' . self::DIGITS
     ];
 
     public function getValidationMessages(): array
     {
         return [
             $this->validationRuleName('required') => $this->trans('rules.required'),
-            $this->validationRuleName('digits') => $this->trans('rules.max', [
-                'max' => self::MAX_LENGTH
+            $this->validationRuleName('numeric') => $this->trans('rules.numeric'),
+            $this->validationRuleName('digits') => $this->trans('rules.digits', [
+                'digits' => self::DIGITS
             ])
         ];
     }

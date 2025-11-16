@@ -15,20 +15,20 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Countries;
 
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\BankElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\BikElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\CorrespondentAccountElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\InnElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\KppElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\OkatoElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\OkpoElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\OkvedElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\OrgnipElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\PaymentAccountElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\BankElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\BikElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\CorrespondentAccountElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\InnElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\KppElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\OkatoElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\OkpoElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\OkvedElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\OrgnipElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\PaymentAccountElement;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Schema;
 use JBZoo\Data\JSON;
 
-class RusCountry extends Country
+class RuCountry extends Country
 {
     public function getBankDataSchema(?JSON $data = null): Schema
     {

@@ -13,21 +13,23 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus;
+namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class OrgnipElement extends Element
+class OkpoElement extends Element
 {
-    public const int DIGITS = 15;
+    public const int MAX_DIGITS = 10;
+    public const int MIN_DIGITS = 8;
 
     protected string $type = Element::TYPE_INT;
-    protected string $name = 'orgnip';
+    protected string $name = 'okpo';
 
     protected array $rules = [
         'required',
         'numeric',
-        'digits:' . self::DIGITS
+        'min_digits:' . self::MIN_DIGITS,
+        'max_digits:' . self::MAX_DIGITS
     ];
 
     public function getValidationMessages(): array
@@ -35,8 +37,11 @@ class OrgnipElement extends Element
         return [
             $this->validationRuleName('required') => $this->trans('rules.required'),
             $this->validationRuleName('numeric') => $this->trans('rules.numeric'),
-            $this->validationRuleName('digits') => $this->trans('rules.digits', [
-                'digits' => self::DIGITS
+            $this->validationRuleName('min_digits') => $this->trans('rules.min_digits', [
+                'digits' => self::MIN_DIGITS
+            ]),
+            $this->validationRuleName('max_digits') => $this->trans('rules.max_digits', [
+                'digits' => self::MAX_DIGITS
             ])
         ];
     }

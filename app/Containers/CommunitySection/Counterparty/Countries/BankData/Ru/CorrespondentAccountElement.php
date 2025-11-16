@@ -13,7 +13,7 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus;
+namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 class CorrespondentAccountElement extends PaymentAccountElement
 {

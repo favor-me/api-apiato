@@ -13,30 +13,34 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus;
+namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class KppElement extends Element
+class OkatoElement extends Element
 {
-    public const int DIGITS = 9;
+    public const int MAX_DIGITS = 11;
+    public const int MIN_DIGITS = 2;
 
     protected string $type = Element::TYPE_INT;
-    protected string $name = 'kpp';
+    protected string $name = 'okato';
 
     protected array $rules = [
-        'required',
         'numeric',
-        'digits:' . self::DIGITS
+        'nullable',
+        'min_digits:' . self::MIN_DIGITS,
+        'max_digits:' . self::MAX_DIGITS
     ];
 
     public function getValidationMessages(): array
     {
         return [
-            $this->validationRuleName('required') => $this->trans('rules.required'),
             $this->validationRuleName('numeric') => $this->trans('rules.numeric'),
-            $this->validationRuleName('digits') => $this->trans('rules.digits', [
-                'digits' => self::DIGITS
+            $this->validationRuleName('min_digits') => $this->trans('rules.min_digits', [
+                'digits' => self::MIN_DIGITS
+            ]),
+            $this->validationRuleName('max_digits') => $this->trans('rules.max_digits', [
+                'digits' => self::MAX_DIGITS
             ])
         ];
     }

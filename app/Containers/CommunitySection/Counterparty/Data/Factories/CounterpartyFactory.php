@@ -15,9 +15,9 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Data\Factories;
 
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\BikElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\OkpoElement;
-use App\Containers\CommunitySection\Counterparty\Countries\RusCountry;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\BikElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\OkpoElement;
+use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Containers\CommunitySection\Organization\Models\Organization;
@@ -39,7 +39,7 @@ final class CounterpartyFactory extends Factory
 
     public function definition(): array
     {
-        $country = new RusCountry();
+        $country = new RuCountry();
 
         return [
             Counterparty::LEGAL_ADDRESS => $this->faker->address(),
@@ -62,7 +62,7 @@ final class CounterpartyFactory extends Factory
 
     public function rus(): self
     {
-        $country = new RusCountry();
+        $country = new RuCountry();
         $randomNumber = $this->faker->randomNumber(1);
         return $this->state(fn() => [
             Counterparty::COUNTRY => $country->getName(),

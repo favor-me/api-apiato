@@ -13,16 +13,16 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus;
+namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class BikElement extends Element
+class OrgnipElement extends Element
 {
-    public const int DIGITS = 9;
+    public const int DIGITS = 15;
 
     protected string $type = Element::TYPE_INT;
-    protected string $name = 'bik';
+    protected string $name = 'orgnip';
 
     protected array $rules = [
         'required',

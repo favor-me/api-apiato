@@ -16,7 +16,7 @@
 namespace App\Containers\CommunitySection\Counterparty\Tests\Unit\Countries;
 
 use App\Containers\CommunitySection\Counterparty\Countries\Manager;
-use App\Containers\CommunitySection\Counterparty\Countries\RusCountry;
+use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Counterparty\Tests\UnitTestCase;
 
 final class ManagerTest extends UnitTestCase
@@ -24,6 +24,6 @@ final class ManagerTest extends UnitTestCase
     public function testManager(): void
     {
         $manager = Manager::getInstance();
-        $this->assertInstanceOf(RusCountry::class, $manager->get(RusCountry::class));
+        $this->assertInstanceOf(RuCountry::class, $manager->get(RuCountry::class));
     }
 }

@@ -16,7 +16,7 @@
 namespace App\Containers\CommunitySection\Counterparty\Tests\Functional\API;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
-use App\Containers\CommunitySection\Counterparty\Countries\RusCountry;
+use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Tests\Functional\ApiTestCase;
@@ -40,7 +40,7 @@ final class GetCounterpartyBankDataSchemaTest extends ApiTestCase
 
         $this
             ->injectId(
-                (new RusCountry())
+                (new RuCountry())
                     ->getName()
             )
             ->makeCall();

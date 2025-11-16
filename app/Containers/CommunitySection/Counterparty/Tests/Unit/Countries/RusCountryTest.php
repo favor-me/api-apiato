@@ -16,14 +16,14 @@
 namespace App\Containers\CommunitySection\Counterparty\Tests\Unit\Countries;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Schema;
-use App\Containers\CommunitySection\Counterparty\Countries\RusCountry;
+use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Counterparty\Tests\UnitTestCase;
 
 final class RusCountryTest extends UnitTestCase
 {
     public function test(): void
     {
-        $country = new RusCountry();
+        $country = new RuCountry();
 
         $schema = $country->getBankDataSchema();
 

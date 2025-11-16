@@ -16,7 +16,7 @@
 namespace App\Containers\CommunitySection\Counterparty\Tests\Unit\Countries\BankData;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Collection;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Rus\InnElement;
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\InnElement;
 use App\Containers\CommunitySection\Counterparty\Tests\UnitTestCase;
 
 final class CollectionTest extends UnitTestCase
