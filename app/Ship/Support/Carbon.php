@@ -16,6 +16,7 @@ namespace App\Ship\Support;
 
 use App\Ship\Exceptions\InvalidSystemDateFormatException;
 use App\Ship\Parents\Support\Carbon as ParentCarbon;
+use App\Ship\Parents\Transformers\Transformer;
 use DateTimeZone;
 
 class Carbon extends ParentCarbon
@@ -81,6 +82,6 @@ class Carbon extends ParentCarbon
 
     public function toSystemDateString(): string
     {
-        return $this->format(TIMETABLE_RESERVATION_DATE_AT_FORMAT);
+        return $this->format(Transformer::HUMAN_DATE_FORMAT);
     }
 }
