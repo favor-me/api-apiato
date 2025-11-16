@@ -22,6 +22,7 @@
  * @apiPermission Аутентифицированный пользователь с ролью `organization_owner|organization_worker`
  *
  * @apiParam {String="1,0"} [only-trashed] Вкл.\Откл.показ корзины.
+ * @apiParam {String="live-now"} [only] `live-now` - Получить только актуальные на сегодня.
  *
  * @apiSuccessExample {json} Успешный ответ:
 HTTP/1.1 200 OK
