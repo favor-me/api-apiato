@@ -36,6 +36,7 @@ class UpdateContractRequest extends CreateContractRequest
 
     protected function afterInitialize(): void
     {
+        parent::afterInitialize();
         $this->mergeDecode(ID);
     }
 
