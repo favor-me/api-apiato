@@ -45,7 +45,7 @@ class FindOrganizationUnitByIdRequest extends OrganizationUnitApiRequest
 
     public function rules(): array
     {
-        return [
+        return $this->priceListRules() + [
             ID => $this->getOrganizationUnitIdValidationRules()
         ];
     }
