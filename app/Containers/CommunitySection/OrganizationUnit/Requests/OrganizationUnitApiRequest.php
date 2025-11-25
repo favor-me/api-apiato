@@ -21,8 +21,8 @@ use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRu
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Traits\OrganizationUnitValidationRules;
-use App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers\AdminOrganizationUnitTransformer;
-use App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers\OrganizationUnitTransformer;
+use App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers\OrganizationUnitTransformerManager;
+use App\Containers\OrganizationSection\UnitPrice\Traits\UnitPriceValidationRules;
 use App\Containers\Vendor\Unit\Traits\HasUnitValidationRules;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
@@ -30,21 +30,28 @@ use App\Ship\Requests\ApiRequest;
 
 /**
  * @property-read mixed $organization_id
+ * @property-read null|int $price_model_id
  */
 abstract class OrganizationUnitApiRequest extends ApiRequest implements GettableTransformer
 {
     use IsOrganizationUser;
     use HasUnitValidationRules;
+    use UnitPriceValidationRules;
     use OrganizationValidationRules;
     use OrganizationUnitValidationRules;
 
+    public const string PRICE_MODEL = 'price_model';
+    public const string PRICE_MODEL_ID = 'price_model_id';
+
     protected array $decode = [
+        self::PRICE_MODEL_ID,
         OrganizationUnit::ORGANIZATION_ID
     ];
 
     public function getTransformer(): Transformer
     {
-        return $this->isAdminUser() ? new AdminOrganizationUnitTransformer() : new OrganizationUnitTransformer();
+        return (new OrganizationUnitTransformerManager())
+            ->getDefaultOrAdmin();
     }
 
     public function messages(): array
@@ -55,6 +62,27 @@ abstract class OrganizationUnitApiRequest extends ApiRequest implements Gettable
             OrganizationUnit::NAME . '.unique' => Container::trans('validation.name.unique'),
             OrganizationUnit::SKU . '.unique' => Container::trans('validation.sku.unique'),
             OrganizationUnit::ORGANIZATION_ID . '.required' => Container::trans('validation.organization_id.required'),
+        ];
+    }
+
+    public function getPriceModel(): ?string
+    {
+        return $this->get(self::PRICE_MODEL);
+    }
+
+    public function getPriceModelId(): ?int
+    {
+        return $this->price_model_id;
+    }
+
+    protected function priceListRules(): array
+    {
+        $priceModelRules = $this->getUnitPriceModelValidationRules()
+            ->add('required_with:' . self::PRICE_MODEL_ID);
+
+        return [
+            self::PRICE_MODEL => $priceModelRules,
+            self::PRICE_MODEL_ID => $this->getUnitPriceModelIdValidationRules(),
         ];
     }
 
