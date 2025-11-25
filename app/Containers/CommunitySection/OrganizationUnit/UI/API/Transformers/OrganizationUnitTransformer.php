@@ -15,9 +15,12 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers;
 
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\HistorySection\ModelNote\UI\API\Transformers\ModelNoteTransformer;
+use App\Containers\OrganizationSection\UnitPrice\UI\API\Transformers\UnitPriceTransformer;
+use App\Containers\OrganizationSection\UnitPrice\UI\API\Transformers\UnitPriceTransformerManager;
 use App\Containers\Vendor\Unit\UI\API\Transformers\UnitTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
@@ -26,11 +29,12 @@ use League\Fractal\Resource\Item;
 class OrganizationUnitTransformer extends Transformer
 {
     protected array $defaultIncludes = [
-        OrganizationUnit::INCLUDE_SYSTEM_UNIT
+        OrganizationUnit::SYSTEM_UNIT
     ];
 
     protected array $availableIncludes = [
-        OrganizationUnit::INCLUDE_MODEL_NOTES
+        OrganizationUnit::MODEL_NOTES,
+        OrganizationUnit::CONTACT_PRICE_LIST
     ];
 
     public function transform(OrganizationUnitModel $organizationUnit): array
@@ -38,17 +42,17 @@ class OrganizationUnitTransformer extends Transformer
         return [
             OBJECT => $organizationUnit->getResourceKey(),
             ID => $organizationUnit->getHashedKey(),
-            'number' => $organizationUnit->getNumber(),
+            OrganizationUnitModel::NUMBER => $organizationUnit->getNumber(),
             OrganizationUnit::NAME => $organizationUnit->name,
             OrganizationUnit::TYPE => $organizationUnit->type->toArray(),
             OrganizationUnit::SKU => $organizationUnit->sku,
             OrganizationUnit::ORDERING => $organizationUnit->ordering,
             PARAMS => $organizationUnit->params,
-            OrganizationUnit::COST_PRICE => $this->money($organizationUnit->cost_price),
-            OrganizationUnit::PRICE_UP => $organizationUnit->price_up,
-            OrganizationUnit::CLIENT_PRICE => $this->money($organizationUnit->client_price),
-            OrganizationUnit::BALANCE => (float)$organizationUnit->balance,
-            OrganizationUnit::IS_INFINITY_BALANCE => $organizationUnit->is_infinity_balance,
+            UnitPrice::COST_PRICE => $this->money($organizationUnit->cost_price),
+            UnitPrice::PRICE_UP => $organizationUnit->price_up,
+            UnitPrice::CLIENT_PRICE => $this->money($organizationUnit->client_price),
+            UnitPrice::BALANCE => (float)$organizationUnit->balance,
+            UnitPrice::IS_INFINITY_BALANCE => $organizationUnit->is_infinity_balance,
             OrganizationUnit::ORGANIZATION_ID => $organizationUnit->getHashedKey(OrganizationUnit::ORGANIZATION_ID),
             OrganizationUnit::SYSTEM_UNIT_ID => $organizationUnit->getHashedKey(OrganizationUnit::SYSTEM_UNIT_ID),
             CREATED_AT => $this->time($organizationUnit->created_at),
@@ -65,5 +69,13 @@ class OrganizationUnitTransformer extends Transformer
     protected function includeModelNotes(OrganizationUnitModel $organizationUnit): Collection
     {
         return $this->collection($organizationUnit->modelNotes, new ModelNoteTransformer());
+    }
+
+    protected function includeContractPriceList(OrganizationUnitModel $organizationUnit): Collection
+    {
+        return $this->collection(
+            $organizationUnit->contractPriceList,
+            (new UnitPriceTransformerManager())->getDefaultOrAdmin()
+        );
     }
 }

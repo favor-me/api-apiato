@@ -25,8 +25,8 @@ class AdminOrganizationUnitTransformer extends OrganizationUnitTransformer
         return parent::transform($organizationUnit) +
             [
                 $this->realKey(ID) => $organizationUnit->id,
-                $this->realKey(OrganizationUnit::ORGANIZATION_ID) => $organizationUnit->OrganizationUnit::ORGANIZATION_ID,
-                $this->realKey(OrganizationUnit::SYSTEM_UNIT_ID) => $organizationUnit->OrganizationUnit::SYSTEM_UNIT_ID
+                $this->realKey(OrganizationUnit::ORGANIZATION_ID) => $organizationUnit->organization_id,
+                $this->realKey(OrganizationUnit::SYSTEM_UNIT_ID) => $organizationUnit->system_unit_id
             ];
     }
 }
