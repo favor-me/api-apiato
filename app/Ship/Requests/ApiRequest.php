@@ -14,7 +14,6 @@
 
 namespace App\Ship\Requests;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Parents\Requests\Request;
@@ -144,15 +143,6 @@ class ApiRequest extends Request
     {
         if (!count($this->post())) {
             throw new ValidationFailedException(__('ship::exception.message.empty_update_data'));
-        }
-    }
-
-    protected function decodeHashedIdsBeforeValidation(array $requestData): array
-    {
-        try {
-            return parent::decodeHashedIdsBeforeValidation($requestData);
-        } catch (IncorrectIdException $exception) {
-            return [];
         }
     }
 
