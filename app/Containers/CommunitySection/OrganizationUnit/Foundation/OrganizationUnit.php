@@ -19,20 +19,44 @@ use App\Ship\Foundation\SectionContainer;
 
 final class OrganizationUnit extends SectionContainer
 {
-    public const BALANCE = 'balance';
-    public const IS_INFINITY_BALANCE = 'is_infinity_balance';
-    public const CLIENT_PRICE = 'client_price';
-    public const COST_PRICE = 'cost_price';
-    public const NAME = 'name';
-    public const ORDERING = 'ordering';
-    public const ORGANIZATION_ID = 'organization_id';
-    public const PRICE_UP = 'price_up';
-    public const SKU = 'sku';
-    public const SYSTEM_UNIT_ID = 'system_unit_id';
-    public const TYPE = 'type';
-    public const INCLUDE_SYSTEM_UNIT = 'systemUnit';
-    public const INCLUDE_MODEL_NOTES = 'modelNotes';
-    public const PRICE_MAX_LENGTH = 200000 * 100;
+    /**
+     * @deprecated use UnitPrice::IS_INFINITY_BALANCE
+     */
+    public const string BALANCE = 'balance';
+
+    /**
+     * @deprecated use UnitPrice::IS_INFINITY_BALANCE
+     */
+    public const string IS_INFINITY_BALANCE = 'is_infinity_balance';
+
+    /**
+     * @deprecated use UnitPrice::CLIENT_PRICE
+     */
+    public const string CLIENT_PRICE = 'client_price';
+
+    /**
+     * @deprecated use UnitPrice::COST_PRICE
+     */
+    public const string COST_PRICE = 'cost_price';
+    public const string NAME = 'name';
+    public const string ORDERING = 'ordering';
+    public const string ORGANIZATION_ID = 'organization_id';
+
+    /**
+     * @deprecated use UnitPrice::PRICE_UP
+     */
+    public const string PRICE_UP = 'price_up';
+    public const string SKU = 'sku';
+    public const string SYSTEM_UNIT_ID = 'system_unit_id';
+    public const string TYPE = 'type';
+    public const string SYSTEM_UNIT = 'systemUnit';
+    public const string MODEL_NOTES = 'modelNotes';
+    public const string CONTACT_PRICE_LIST = 'contractPriceList';
+
+    /**
+     * @deprecated use UnitPrice::PRICE_MAX_LENGTH
+     */
+    public const int PRICE_MAX_LENGTH = 200000 * 100;
 
     protected string $apiBaseUri = 'community/organization-units';
 }
