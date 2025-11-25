@@ -104,6 +104,11 @@ abstract class AbstractManager
     {
         /** @var Namebled $item */
         $item = new $className();
+        $this->putItem($item);
+    }
+
+    protected function putItem(Namebled $item): void
+    {
         $this->items->put($item->getName(), $item);
     }
 
