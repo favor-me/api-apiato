@@ -15,12 +15,11 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Requests;
 
-use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
 use App\Containers\AppSection\User\Traits\IsOrganizationUser;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Traits\CounterpartyValidationRules;
-use App\Containers\CommunitySection\Counterparty\UI\API\Transformers\AdminCounterpartyTransformer;
-use App\Containers\CommunitySection\Counterparty\UI\API\Transformers\CounterpartyTransformer;
+use App\Containers\CommunitySection\Counterparty\UI\API\Transformers\CounterpartyTransformerManager;
+use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
@@ -40,7 +39,7 @@ abstract class CounterpartyApiRequest extends ApiRequest implements GettableTran
 
     public function getTransformer(): Transformer
     {
-        return $this->isAdminUser() ? new AdminCounterpartyTransformer() : new CounterpartyTransformer();
+        return (new CounterpartyTransformerManager())->getDefaultOrAdmin();
     }
 
     protected function prepareForValidation(): void
