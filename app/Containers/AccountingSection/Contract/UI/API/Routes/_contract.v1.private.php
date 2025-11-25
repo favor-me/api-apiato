@@ -240,9 +240,10 @@ HTTP/1.1 200 OK
             }
         },
         "meta": {
-        "include": [
-            "organization"
-        ]
+            "include": [
+                "unit_prices",
+                "organization"
+            ]
     }
 }
 */
