@@ -1,20 +1,21 @@
 <?php
 
 /**
- * __PROJECT_NAME__
+ * FavorMe system
  *
- * This file is part of the __PROJECT_NAME__ package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license __PROJECT_LICENCE__
- * @copyright Copyright (C) __PROJECT_AUTHOR__, All rights reserved ©.
- * @link __PROJECT_URL__
- * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Models;
 
+use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\CommunitySection\OrganizationUnit\Data\Factories\OrganizationUnitFactory;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit as BaseOrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnitType\Casts\OrganizationUnitType;
@@ -23,6 +24,8 @@ use App\Containers\CommunitySection\OrganizationUnitType\ServiceType;
 use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\HistorySection\ModelNote\Foundation\ModelNote;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\Vendor\Unit\Models\Unit as UnitModel;
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Database\Casts\Money as MoneyCast;
@@ -56,6 +59,7 @@ use JBZoo\Data\JSON;
  * @property-read null|Carbon $deleted_at Дата и время удаления.
  * @property-read UnitModel $systemUnit Связанная модель еденицы измерения.
  * @property-read Collection $modelNotes Колекция заметок для событий модели (История).
+ * @property-read Collection $contractPriceList
  *
  * @method static OrganizationUnitFactory factory(...$parameters)
  */
@@ -71,7 +75,7 @@ class OrganizationUnit extends Model
     protected string $resourceKey = self::RESOURCE_KEY;
 
     protected $with = [
-        BaseOrganizationUnit::INCLUDE_SYSTEM_UNIT
+        BaseOrganizationUnit::SYSTEM_UNIT
     ];
 
     protected $fillable = [
@@ -80,23 +84,23 @@ class OrganizationUnit extends Model
         BaseOrganizationUnit::TYPE,
         BaseOrganizationUnit::SKU,
         BaseOrganizationUnit::ORDERING,
-        BaseOrganizationUnit::COST_PRICE,
-        BaseOrganizationUnit::PRICE_UP,
-        BaseOrganizationUnit::CLIENT_PRICE,
-        BaseOrganizationUnit::BALANCE,
-        BaseOrganizationUnit::IS_INFINITY_BALANCE,
+        UnitPrice::COST_PRICE,
+        UnitPrice::PRICE_UP,
+        UnitPrice::CLIENT_PRICE,
+        UnitPrice::BALANCE,
+        UnitPrice::IS_INFINITY_BALANCE,
         BaseOrganizationUnit::ORGANIZATION_ID,
         BaseOrganizationUnit::SYSTEM_UNIT_ID
     ];
 
     protected $casts = [
         PARAMS => JsonCast::class,
-        BaseOrganizationUnit::PRICE_UP => 'float',
-        BaseOrganizationUnit::BALANCE => 'float',
+        UnitPrice::PRICE_UP => 'float',
+        UnitPrice::BALANCE => 'float',
         BaseOrganizationUnit::TYPE => OrganizationUnitType::class,
-        BaseOrganizationUnit::COST_PRICE => MoneyCast::class,
-        BaseOrganizationUnit::CLIENT_PRICE => MoneyCast::class,
-        BaseOrganizationUnit::IS_INFINITY_BALANCE => 'boolean'
+        UnitPrice::COST_PRICE => MoneyCast::class,
+        UnitPrice::CLIENT_PRICE => MoneyCast::class,
+        UnitPrice::IS_INFINITY_BALANCE => 'boolean'
     ];
 
     public function systemUnit(): BelongsTo
@@ -106,11 +110,25 @@ class OrganizationUnit extends Model
 
     public function modelNotes(int $limit = 10): HasMany
     {
-        return $this->hasMany(ModelNoteModel::class, ModelNote::MODEL_ID, ID)
+        return $this
+            ->hasMany(ModelNoteModel::class, ModelNote::MODEL_ID, ID)
             ->where(ModelNote::MODEL, self::class)
             ->orderByDesc(ID)
             ->orderByDesc(self::CREATED_AT)
             ->limit($limit);
+    }
+
+    public function contractPriceList(?int $modelId = null): HasMany
+    {
+        $relation = $this
+            ->hasMany(UnitPriceModel::class, UnitPrice::UNIT_ID, ID)
+            ->where(UnitPrice::MODEL, Contract::class);
+
+        if (!is_null($modelId)) {
+            $relation = $relation->where(UnitPrice::MODEL_ID, $modelId);
+        }
+
+        return $relation;
     }
 
     protected function performInsert(Builder $query): bool
@@ -126,7 +144,7 @@ class OrganizationUnit extends Model
             ->getName();
 
         if ($this->type->getName() === $serviceTypeName) {
-            $this->setAttribute(BaseOrganizationUnit::IS_INFINITY_BALANCE, true);
+            $this->setAttribute(UnitPrice::IS_INFINITY_BALANCE, true);
         }
     }
 }

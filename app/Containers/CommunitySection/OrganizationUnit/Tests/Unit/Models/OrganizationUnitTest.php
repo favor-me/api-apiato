@@ -20,10 +20,10 @@ use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as 
 use App\Containers\CommunitySection\OrganizationUnit\Tasks\PlusOrganizationUnitBalanceTask;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\UnitTestCase;
 use App\Containers\CommunitySection\OrganizationUnitType\Manager;
-use App\Containers\CommunitySection\OrganizationUnitType\ProductType;
 use App\Containers\CommunitySection\OrganizationUnitType\ServiceType;
 use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\Vendor\Unit\Models\Unit;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\SimpleTypes\Type\Money;
@@ -69,11 +69,11 @@ final class OrganizationUnitTest extends UnitTestCase
             OrganizationUnit::TYPE,
             OrganizationUnit::SKU,
             OrganizationUnit::ORDERING,
-            OrganizationUnit::COST_PRICE,
-            OrganizationUnit::PRICE_UP,
-            OrganizationUnit::CLIENT_PRICE,
-            OrganizationUnit::BALANCE,
-            OrganizationUnit::IS_INFINITY_BALANCE,
+            UnitPrice::COST_PRICE,
+            UnitPrice::PRICE_UP,
+            UnitPrice::CLIENT_PRICE,
+            UnitPrice::BALANCE,
+            UnitPrice::IS_INFINITY_BALANCE,
             OrganizationUnit::ORGANIZATION_ID,
             OrganizationUnit::SYSTEM_UNIT_ID
         ], $this->model->getFillable());
@@ -133,5 +133,11 @@ final class OrganizationUnitTest extends UnitTestCase
             ]);
 
         $this->assertTrue($model->is_infinity_balance);
+    }
+
+    public function testHasManyContractPriceList(): void
+    {
+        $this->assertInstanceOf(Collection::class, $this->model->contractPriceList);
+        $this->assertInstanceOf(HasMany::class, $this->model->contractPriceList());
     }
 }
