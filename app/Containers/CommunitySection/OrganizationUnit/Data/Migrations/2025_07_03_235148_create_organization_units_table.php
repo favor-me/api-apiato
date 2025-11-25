@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * FavorMe system
+ *
+ * This file is part of the FavorMe system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
+ */
+
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
@@ -18,11 +32,11 @@ return new class extends CreateTableMigration
         $table->string(OrganizationUnit::SKU)->nullable();
         $table->unsignedInteger(OrganizationUnit::ORDERING)->default(ZERO);
         $table->json(PARAMS)->nullable();
-        $table->unsignedBigInteger(OrganizationUnit::COST_PRICE)->nullable();
-        $table->unsignedBigInteger(OrganizationUnit::PRICE_UP)->nullable();
-        $table->unsignedBigInteger(OrganizationUnit::CLIENT_PRICE)->nullable();
-        $table->float(OrganizationUnit::BALANCE)->nullable();
-        $table->boolean(OrganizationUnit::IS_INFINITY_BALANCE)->default(false);
+        $table->unsignedBigInteger(UnitPrice::COST_PRICE)->nullable();
+        $table->unsignedBigInteger(UnitPrice::PRICE_UP)->nullable();
+        $table->unsignedBigInteger(UnitPrice::CLIENT_PRICE)->nullable();
+        $table->float(UnitPrice::BALANCE)->nullable();
+        $table->boolean(UnitPrice::IS_INFINITY_BALANCE)->default(false);
         $table->unsignedBigInteger(OrganizationUnit::ORGANIZATION_ID);
         $table->unsignedBigInteger(OrganizationUnit::SYSTEM_UNIT_ID)->nullable();
         $table->timestamps();

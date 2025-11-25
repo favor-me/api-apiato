@@ -21,6 +21,7 @@ use App\Ship\Parents\Repositories\Repository;
 
 /**
  * @method OrganizationUnitModel getModel()
+ * @method OrganizationUnitModel find($id, $columns = ['*'])
  */
 final class OrganizationUnitRepository extends Repository
 {
