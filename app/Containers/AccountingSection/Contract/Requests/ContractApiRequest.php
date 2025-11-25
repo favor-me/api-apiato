@@ -17,8 +17,7 @@ namespace App\Containers\AccountingSection\Contract\Requests;
 
 use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Traits\ContractValidationRules;
-use App\Containers\AccountingSection\Contract\UI\API\Transformers\AdminContractTransformer;
-use App\Containers\AccountingSection\Contract\UI\API\Transformers\ContractTransformer;
+use App\Containers\AccountingSection\Contract\UI\API\Transformers\ContractTransformerManager;
 use App\Containers\AppSection\User\Traits\IsOrganizationUser;
 use App\Containers\CommunitySection\Counterparty\Traits\CounterpartyValidationRules;
 use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
@@ -49,7 +48,8 @@ abstract class ContractApiRequest extends ApiRequest implements GettableTransfor
 
     public function getTransformer(): Transformer
     {
-        return $this->isAdminUser() ? new AdminContractTransformer() : new ContractTransformer();
+        return (new ContractTransformerManager())
+            ->getDefaultOrAdmin();
     }
 
     protected function prepareForValidation(): void
