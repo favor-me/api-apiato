@@ -17,8 +17,7 @@ namespace App\Containers\CommunitySection\Organization\Requests;
 
 use App\Containers\AppSection\User\Traits\HasUserValidationRules;
 use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
-use App\Containers\CommunitySection\Organization\UI\API\Transformers\AdminOrganizationTransformer;
-use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
+use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformerManager;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
@@ -30,6 +29,6 @@ abstract class OrganizationApiRequest extends ApiRequest implements GettableTran
 
     public function getTransformer(): Transformer
     {
-        return $this->isAdminUser() ? new AdminOrganizationTransformer() : new OrganizationTransformer();
+        return (new OrganizationTransformerManager())->getDefaultOrAdmin();
     }
 }
