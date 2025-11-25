@@ -19,10 +19,16 @@ use App\Containers\AccountingSection\Contract\Data\Factories\ContractFactory;
 use App\Containers\AccountingSection\Contract\Foundation\Contract as BaseContract;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
 use App\Containers\CommunitySection\Organization\Models\Organization;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
+use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Database\Eloquent\Models\OrganizationModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +47,7 @@ use Illuminate\Support\Facades\Auth;
  * @property-read Carbon|null $deleted_at Дата и время удаления.
  * @property-read Counterparty $organization Связанная модель организации.
  * @property-read Counterparty $counterparty Связанная модель контрагента.
+ * @property-read Collection $unitPrices Список переопределенных цен для продуктов и услуг.
  *
  * @method static ContractFactory factory(...$parameters)
  */
@@ -74,6 +81,39 @@ class Contract extends OrganizationModel
             $now = Carbon::now();
             return $now->gte($this->start_at) && $this->finish_at->gte($now->toDateString());
         });
+    }
+
+    public function unitPrices(): HasManyThrough
+    {
+        return $this
+            ->hasManyThrough(
+                OrganizationUnitModel::class,
+                UnitPriceModel::class,
+                UnitPrice::MODEL_ID,
+                ID,
+                ID,
+                UnitPrice::UNIT_ID
+            )
+            ->where(UnitPriceModel::TABLE . '.' . UnitPrice::MODEL, Contract::class)
+            ->select([
+                OrganizationUnitModel::TABLE . '.' . ID,
+                OrganizationUnitModel::TABLE . '.' . OrganizationUnit::NAME,
+                OrganizationUnitModel::TABLE . '.' . OrganizationUnit::TYPE,
+                OrganizationUnitModel::TABLE . '.' . OrganizationUnit::SKU,
+                OrganizationUnitModel::TABLE . '.' . OrganizationUnit::ORDERING,
+                OrganizationUnitModel::TABLE . '.' . PARAMS,
+                UnitPriceModel::TABLE . '.' . UnitPrice::MODEL,
+                UnitPriceModel::TABLE . '.' . UnitPrice::COST_PRICE,
+                UnitPriceModel::TABLE . '.' . UnitPrice::PRICE_UP,
+                UnitPriceModel::TABLE . '.' . UnitPrice::CLIENT_PRICE,
+                OrganizationUnitModel::TABLE . '.' . UnitPrice::BALANCE,
+                OrganizationUnitModel::TABLE . '.' . UnitPrice::IS_INFINITY_BALANCE,
+                OrganizationUnitModel::TABLE . '.' . OrganizationUnit::ORGANIZATION_ID,
+                OrganizationUnitModel::TABLE . '.' . OrganizationUnit::SYSTEM_UNIT_ID,
+                OrganizationUnitModel::TABLE . '.' . CREATED_AT,
+                OrganizationUnitModel::TABLE . '.' . UPDATED_AT,
+                OrganizationUnitModel::TABLE . '.' . DELETED_AT,
+            ]);
     }
 
     public function counterparty(): BelongsTo

@@ -17,14 +17,17 @@ namespace App\Containers\AccountingSection\Contract\UI\API\Transformers;
 
 use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
-use App\Containers\CommunitySection\Counterparty\UI\API\Transformers\CounterpartyTransformer;
-use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
+use App\Containers\CommunitySection\Counterparty\UI\API\Transformers\CounterpartyTransformerManager;
+use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformerManager;
+use App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers\OrganizationUnitTransformerManager;
 use App\Ship\Parents\Transformers\Transformer;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
 class ContractTransformer extends Transformer
 {
     protected array $availableIncludes = [
+        Contract::UNIT_PRICES,
         Contract::ORGANIZATION
     ];
 
@@ -50,13 +53,30 @@ class ContractTransformer extends Transformer
         ];
     }
 
+    protected function includeUnitPrices(ContractModel $contract): Collection
+    {
+        return $this->collection(
+            $contract->unitPrices,
+            (new OrganizationUnitTransformerManager())
+                ->getDefaultOrAdmin()
+        );
+    }
+
     protected function includeOrganization(ContractModel $contract): Item
     {
-        return $this->item($contract->organization, new OrganizationTransformer());
+        return $this->item(
+            $contract->organization,
+            (new OrganizationTransformerManager())
+                ->getDefaultOrAdmin()
+        );
     }
 
     protected function includeCounterparty(ContractModel $contract): Item
     {
-        return $this->item($contract->counterparty, new CounterpartyTransformer());
+        return $this->item(
+            $contract->counterparty,
+            (new CounterpartyTransformerManager())
+                ->getDefaultOrAdmin()
+        );
     }
 }
