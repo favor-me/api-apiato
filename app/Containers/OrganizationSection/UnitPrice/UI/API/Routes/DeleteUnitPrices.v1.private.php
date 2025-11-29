@@ -30,14 +30,8 @@ HTTP/1.1 200 OK
 
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 use App\Containers\OrganizationSection\UnitPrice\UI\API\Controllers\DeleteUnitPricesController;
-use App\Containers\OrganizationSection\UnitPrice\UI\API\Controllers\TrashUnitPricesController;
-use App\Ship\Requests\ApiRequest;
 use Illuminate\Support\Facades\Route;
 
-Route::delete(Container::getApiUri(), function (ApiRequest $request) {
-    $callback = $request->isForceDelete() ?
-        DeleteUnitPricesController::class : TrashUnitPricesController::class;
-    return app()->call($callback);
-})
-    ->name('api_organization_unit_price_trash_or_delete_unit_prices')
+Route::delete(Container::getApiUri(), DeleteUnitPricesController::class)
+    ->name('api_organization_unit_price_delete_unit_prices')
     ->middleware(['auth:api']);

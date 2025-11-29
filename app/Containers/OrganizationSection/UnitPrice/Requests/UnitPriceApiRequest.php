@@ -15,15 +15,25 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Requests;
 
+use App\Containers\CommunitySection\OrganizationUnit\Traits\OrganizationUnitValidationRules;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Traits\UnitPriceValidationRules;
 use App\Containers\OrganizationSection\UnitPrice\UI\API\Transformers\UnitPriceTransformerManager;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
 
+/**
+ * @property-read string $model
+ */
 abstract class UnitPriceApiRequest extends ApiRequest implements GettableTransformer
 {
     use UnitPriceValidationRules;
+    use OrganizationUnitValidationRules;
+
+    protected array $urlParameters = [
+        UnitPrice::MODEL
+    ];
 
     public function getTransformer(): Transformer
     {

@@ -15,13 +15,32 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\UI\API\Requests;
 
-use Illuminate\Validation\Rules\Exists;
+use App\Containers\OrganizationSection\UnitPrice\Requests\UnitPriceApiRequest;
+use App\Ship\Collections\ValidationRules;
+use App\Ship\Traits\Request\HasInputIds;
 
-class DeleteUnitPricesRequest extends TrashUnitPricesRequest
+class DeleteUnitPricesRequest extends UnitPriceApiRequest
 {
-    public function getUnitPriceIdExistsValidationRule(string $column = 'NULL'): Exists
+    use HasInputIds;
+
+    protected array $access = [
+        ROLES => RoleModel::ORGANIZATION_OWNER
+    ];
+
+    protected array $decode = [
+        IDS . '.*'
+    ];
+
+    public function rules(): array
     {
-        return parent::getUnitPriceIdExistsValidationRule($column)
-            ->whereNotNull(DELETED_AT);
+        return [
+            IDS . '.*' => $this->getUnitPriceIdValidationRules()
+        ];
+    }
+
+    public function getUnitPriceIdValidationRules(): ValidationRules
+    {
+        return parent::getUnitPriceIdValidationRules()
+            ->addRequired();
     }
 }

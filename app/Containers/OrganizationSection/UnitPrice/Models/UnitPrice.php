@@ -58,6 +58,7 @@ class UnitPrice extends Model
     ];
 
     protected $casts = [
+        BaseUnitPrice::PRICE_UP => 'float',
         BaseUnitPrice::COST_PRICE => MoneyCast::class,
         BaseUnitPrice::CLIENT_PRICE => MoneyCast::class,
         BaseUnitPrice::IS_INFINITY_BALANCE => 'boolean'

@@ -15,18 +15,19 @@
  * @apiGroup OrganizationUnitPrice
  * @apiName createOrganizationUnitPrice
 
- * @api {post} /v1/organization/unit-prices Создать
- * @apiDescription Создание.
+ * @api {post} /v1/organization/unit-prices/:model Создать
+ * @apiDescription Создание цены.
  *
  * @apiVersion 1.0.0
  * @apiPermission Аутентифицированный пользователь
  *
- * @apiBody {String} [model]
- * @apiBody {String} [model_id]
- * @apiBody {String} [unit_id]
- * @apiBody {String} [cost_price]
- * @apiBody {String} [price_up] Наценка.
- * @apiBody {String} [client_price]
+ * @apiParam {String=contract} model Тип модели (сущность к которой привязывается цена)
+ *
+ * @apiBody {String} model_id Уникальный идентификатор сущности типа модели.
+ * @apiBody {String} unit_id Уникальный идентификатор товара или услуги.
+ * @apiBody {Numeric} cost_price Себестоимость.
+ * @apiBody {Numeric} price_up Наценка себестоимости в % для расчёта цены продажи.
+ * @apiBody {Numeric} client_price Цена продажи.
  *
  * @apiUse UnitPriceSuccessSingleResponse
  */

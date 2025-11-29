@@ -16,32 +16,117 @@
 namespace App\Containers\OrganizationSection\UnitPrice\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\OrganizationSection\UnitPrice\Dto\CreateUnitPriceDto;
+use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Map\Manager;
+use App\Containers\OrganizationSection\UnitPrice\Map\Type;
 use App\Containers\OrganizationSection\UnitPrice\Requests\UnitPriceApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
+use App\Ship\SimpleTypes\Type\Money;
+use App\Ship\Traits\Request\CanPrepareMoney;
+use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\Unique;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
+/**
+ * @property-read mixed $model_id
+ * @property-read mixed $cost_price
+ */
 class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
 {
+    use CanPrepareMoney;
+
     protected array $access = [
-        ROLES => [
-            RoleModel::ORGANIZATION_OWNER,
-            RoleModel::ORGANIZATION_WORKER
-        ]
+        ROLES => RoleModel::ORGANIZATION_OWNER
     ];
+
+    protected array $decode = [
+        UnitPrice::MODEL_ID,
+        UnitPrice::UNIT_ID
+    ];
+
+    protected ?Money $internalClientPrice = null;
 
     public function rules(): array
     {
         return [
             UnitPrice::MODEL => $this->getUnitPriceModelValidationRules(),
             UnitPrice::MODEL_ID => $this->getUnitPriceModelIdValidationRules(),
-            UnitPrice::UNIT_ID => $this->getUnitPriceUnitIdValidationRules(),
+            UnitPrice::UNIT_ID => $this->getOrganizationUnitIdValidationRules(),
             UnitPrice::COST_PRICE => $this->getUnitPriceCostPriceValidationRules(),
             UnitPrice::PRICE_UP => $this->getUnitPricePriceUpValidationRules(),
-            UnitPrice::CLIENT_PRICE => $this->getUnitPriceClientPriceValidationRules(),
+            UnitPrice::CLIENT_PRICE => $this->getUnitPriceClientPriceValidationRules()
         ];
+    }
+
+    public function getUnitPriceModelValidationRules(): ValidationRules
+    {
+        return parent::getUnitPriceModelValidationRules()
+            ->addRequired();
+    }
+
+    public function getUnitPriceModelIdValidationRules(): ValidationRules
+    {
+        return parent::getUnitPriceModelIdValidationRules()
+            ->addRequired();
+    }
+
+    public function getOrganizationUnitIdValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitIdValidationRules()
+            ->add(
+                $this->getUnitPriceUnitIdExistsValidationRule()
+            )
+            ->add(
+                $this->getUnitPriceUnitIdUniqueValidationRule()
+            )
+            ->addRequired();
+    }
+
+    public function getUnitPriceCostPriceValidationRules(): ValidationRules
+    {
+        return parent::getUnitPriceCostPriceValidationRules()
+            ->addRequired();
+    }
+
+    public function getUnitPricePriceUpValidationRules(): ValidationRules
+    {
+        return parent::getUnitPricePriceUpValidationRules()
+            ->addRequired();
+    }
+
+    public function getUnitPriceClientPriceValidationRules(): ValidationRules
+    {
+        $rules = parent::getUnitPriceClientPriceValidationRules();
+
+        $priceUp = (float)$this->get(UnitPrice::PRICE_UP);
+        if ($this->has(UnitPrice::COST_PRICE) && $priceUp > ZERO) {
+            $rules->add('size:' . $this->internalClientPrice->val());
+        }
+
+        return $rules->addRequired();
+    }
+
+    public function getUnitPriceUnitIdExistsValidationRule(): Exists
+    {
+        return $this->getModelType()->existsUnitIdValidationRule();
+    }
+
+    public function getUnitPriceUnitIdUniqueValidationRule(): Unique
+    {
+        return $this->getModelType()
+            ->uniqueUnitIdValidationRule(
+                $this->model_id
+            );
+    }
+
+    public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationUnitIdExistsValidationRule($column)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->user()->organization_id);
     }
 
     /**
@@ -50,7 +135,10 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
      */
     public function getDto(): CreateUnitPriceDto
     {
-        return $this->newDto($this->validated());
+        $data = $this->validated();
+        $data[UnitPrice::MODEL] = $this->getModelType()->getModelAccessor();
+
+        return $this->newDto($data);
     }
 
     /**
@@ -61,5 +149,75 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
     public function newDto(array $data = []): CreateUnitPriceDto
     {
         return new CreateUnitPriceDto($data);
+    }
+
+    public function messages(): array
+    {
+        $unitIdUniqueMessage = $this
+            ->getModelType()
+            ->getUniqueUnitIdValidationRuleValidationMessage();
+
+        $messages = parent::messages() +
+            [
+                UnitPrice::UNIT_ID . '.unique' => $unitIdUniqueMessage
+            ];
+
+        if ($this->has(UnitPrice::COST_PRICE)) {
+            $messages[UnitPrice::CLIENT_PRICE . '.size'] = Container::trans('container.validation.client_price.size', [
+                'size' => $this->internalClientPrice->currency()->text()
+            ]);
+        }
+
+        return $messages;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->prepareForValidationIsInfinityBalance();
+        $this->prepareForValidationOrganizationClientPrice();
+    }
+
+    protected function prepareForValidationIsInfinityBalance(): void
+    {
+        $isInfinityBalance = (bool)$this->get(UnitPrice::IS_INFINITY_BALANCE);
+        if ($isInfinityBalance) {
+            $this->merge([
+                UnitPrice::BALANCE => ZERO
+            ]);
+        }
+    }
+
+    protected function prepareForValidationOrganizationClientPrice(): void
+    {
+        $this
+            ->prepareMoney(UnitPrice::COST_PRICE)
+            ->prepareMoney(UnitPrice::CLIENT_PRICE);
+
+        if ($this->has(UnitPrice::COST_PRICE)) {
+            $costPrice = app('money')
+                ->add(
+                    $this->cost_price
+                );
+
+            $clientPrice = app('money')->add($costPrice);
+            $priceUp = (float)$this->get(UnitPrice::PRICE_UP);
+
+            if ($priceUp > ZERO) {
+                $clientPrice->add($priceUp . '%');
+            }
+
+            $this->internalClientPrice = $clientPrice;
+            if (empty($this->get(UnitPrice::CLIENT_PRICE))) {
+                $this->merge([
+                    UnitPrice::CLIENT_PRICE => $this->internalClientPrice->val()
+                ]);
+            }
+        }
+    }
+
+    protected function getModelType(): Type
+    {
+        return Manager::getInstance()
+            ->get($this->model);
     }
 }

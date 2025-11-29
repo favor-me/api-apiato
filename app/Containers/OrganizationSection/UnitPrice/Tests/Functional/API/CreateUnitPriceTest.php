@@ -15,9 +15,14 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Tests\Functional\API;
 
+use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Map\ContractType;
+use App\Containers\OrganizationSection\UnitPrice\Map\Manager;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\OrganizationSection\UnitPrice\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -25,10 +30,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 final class CreateUnitPriceTest extends ApiTestCase
 {
     protected array $access = [
-        ROLES => [
-            RoleModel::ORGANIZATION_OWNER,
-            RoleModel::ORGANIZATION_WORKER
-        ]
+        ROLES => RoleModel::ORGANIZATION_OWNER
     ];
 
     public function setUp(): void
@@ -51,11 +53,32 @@ final class CreateUnitPriceTest extends ApiTestCase
 
     public function testSuccess(): void
     {
+        $this->getTestingOrganizationOwnerUser();
+
+        $unit = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
+
+        $contract = ContractModel::factory()
+            ->counterparty(
+                $this->testingUser->organization_id
+            )
+            ->create();
+
+        $contractType = Manager::getInstance()->get(ContractType::class);
+
         $data = [
-            // Write data
+            UnitPrice::MODEL_ID => $contract->getHashedKey(),
+            UnitPrice::UNIT_ID => $unit->getHashedKey(),
+            UnitPrice::COST_PRICE => 100,
+            UnitPrice::PRICE_UP => 10,
+            UnitPrice::CLIENT_PRICE => 110
         ];
 
-        $this->makeCall($data);
+        $this
+            ->injectId($contractType->getModelKey())
+            ->makeCall($data);
 
         $this->response
             ->assertCreated()
@@ -63,8 +86,18 @@ final class CreateUnitPriceTest extends ApiTestCase
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
                     ->where('data.' . OBJECT, UnitPriceModel::RESOURCE_KEY)
-                    //->where('data.' . UnitPrice::, $data[UnitPrice::])
+                    ->where('data.' . UnitPrice::MODEL, $contractType->getModelAccessor())
+                    ->where('data.' . UnitPrice::MODEL_ID, $data[UnitPrice::MODEL_ID])
+                    ->where('data.' . UnitPrice::UNIT_ID, $data[UnitPrice::UNIT_ID])
+                    ->where('data.' . UnitPrice::COST_PRICE . '.currency.value', $data[UnitPrice::COST_PRICE])
+                    ->where('data.' . UnitPrice::PRICE_UP, $data[UnitPrice::PRICE_UP])
+                    ->where('data.' . UnitPrice::CLIENT_PRICE . '.currency.value', $data[UnitPrice::CLIENT_PRICE])
                     ->etc()
             );
+    }
+
+    public function injectId($id, bool $skipEncoding = true, string $replace = '{' . UnitPrice::MODEL . '}'): static
+    {
+        return parent::injectId($id, $skipEncoding, $replace);
     }
 }

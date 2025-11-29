@@ -15,8 +15,11 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Map;
 
+use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Exists;
 
 class ContractType extends Type
 {
@@ -33,5 +36,19 @@ class ContractType extends Type
     public function getName(): string
     {
         return trans_choice(Container::transFullKey('container.items'), 1);
+    }
+
+    public function existsModelId(int|string $id): bool
+    {
+        return DB::table($this->getModel()->getTable())
+            ->where(ID, $id)
+            ->where(Contract::ORGANIZATION_ID, $this->user()->organization_id)
+            ->exists();
+    }
+
+    public function existsUnitIdValidationRule(): Exists
+    {
+        return parent::existsUnitIdValidationRule()
+            ->where(Contract::ORGANIZATION_ID, $this->user()->organization_id);
     }
 }

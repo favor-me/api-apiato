@@ -41,11 +41,6 @@ trait UnitPriceValidationRules
         return validation_rules(Container::getConfig('rules.' . UnitPrice::MODEL_ID));
     }
 
-    public function getUnitPriceUnitIdValidationRules(): ValidationRules
-    {
-        return validation_rules(Container::getConfig('rules.' . UnitPrice::UNIT_ID));
-    }
-
     public function getUnitPriceCostPriceValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . UnitPrice::COST_PRICE));
@@ -58,6 +53,16 @@ trait UnitPriceValidationRules
     public function getUnitPriceClientPriceValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . UnitPrice::CLIENT_PRICE));
+    }
+
+    public function getUnitPriceBalanceValidationRules(): ValidationRules
+    {
+        return validation_rules(Container::getConfig('rules.' . UnitPrice::BALANCE));
+    }
+
+    public function getUnitPriceIsInfinityValidationRules(): ValidationRules
+    {
+        return validation_rules(Container::getConfig('rules.' . UnitPrice::IS_INFINITY_BALANCE));
     }
 
     public function getUnitPriceIdExistsValidationRule(string $column = 'NULL'): Exists

@@ -15,30 +15,44 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Map;
 
-use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AppSection\User\Models\User;
+use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Ship\Contracts\Namebled;
 use App\Ship\Parents\Models\Model;
+use App\Ship\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\Unique;
 
 abstract class Type implements Namebled
 {
     abstract public function getModelAccessor(): string;
     abstract public function getModelKey(): string;
 
+    abstract public function existsModelId(int|string $id): bool;
+    public function existsUnitIdValidationRule(): Exists
+    {
+        return Rule::exists(OrganizationUnit::TABLE, ID);
+    }
+
+    public function uniqueUnitIdValidationRule(int|string $modelId): Unique
+    {
+        return Rule::unique(UnitPriceModel::TABLE, UnitPrice::UNIT_ID)
+            ->where(UnitPrice::MODEL, $this->getModelAccessor())
+            ->where(UnitPrice::MODEL_ID, $modelId);
+    }
+
+    public function getUniqueUnitIdValidationRuleValidationMessage(): string
+    {
+        return Container::trans('container.' . $this->getModelKey() . '.unique');
+    }
+
     public function noExistsModelIdValidationMessage(): string
     {
         return Container::trans('container.' . $this->getModelKey() . '.no_exists_model_id');
-    }
-
-    public function existsModelId(int|string $id): bool
-    {
-        return DB::table($this->getModel()->getTable())
-            ->where(ID, $id)
-            ->where(Contract::ORGANIZATION_ID, $this->user()->organization_id)
-            ->exists();
     }
 
     public function getModel(): Model
