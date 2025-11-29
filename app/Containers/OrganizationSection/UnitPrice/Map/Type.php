@@ -41,11 +41,17 @@ abstract class Type implements Namebled
         return Rule::exists(OrganizationUnit::TABLE, ID);
     }
 
-    public function uniqueUnitIdValidationRule(int|string $modelId): Unique
+    public function uniqueUnitIdValidationRule(int|string $modelId, int|string|null $ignoreUnitId = null): Unique
     {
-        return Rule::unique(UnitPriceModel::TABLE, UnitPrice::UNIT_ID)
+        $rule = Rule::unique(UnitPriceModel::TABLE, UnitPrice::UNIT_ID)
             ->where(UnitPrice::MODEL, $this->getModelAccessor())
             ->where(UnitPrice::MODEL_ID, $modelId);
+
+        if ($ignoreUnitId) {
+            $rule->ignore($ignoreUnitId, UnitPrice::UNIT_ID);
+        }
+
+        return $rule;
     }
 
     public function getUniqueUnitIdValidationRuleValidationMessage(): string

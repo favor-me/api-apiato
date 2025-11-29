@@ -15,21 +15,28 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Actions;
 
+use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\OrganizationSection\UnitPrice\Dto\UpdateUnitPriceDto;
-use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Tasks\UpdateUnitPriceTask;
-use App\Ship\Parents\Actions\Action;
 use App\Ship\Exceptions\UpdateResourceFailedException;
+use App\Ship\Parents\Actions\Action;
 
 class UpdateUnitPriceAction extends Action
 {
     /**
      * @param UpdateUnitPriceDto $dto
-     * @return UnitPrice
+     * @return OrganizationUnitModel
      * @throws UpdateResourceFailedException
      */
-    public function run(UpdateUnitPriceDto $dto): UnitPrice
+    public function run(UpdateUnitPriceDto $dto): OrganizationUnitModel
     {
-        return app(UpdateUnitPriceTask::class)->run($dto);
+        $unitPrice = app(UpdateUnitPriceTask::class)->run($dto);
+
+        return $unitPrice
+            ->model()
+            ->first()
+            ->unitPrices()
+            ->where(OrganizationUnitModel::TABLE . '.' . ID, $dto->unit_id)
+            ->first();
     }
 }

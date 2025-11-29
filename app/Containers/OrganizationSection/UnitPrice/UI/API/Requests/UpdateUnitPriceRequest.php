@@ -15,39 +15,31 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\UI\API\Requests;
 
+use App\Containers\OrganizationSection\UnitPrice\Data\Repositories\UnitPriceRepository;
+use App\Containers\OrganizationSection\UnitPrice\Dto\CreateUnitPriceDto;
 use App\Containers\OrganizationSection\UnitPrice\Dto\UpdateUnitPriceDto;
-use App\Ship\Collections\ValidationRules;
+use Prettus\Repository\Exceptions\RepositoryException;
+use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Ship\Criterias\ThisEqualThatCriteria;
 use App\Ship\Exceptions\ValidationFailedException;
-use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\Rules\Unique;
 
 /**
  * @method UpdateUnitPriceDto getDto()
+ * @property-read mixed $unit_id
  */
 class UpdateUnitPriceRequest extends CreateUnitPriceRequest
 {
-    use HasInputId;
-
-    protected array $urlParameters = [
-        ID
-    ];
-
     protected function afterInitialize(): void
     {
-        $this->mergeDecode(ID);
-    }
+        parent::afterInitialize();
 
-    public function rules(): array
-    {
-        return array_merge(parent::rules(), [
-            ID => $this->getUnitPriceIdValidationRules()
+        $this->mergeUrlParameters([
+            UnitPrice::MODEL_ID,
+            UnitPrice::UNIT_ID
         ]);
-    }
-
-    public function getUnitPriceIdValidationRules(): ValidationRules
-    {
-        return parent::getUnitPriceIdValidationRules()
-            ->addRequired();
     }
 
     public function newDto(array $data = []): UpdateUnitPriceDto
@@ -55,10 +47,50 @@ class UpdateUnitPriceRequest extends CreateUnitPriceRequest
         return new UpdateUnitPriceDto($data);
     }
 
+    public function getUnitPriceUnitIdUniqueValidationRule(): Unique
+    {
+        return $this->getModelType()
+            ->uniqueUnitIdValidationRule(
+                $this->model_id,
+                $this->unit_id
+            );
+    }
+
+    /**
+     * @return array
+     * @throws RepositoryException
+     */
+    protected function getDtoData(): array
+    {
+        $data = parent::getDtoData();
+        $data[ID] = $this->getUnitPrice()->id;
+
+        return $data;
+    }
+
+    /**
+     * @return UnitPriceModel|null
+     * @throws RepositoryException
+     */
+    protected function getUnitPrice(): ?UnitPriceModel
+    {
+        return app(UnitPriceRepository::class)
+            ->pushCriteria(
+                new ThisEqualThatCriteria(UnitPrice::MODEL, $this->getModelType()->getModelAccessor())
+            )
+            ->pushCriteria(
+                new ThisEqualThatCriteria(UnitPrice::MODEL_ID, $this->model_id)
+            )
+            ->pushCriteria(
+                new ThisEqualThatCriteria(UnitPrice::UNIT_ID, $this->unit_id)
+            )
+            ->first();
+    }
+
     /**
      * @return bool
-     * @throws ValidationFailedException
      * @throws AuthorizationException
+     * @throws ValidationFailedException
      */
     protected function passesAuthorization(): bool
     {

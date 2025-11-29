@@ -135,10 +135,9 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
      */
     public function getDto(): CreateUnitPriceDto
     {
-        $data = $this->validated();
-        $data[UnitPrice::MODEL] = $this->getModelType()->getModelAccessor();
-
-        return $this->newDto($data);
+        return $this->newDto(
+            $this->getDtoData()
+        );
     }
 
     /**
@@ -169,6 +168,14 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
         }
 
         return $messages;
+    }
+
+    protected function getDtoData(): array
+    {
+        $data = $this->validated();
+        $data[UnitPrice::MODEL] = $this->getModelType()->getModelAccessor();
+
+        return $data;
     }
 
     protected function prepareForValidation(): void

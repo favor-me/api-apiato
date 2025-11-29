@@ -142,7 +142,7 @@ class ApiRequest extends Request
     protected function throwIfEmptyInput(): void
     {
         if (!count($this->post())) {
-            throw new ValidationFailedException(__('ship::exception.message.empty_update_data'));
+            throw new ValidationFailedException(__('ship::exception.empty_update_data'));
         }
     }
 
