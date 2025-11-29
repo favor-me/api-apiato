@@ -29,5 +29,5 @@ final class UnitPrice extends SectionContainer
     public const string UNIT_ID = 'unit_id';
     public const int PRICE_MAX_LENGTH = 200000 * 100;
 
-    protected string $apiBaseUri = 'organization/unit-prices';
+    protected string $apiBaseUri = 'organization/unit-prices/{' . self::MODEL . '}';
 }

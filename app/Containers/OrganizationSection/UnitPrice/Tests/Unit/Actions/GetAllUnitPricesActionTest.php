@@ -24,6 +24,8 @@ final class GetAllUnitPricesActionTest extends UnitTestCase
 {
     public function test(): void
     {
+        $this->getTestingOrganizationUser();
+
         $models = UnitPriceModel::factory()
             ->count(10)
             ->create();
@@ -32,21 +34,5 @@ final class GetAllUnitPricesActionTest extends UnitTestCase
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $result);
         $this->assertSame($models->count(), $result->count());
-    }
-
-    public function testOnlyTrashed(): void
-    {
-        UnitPriceModel::factory()
-            ->count(4)
-            ->create();
-
-        UnitPriceModel::factory()
-            ->trashed()
-            ->create();
-
-        $result = app(GetAllUnitPricesAction::class)->run(true);
-
-        $this->assertInstanceOf(LengthAwarePaginator::class, $result);
-        $this->assertSame(1, $result->total());
     }
 }

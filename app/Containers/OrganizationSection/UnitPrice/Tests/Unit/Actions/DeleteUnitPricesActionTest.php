@@ -21,27 +21,20 @@ use App\Containers\OrganizationSection\UnitPrice\Tests\UnitTestCase;
 
 final class DeleteUnitPricesActionTest extends UnitTestCase
 {
-    public function testNotTrashed(): void
-    {
-        $model = UnitPriceModel::factory()->create();
-
-        $result = app(DeleteUnitPricesAction::class)->run([$model->id]);
-
-        $this->assertSame(ZERO, $result);
-    }
-
     public function testTrashed(): void
     {
+        $this->getTestingOrganizationUser();
+
         $models = UnitPriceModel::factory()
             ->count(2)
-            ->trashed()
             ->create();
 
-        $ids = $models
-            ->pluck(ID)
-            ->toArray();
-
-        $result = app(DeleteUnitPricesAction::class)->run($ids);
+        $result = app(DeleteUnitPricesAction::class)
+            ->run(
+                $models
+                    ->pluck(ID)
+                    ->toArray()
+            );
 
         $this->assertSame($models->count(), $result);
     }

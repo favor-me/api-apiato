@@ -24,6 +24,8 @@ final class CreateUnitPriceActionTest extends UnitTestCase
 {
     public function testSuccess(): void
     {
+        $this->getTestingOrganizationUser();
+
         $data = UnitPriceModel::factory()->make();
         $dto = new CreateUnitPriceDto($data->toArray());
 

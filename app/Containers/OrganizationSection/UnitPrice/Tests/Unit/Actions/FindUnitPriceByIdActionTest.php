@@ -24,12 +24,16 @@ final class FindUnitPriceByIdActionTest extends UnitTestCase
 {
     public function testWithInvalidId(): void
     {
+        $this->getTestingOrganizationUser();
+
         $this->expectException(NotFoundException::class);
         app(FindUnitPriceByIdAction::class)->run(2131243);
     }
 
     public function testWithActualId(): void
     {
+        $this->getTestingOrganizationUser();
+
         $model = UnitPriceModel::factory()->create();
 
         $this->assertInstanceOf(

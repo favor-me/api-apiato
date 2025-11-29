@@ -17,6 +17,7 @@ namespace App\Containers\OrganizationSection\UnitPrice\Tests\Unit\Actions;
 
 use App\Containers\OrganizationSection\UnitPrice\Actions\UpdateUnitPriceAction;
 use App\Containers\OrganizationSection\UnitPrice\Dto\UpdateUnitPriceDto;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\OrganizationSection\UnitPrice\Tests\UnitTestCase;
 use App\Ship\Exceptions\UpdateResourceFailedException;
@@ -25,6 +26,8 @@ final class UpdateUnitPriceActionTest extends UnitTestCase
 {
     public function testFail(): void
     {
+        $this->getTestingOrganizationUser();
+
         $this->expectException(UpdateResourceFailedException::class);
         $data = UnitPriceModel::factory()
             ->make([
@@ -37,13 +40,15 @@ final class UpdateUnitPriceActionTest extends UnitTestCase
 
     public function testSuccess(): void
     {
+        $this->getTestingOrganizationUser();
+
         $model = UnitPriceModel::factory()->create();
         $this->assertInstanceOf(UnitPriceModel::class, $model);
 
         $data = UnitPriceModel::factory()
             ->make([
                 ID => $model->id,
-                //  write more.
+                UnitPrice::COST_PRICE => 132000
             ]);
 
         $dto = new UpdateUnitPriceDto($data->toArray());
@@ -51,5 +56,6 @@ final class UpdateUnitPriceActionTest extends UnitTestCase
         $result = app(UpdateUnitPriceAction::class)->run($dto);
 
         $this->assertInstanceOf(UnitPriceModel::class, $result);
+        $this->assertSame(1320.0, $result->cost_price->currency()->val());
     }
 }

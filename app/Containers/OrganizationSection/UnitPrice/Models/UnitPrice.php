@@ -19,18 +19,19 @@ use App\Containers\OrganizationSection\UnitPrice\Data\Factories\UnitPriceFactory
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice as BaseUnitPrice;
 use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Parents\Models\Model;
+use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Model\IsNumbered;
 
 /**
  * @property-read int $id Уникальный идентификатор.
- * @property-read mixed $model
+ * @property-read mixed $model Namespace модели.
  * @property-read int $model_id Уникальный идентификатор.
  * @property-read int $unit_id Уникальный идентификатор.
- * @property-read mixed $cost_price
- * @property-read float $price_up Наценка.
- * @property-read mixed $client_price
- * @property-read float $balance
- * @property-read bool $is_infinity_balance
+ * @property-read Money $cost_price Себестоимость.
+ * @property-read Money $price_up Наценка.
+ * @property-read mixed $client_price Цена продажи.
+ * @property-read float $balance Баланс.
+ * @property-read bool $is_infinity_balance Флаг бесконечного баланса.
  *
  * @method static UnitPriceFactory factory(...$parameters)
  */
@@ -43,6 +44,7 @@ class UnitPrice extends Model
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;
+    public $timestamps = false;
 
     protected $fillable = [
         BaseUnitPrice::MODEL,
