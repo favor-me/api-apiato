@@ -15,21 +15,28 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Actions;
 
-use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice;
+use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\OrganizationSection\UnitPrice\Dto\CreateUnitPriceDto;
 use App\Containers\OrganizationSection\UnitPrice\Tasks\CreateUnitPriceTask;
-use App\Ship\Parents\Actions\Action;
 use App\Ship\Exceptions\CreateResourceFailedException;
+use App\Ship\Parents\Actions\Action;
 
 class CreateUnitPriceAction extends Action
 {
     /**
      * @param CreateUnitPriceDto $dto
-     * @return UnitPrice
+     * @return OrganizationUnitModel
      * @throws CreateResourceFailedException
      */
-    public function run(CreateUnitPriceDto $dto): UnitPrice
+    public function run(CreateUnitPriceDto $dto): OrganizationUnitModel
     {
-        return app(CreateUnitPriceTask::class)->run($dto);
+        $unitPrice = app(CreateUnitPriceTask::class)->run($dto);
+
+        return $unitPrice
+            ->model()
+            ->first()
+            ->unitPrices()
+            ->where(OrganizationUnitModel::TABLE . '.' . ID, $dto->unit_id)
+            ->first();
     }
 }

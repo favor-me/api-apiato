@@ -15,7 +15,11 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Tests\Unit\Actions;
 
+use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\OrganizationSection\UnitPrice\Actions\GetAllUnitPricesAction;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Map\ContractType;
+use App\Containers\OrganizationSection\UnitPrice\Map\Manager;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\OrganizationSection\UnitPrice\Tests\UnitTestCase;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -26,11 +30,21 @@ final class GetAllUnitPricesActionTest extends UnitTestCase
     {
         $this->getTestingOrganizationUser();
 
-        $models = UnitPriceModel::factory()
-            ->count(10)
+        $contract = Contract::factory()
+            ->counterparty(
+                $this->testingUser->organization_id
+            )
             ->create();
 
-        $result = app(GetAllUnitPricesAction::class)->run();
+        $models = UnitPriceModel::factory()
+            ->count(10)
+            ->create([
+                UnitPrice::MODEL_ID => $contract->id
+            ]);
+
+        $contractType = Manager::getInstance()->get(ContractType::class);
+
+        $result = app(GetAllUnitPricesAction::class)->run($contractType, $contract->id);
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $result);
         $this->assertSame($models->count(), $result->count());

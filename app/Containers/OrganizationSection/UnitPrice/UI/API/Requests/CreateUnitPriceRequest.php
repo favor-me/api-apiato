@@ -214,10 +214,4 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
             }
         }
     }
-
-    protected function getModelType(): Type
-    {
-        return Manager::getInstance()
-            ->get($this->model);
-    }
 }

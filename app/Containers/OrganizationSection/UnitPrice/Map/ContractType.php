@@ -17,7 +17,9 @@ namespace App\Containers\OrganizationSection\UnitPrice\Map;
 
 use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
+use App\Containers\AccountingSection\Contract\Tasks\FindContractByIdTask;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
+use App\Ship\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Exists;
 
@@ -26,6 +28,16 @@ class ContractType extends Type
     public function getModelAccessor(): string
     {
         return ContractModel::class;
+    }
+
+    /**
+     * @param int|string $id
+     * @return ContractModel|null
+     * @throws NotFoundException
+     */
+    public function findModel(int|string $id): ?ContractModel
+    {
+        return app(FindContractByIdTask::class)->run($id);
     }
 
     public function getModelKey(): string

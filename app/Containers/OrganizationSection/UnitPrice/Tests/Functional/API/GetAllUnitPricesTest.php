@@ -15,13 +15,14 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Tests\Functional\API;
 
+use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Map\ContractType;
+use App\Containers\OrganizationSection\UnitPrice\Map\Manager;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\OrganizationSection\UnitPrice\Tests\Functional\ApiTestCase;
-use App\Ship\Requests\ApiRequest;
-use App\Ship\Parents\Requests\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class GetAllUnitPricesTest extends ApiTestCase
@@ -36,146 +37,42 @@ final class GetAllUnitPricesTest extends ApiTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->endpoint = 'get@v1/' . Container::getApiUri();
+        $this->endpoint = 'get@v1/' . Container::getApiUri('{' . UnitPrice::MODEL_ID . '}');
     }
 
     public function testSuccess(): void
     {
         $this->getTestingOrganizationOwnerUser();
 
-        $baseCount = UnitPriceModel::count();
-
-        $models = UnitPriceModel::factory()
-            ->count(3)
-            ->create();
-
-        $this->makeCall();
-
-        $this->response
-            ->assertOk()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data')
-                    ->where('meta.pagination.total', $models->count() + $baseCount)
-                    ->etc()
-            );
-    }
-
-    public function testOnlyTrashed(): void
-    {
-        $this->getTestingOrganizationOwnerUser(null, [
-            ROLES => RoleModel::ORGANIZATION_OWNER
-        ]);
-
-        UnitPriceModel::factory()
-            ->count(3)
-            ->create();
-
-        $trashedModels = UnitPriceModel::factory()
-            ->trashed()
-            ->create();
-
-        $this
-            ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
-            ->makeCall();
-
-        $this->response
-            ->assertOk()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', 1)
-                    ->where('data.0.' . ID, $trashedModels->getHashedKey())
-                    ->etc()
-            );
-    }
-
-    public function testCanReadOnlyTrashedList(): void
-    {
-        $this->getTestingOrganizationOwnerUser(null, [
-            ROLES => RoleModel::ORGANIZATION_OWNER
-        ]);
-
-        $trashedModels = UnitPriceModel::factory()
-            ->count(3)
-            ->trashed()
+        $contract = Contract::factory()
+            ->counterparty(
+                $this->testingUser->organization_id
+            )
             ->create();
 
         UnitPriceModel::factory()
             ->count(2)
             ->create();
 
-        $this
-            ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
-            ->makeCall();
-
-        $this->response
-            ->assertOk()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', $trashedModels->count())
-                    ->etc()
-            );
-    }
-
-    public function testCantReadOnlyTrashedList(): void
-    {
-        $this->getTestingOrganizationUser(null, [
-            ROLES => RoleModel::ORGANIZATION_WORKER
-        ]);
-
-        $baseCount = UnitPriceModel::count();
-
-        UnitPriceModel::factory()
-            ->count(5)
-            ->trashed()
-            ->create();
-
-        $models = UnitPriceModel::factory()
-            ->count(6)
-            ->create();
-
-        $this
-            ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
-            ->makeCall();
-
-        $this->response
-            ->assertOk()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', $baseCount + $models->count())
-                    ->etc()
-            );
-    }
-
-    public function testToList(): void
-    {
-        $this->getTestingOrganizationUser();
-
-        $defaultCount = UnitPriceModel::count();
-
         $models = UnitPriceModel::factory()
             ->count(3)
-            ->create();
+            ->create([
+                UnitPrice::MODEL_ID => $contract->id
+            ]);
+
+        $contractType = Manager::getInstance()->get(ContractType::class);
 
         $this
-            ->endpoint($this->endpoint . '?to=' . ApiRequest::TO_LIST_VALUE)
+            ->injectId($contractType->getModelKey(), true, '{' . UnitPrice::MODEL . '}')
+            ->injectId($contract->id, false, '{' . UnitPrice::MODEL_ID . '}')
             ->makeCall();
 
         $this->response
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
-                    ->where('meta.pagination.total', $defaultCount + $models->count())
-                    ->where('data', function (Collection $statuses) {
-                        $statuses->each(function ($status) {
-                            $this->assertSame([
-                                'value',
-                                'title'
-                            ], array_keys($status));
-                        });
-
-                        return true;
-                    })
+                    ->has('data')
+                    ->where('meta.pagination.total', $models->count())
                     ->etc()
             );
     }

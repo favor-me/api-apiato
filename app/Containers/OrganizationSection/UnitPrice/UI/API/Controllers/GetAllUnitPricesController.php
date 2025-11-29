@@ -26,17 +26,20 @@ use Prettus\Repository\Exceptions\RepositoryException;
 class GetAllUnitPricesController extends ApiController
 {
     /**
-     * @param GetAllContractsRequest $request
-     * @param GetAllContractsAction $action
+     * @param GetAllUnitPricesRequest $request
+     * @param GetAllUnitPricesAction $action
      * @return JsonResponse
-     * @throws CoreInternalErrorException
-     * @throws RepositoryException
      */
     public function __invoke(
         GetAllUnitPricesRequest $request,
         GetAllUnitPricesAction $action
     ): JsonResponse {
-        $models = $action->run($request->isOnlyTrashed());
+        $models = $action
+            ->run(
+                $request->getModelType(),
+                $request->model_id,
+                $request->getLimit()
+            );
 
         return Response::create(
             $models,

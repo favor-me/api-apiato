@@ -21,6 +21,7 @@ use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Parents\Models\Model;
 use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Model\IsNumbered;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read int $id Уникальный идентификатор.
@@ -63,4 +64,9 @@ class UnitPrice extends Model
         BaseUnitPrice::CLIENT_PRICE => MoneyCast::class,
         BaseUnitPrice::IS_INFINITY_BALANCE => 'boolean'
     ];
+
+    public function model(): BelongsTo
+    {
+        return $this->belongsTo($this->model, BaseUnitPrice::MODEL_ID, ID);
+    }
 }

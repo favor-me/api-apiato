@@ -23,7 +23,6 @@ use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Map\ContractType;
 use App\Containers\OrganizationSection\UnitPrice\Map\Manager;
-use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\OrganizationSection\UnitPrice\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -85,10 +84,8 @@ final class CreateUnitPriceTest extends ApiTestCase
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
-                    ->where('data.' . OBJECT, UnitPriceModel::RESOURCE_KEY)
-                    ->where('data.' . UnitPrice::MODEL, $contractType->getModelAccessor())
-                    ->where('data.' . UnitPrice::MODEL_ID, $data[UnitPrice::MODEL_ID])
-                    ->where('data.' . UnitPrice::UNIT_ID, $data[UnitPrice::UNIT_ID])
+                    ->where('data.' . OBJECT, OrganizationUnitModel::RESOURCE_KEY)
+                    ->where('data.' . ID, $data[UnitPrice::UNIT_ID])
                     ->where('data.' . UnitPrice::COST_PRICE . '.currency.value', $data[UnitPrice::COST_PRICE])
                     ->where('data.' . UnitPrice::PRICE_UP, $data[UnitPrice::PRICE_UP])
                     ->where('data.' . UnitPrice::CLIENT_PRICE . '.currency.value', $data[UnitPrice::CLIENT_PRICE])

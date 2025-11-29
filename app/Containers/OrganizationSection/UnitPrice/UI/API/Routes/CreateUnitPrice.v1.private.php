@@ -29,7 +29,7 @@
  * @apiBody {Numeric} price_up Наценка себестоимости в % для расчёта цены продажи.
  * @apiBody {Numeric} client_price Цена продажи.
  *
- * @apiUse UnitPriceSuccessSingleResponse
+ * @apiUse OrganizationUnitSuccessSingleResponse
  */
 
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;

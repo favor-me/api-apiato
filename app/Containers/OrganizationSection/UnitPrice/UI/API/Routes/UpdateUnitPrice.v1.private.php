@@ -37,6 +37,6 @@ use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 use App\Containers\OrganizationSection\UnitPrice\UI\API\Controllers\UpdateUnitPriceController;
 use Illuminate\Support\Facades\Route;
 
-Route::patch(Container::getApiUri('{' . ID . '}'), UpdateUnitPriceController::class)
+/*Route::patch(Container::getApiUri('{' . ID . '}'), UpdateUnitPriceController::class)
     ->name('api_organization_unit_price_update_unit_price')
-    ->middleware(['auth:api']);
+    ->middleware(['auth:api']);*/

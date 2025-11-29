@@ -15,29 +15,29 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Actions;
 
-use App\Containers\OrganizationSection\UnitPrice\Tasks\GetAllUnitPricesTask;
+use App\Containers\OrganizationSection\UnitPrice\Map\Type;
+use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Actions\Action;
-use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllUnitPricesAction extends Action
 {
     /**
-     * @param bool $onlyTrashed
+     * @param Type $modelType
+     * @param mixed $modelId
      * @param mixed|null $limit
-     * @return LengthAwarePaginator
-     * @throws CoreInternalErrorException
-     * @throws RepositoryException
+     * @return Collection|LengthAwarePaginator
      */
-    public function run(bool $onlyTrashed = false, mixed $limit = null): LengthAwarePaginator
+    public function run(Type $modelType, mixed $modelId, mixed $limit = null): Collection|LengthAwarePaginator
     {
-        $task = app(GetAllUnitPricesTask::class);
+        $relation = $modelType
+            ->findModel($modelId)
+            ->unitPrices();
 
-        if ($onlyTrashed) {
-            $task->onlyTrashed();
+        if ($limit === '*') {
+            return $relation->get();
         }
 
-        return $task->addRequestCriteria()->run($limit);
+        return $relation->paginate();
     }
 }

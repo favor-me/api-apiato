@@ -33,6 +33,9 @@ abstract class Type implements Namebled
     abstract public function getModelKey(): string;
 
     abstract public function existsModelId(int|string $id): bool;
+
+    abstract public function findModel(int|string $id): ?Model;
+
     public function existsUnitIdValidationRule(): Exists
     {
         return Rule::exists(OrganizationUnit::TABLE, ID);

@@ -15,22 +15,24 @@
  * @apiGroup OrganizationUnitPrice
  * @apiName getAllOrganizationUnitPrice
 
- * @api {get} /v1/organization/unit-prices Список
+ * @api {get} /v1/organization/unit-prices/:model/:model_id Список
  * @apiDescription Получить список.
  *
  * @apiVersion 1.0.0
  * @apiPermission Аутентифицированный пользователь
  *
- * @apiParam {String="1,0"} [only-trashed] Вкл.\Откл.показ корзины.
+ * @apiParam {String=contract} model Тип модели (сущность к которой привязывается цена)
+ * @apiParam {String} model_id Уникальный идентификатор сущности
  *
  * @apiSuccessExample {json} Успешный ответ:
 HTTP/1.1 200 OK
  */
 
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\UI\API\Controllers\GetAllUnitPricesController;
 use Illuminate\Support\Facades\Route;
 
-Route::get(Container::getApiUri(), GetAllUnitPricesController::class)
+Route::get(Container::getApiUri('{' . UnitPrice::MODEL_ID . '}'), GetAllUnitPricesController::class)
     ->name('api_organization_unit_price_get_all_unit_price')
     ->middleware(['auth:api']);

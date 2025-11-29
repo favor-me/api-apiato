@@ -30,6 +30,6 @@ use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 use App\Containers\OrganizationSection\UnitPrice\UI\API\Controllers\FindUnitPriceByIdController;
 use Illuminate\Support\Facades\Route;
 
-Route::get(Container::getApiUri('{' . ID . '}'), FindUnitPriceByIdController::class)
+/*Route::get(Container::getApiUri('{' . ID . '}'), FindUnitPriceByIdController::class)
     ->name('api_organization_unit_price_find_by_id_unit_price')
-    ->middleware(['auth:api']);
+    ->middleware(['auth:api']);*/

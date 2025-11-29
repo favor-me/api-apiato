@@ -16,12 +16,15 @@
 namespace App\Containers\OrganizationSection\UnitPrice\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Requests\UnitPriceApiRequest;
-use App\Containers\OrganizationSection\UnitPrice\UI\API\Transformers\UnitPriceToListTransformer;
-use App\Ship\Contracts\IsListableRequest;
+use App\Ship\Collections\ValidationRules;
 use App\Ship\Traits\Request\ListableTransformerRequest;
 
-class GetAllUnitPricesRequest extends UnitPriceApiRequest implements IsListableRequest
+/**
+ * @property-read mixed $model_id
+ */
+class GetAllUnitPricesRequest extends UnitPriceApiRequest
 {
     use ListableTransformerRequest;
 
@@ -32,17 +35,32 @@ class GetAllUnitPricesRequest extends UnitPriceApiRequest implements IsListableR
         ]
     ];
 
-    public function isOnlyTrashed(): bool
+    protected function afterInitialize(): void
     {
-        if (!$this->user()->hasRole(RoleModel::ORGANIZATION_OWNER)) {
-            return false;
-        }
+        parent::afterInitialize();
 
-        return parent::isOnlyTrashed();
+        $this
+            ->mergeDecode(UnitPrice::MODEL_ID)
+            ->mergeUrlParameters(UnitPrice::MODEL_ID);
     }
 
-    public function getToListTransformer(): UnitPriceToListTransformer
+    public function rules(): array
     {
-        return new UnitPriceToListTransformer();
+        return [
+            UnitPrice::MODEL => $this->getUnitPriceModelValidationRules(),
+            UnitPrice::MODEL_ID => $this->getUnitPriceModelIdValidationRules()
+        ];
+    }
+
+    public function getUnitPriceModelValidationRules(): ValidationRules
+    {
+        return parent::getUnitPriceModelValidationRules()
+            ->addRequired();
+    }
+
+    public function getUnitPriceModelIdValidationRules(): ValidationRules
+    {
+        return parent::getUnitPriceModelIdValidationRules()
+            ->addRequired();
     }
 }
