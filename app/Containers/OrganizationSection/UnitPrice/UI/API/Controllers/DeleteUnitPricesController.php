@@ -34,7 +34,12 @@ class DeleteUnitPricesController extends ApiController
         DeleteUnitPricesRequest $request,
         DeleteUnitPricesAction $action
     ): JsonResponse {
-        $result = $action->run($request->getIds());
+        $result = $action->run(
+            $request->getModelType(),
+            $request->model_id,
+            $request->unit_ids
+        );
+
         return $this->json([
             MESSAGE => Container::transMultipleDeleted($result)
         ]);
