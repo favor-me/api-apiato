@@ -36,7 +36,7 @@ abstract class AbstractManager
     public function get(string $key): mixed
     {
         if (class_exists($key) && is_subclass_of($key, $this->getItemAccessor())) {
-            $key = (new ($key))->getName();
+            $key = $this->getItemAccessorKey($key);
         }
 
         return $this->items->get($key);
@@ -79,6 +79,11 @@ abstract class AbstractManager
     {
         $this->items = collect();
         $this->registerItems();
+    }
+
+    protected function getItemAccessorKey(string $key): string
+    {
+        return (new ($key))->getName();
     }
 
     protected function findFiles(): Finder
