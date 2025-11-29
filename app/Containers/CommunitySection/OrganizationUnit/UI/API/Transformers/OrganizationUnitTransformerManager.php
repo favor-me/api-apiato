@@ -15,7 +15,6 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers;
 
-use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Transformers\TransformerManager;
 
 class OrganizationUnitTransformerManager extends TransformerManager
@@ -30,7 +29,7 @@ class OrganizationUnitTransformerManager extends TransformerManager
         return new AdminOrganizationUnitTransformer();
     }
 
-    public function getToList(): ?Transformer
+    public function getToList(): ?OrganizationUnitToListTransformer
     {
         return new OrganizationUnitToListTransformer();
     }
