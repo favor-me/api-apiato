@@ -14,18 +14,18 @@
  *
  * @apiGroup OrganizationUnitPrice
  * @apiName getAllOrganizationUnitPrice
-
+ *
  * @api {get} /v1/organization/unit-prices/:model/:model_id Список
  * @apiDescription Получить список.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`, `organization_worker`
  *
  * @apiParam {String=contract} model Тип модели (сущность к которой привязывается цена)
  * @apiParam {String} model_id Уникальный идентификатор сущности
  *
  * @apiSuccessExample {json} Успешный ответ:
-HTTP/1.1 200 OK
+* HTTP/1.1 200 OK
  */
 
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;

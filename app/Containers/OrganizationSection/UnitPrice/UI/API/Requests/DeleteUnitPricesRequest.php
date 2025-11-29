@@ -15,32 +15,64 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\UI\API\Requests;
 
-use App\Containers\OrganizationSection\UnitPrice\Requests\UnitPriceApiRequest;
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Ship\Collections\ValidationRules;
-use App\Ship\Traits\Request\HasInputIds;
+use App\Ship\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
 
-class DeleteUnitPricesRequest extends UnitPriceApiRequest
+/**
+ * @property-read mixed $unit_ids
+ */
+class DeleteUnitPricesRequest extends GetAllUnitPricesRequest
 {
-    use HasInputIds;
-
     protected array $access = [
         ROLES => RoleModel::ORGANIZATION_OWNER
     ];
 
-    protected array $decode = [
-        IDS . '.*'
-    ];
+    protected function afterInitialize(): void
+    {
+        parent::afterInitialize();
+        $this->mergeDecode(UnitPrice::UNIT_IDS . '.*');
+    }
 
     public function rules(): array
     {
-        return [
-            IDS . '.*' => $this->getUnitPriceIdValidationRules()
-        ];
+        return parent::rules() +
+            [
+                UnitPrice::UNIT_IDS => $this->getUnitPriceUnitIdsValidationRules(),
+                UnitPrice::UNIT_IDS . '.*' => $this->getOrganizationUnitIdValidationRules()
+            ];
     }
 
-    public function getUnitPriceIdValidationRules(): ValidationRules
+    public function getUnitPriceUnitIdsValidationRules(): ValidationRules
     {
-        return parent::getUnitPriceIdValidationRules()
+        return validation_rules([
+            'array'
+        ])->addRequired();
+    }
+
+    public function getOrganizationUnitIdValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitIdValidationRules()
+            ->add(
+                $this->getUnitPriceUnitIdExitsValidationRule()
+            )
             ->addRequired();
+    }
+
+    public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationUnitIdExistsValidationRule($column)
+            ->where(OrganizationUnit::ORGANIZATION_ID, $this->user()->organization_id);
+    }
+
+    public function getUnitPriceUnitIdExitsValidationRule(): Exists
+    {
+        return Rule::exists(UnitPriceModel::TABLE, UnitPrice::UNIT_ID)
+            ->where(UnitPrice::MODEL, $this->getModelType()->getModelAccessor())
+            ->where(UnitPrice::MODEL_ID, $this->model_id);
     }
 }

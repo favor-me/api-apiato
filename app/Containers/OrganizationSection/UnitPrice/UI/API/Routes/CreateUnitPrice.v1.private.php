@@ -19,7 +19,7 @@
  * @apiDescription Создание цены.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
  * @apiParam {String=contract} model Тип модели (сущность к которой привязывается цена)
  *

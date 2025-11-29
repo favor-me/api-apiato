@@ -15,11 +15,16 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Tests\Functional\API;
 
+use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Map\ContractType;
+use App\Containers\OrganizationSection\UnitPrice\Map\Manager;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\OrganizationSection\UnitPrice\Tests\Functional\ApiTestCase;
-use App\Ship\Parents\Requests\Request;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class DeleteUnitPricesTest extends ApiTestCase
@@ -31,44 +36,30 @@ final class DeleteUnitPricesTest extends ApiTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->endpoint = 'delete@v1/' . Container::getApiUri() . '?' . Request::FORCE_DELETE . '=1';
-    }
-
-    public function testWithNotTrashed(): void
-    {
-        $this->getTestingOrganizationOwnerUser();
-
-        $model = UnitPriceModel::factory()->create();
-
-        $this->makeCall([
-            IDS => [
-                $model->getHashedKey()
-            ]
-        ]);
-
-        $this->assertGivenDataIsInvalid();
-
-        $this->response->assertJson(
-            fn(AssertableJson $json): AssertableJson => $json
-                ->has('errors')
-                ->where('errors', [
-                    IDS . '.0' => [
-                        __('validation.custom.ids.*.exists')
-                    ]
-                ])
-                ->etc()
-        );
+        $this->endpoint = 'delete@v1/' . Container::getApiUri('{' . UnitPrice::MODEL_ID . '}');
     }
 
     public function testFailedWithNoExistsIds(): void
     {
         $this->getTestingOrganizationOwnerUser();
 
-        $this->makeCall([
-            IDS => [
-                hash_encode(123)
-            ]
-        ]);
+        $contract = Contract::factory()
+            ->counterparty(
+                $this->testingUser->organization_id
+            )
+            ->create();
+
+        $unitPrice = UnitPriceModel::factory()->create();
+        $contractType = Manager::getInstance()->get(ContractType::class);
+
+        $this
+            ->injectId($contractType->getModelKey(), true, '{' . UnitPrice::MODEL . '}')
+            ->injectId($contract->id, false, '{' . UnitPrice::MODEL_ID . '}')
+            ->makeCall([
+                UnitPrice::UNIT_IDS => [
+                    $unitPrice->getHashedKey()
+                ]
+            ]);
 
         $this->assertGivenDataIsInvalid();
 
@@ -76,8 +67,10 @@ final class DeleteUnitPricesTest extends ApiTestCase
             fn(AssertableJson $json): AssertableJson => $json
                 ->has('errors')
                 ->where('errors', [
-                    IDS . '.0' => [
-                        __('validation.custom.ids.*.exists')
+                    UnitPrice::UNIT_IDS . '.0' => [
+                        __('validation.exists', [
+                            'attribute' => UnitPrice::UNIT_IDS . '.0'
+                        ])
                     ]
                 ])
                 ->etc()
@@ -88,23 +81,52 @@ final class DeleteUnitPricesTest extends ApiTestCase
     {
         $this->getTestingOrganizationOwnerUser();
 
-        $models = UnitPriceModel::factory()
-            ->count(2)
-            ->trashed()
+        $contract = Contract::factory()
+            ->counterparty(
+                $this->testingUser->organization_id
+            )
             ->create();
 
-        $this->makeCall([
-            IDS => $models
-                ->getHashedKeys()
-                ->toArray()
-        ]);
+        $contractType = Manager::getInstance()->get(ContractType::class);
+
+        $organizationUnitA = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
+
+        $modelA = UnitPriceModel::factory()
+            ->create([
+                UnitPrice::MODEL_ID => $contract->id,
+                UnitPrice::UNIT_ID => $organizationUnitA->id
+            ]);
+
+        $organizationUnitB = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
+
+        $modelB = UnitPriceModel::factory()
+            ->create([
+                UnitPrice::MODEL_ID => $contract->id,
+                UnitPrice::UNIT_ID => $organizationUnitB->id
+            ]);
+
+        $this
+            ->injectId($contractType->getModelKey(), true, '{' . UnitPrice::MODEL . '}')
+            ->injectId($contract->id, false, '{' . UnitPrice::MODEL_ID . '}')
+            ->makeCall([
+                UnitPrice::UNIT_IDS => [
+                    $modelA->getHashedKey(),
+                    $modelB->getHashedKey()
+                ]
+            ]);
 
         $this->response
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has(MESSAGE)
-                    ->where(MESSAGE, Container::transMultipleDeleted($models->count()))
+                    ->where(MESSAGE, Container::transMultipleDeleted(2))
                     ->etc()
             );
     }

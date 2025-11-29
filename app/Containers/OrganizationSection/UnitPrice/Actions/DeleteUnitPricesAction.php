@@ -15,6 +15,7 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Actions;
 
+use App\Containers\OrganizationSection\UnitPrice\Map\Type;
 use App\Containers\OrganizationSection\UnitPrice\Tasks\DeleteUnitPricesTask;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Actions\Action;
@@ -22,12 +23,14 @@ use App\Ship\Parents\Actions\Action;
 class DeleteUnitPricesAction extends Action
 {
     /**
-     * @param array $ids
+     * @param Type $modelType
+     * @param int $modelId
+     * @param array $unitIds
      * @return int|null
      * @throws NotFoundException
      */
-    public function run(array $ids): ?int
+    public function run(Type $modelType, int $modelId, array $unitIds): ?int
     {
-        return app(DeleteUnitPricesTask::class)->run($ids);
+        return app(DeleteUnitPricesTask::class)->run($modelType, $modelId, $unitIds);
     }
 }

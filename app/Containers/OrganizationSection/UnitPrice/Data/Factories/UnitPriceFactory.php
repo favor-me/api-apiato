@@ -15,15 +15,12 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Data\Factories;
 
-use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
-use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
-use App\Ship\Traits\Factory\HasTrashedState;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -32,8 +29,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 final class UnitPriceFactory extends Factory
 {
-    use HasTrashedState;
-
     protected $model = UnitPriceModel::class;
 
     public function definition(): array

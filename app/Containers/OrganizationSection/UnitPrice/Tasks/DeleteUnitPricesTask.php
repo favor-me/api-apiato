@@ -15,9 +15,31 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Tasks;
 
-use App\Ship\Traits\Task\DeleteRun;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Map\Type;
+use App\Ship\Exceptions\NotFoundException;
+use Exception;
 
 class DeleteUnitPricesTask extends UnitPriceTask
 {
-    use DeleteRun;
+    /**
+     * @param Type $modelType
+     * @param int $modelId
+     * @param array $unitIds
+     * @return int
+     * @throws NotFoundException
+     */
+    public function run(Type $modelType, int $modelId, array $unitIds): int
+    {
+        try {
+            return $this->repository
+                ->deleteWhere([
+                    [UnitPrice::UNIT_ID, 'in', $unitIds],
+                    [UnitPrice::MODEL_ID, '=', $modelId],
+                    [UnitPrice::MODEL, '=', $modelType->getModelAccessor()]
+                ]);
+        } catch (Exception $e) {
+            throw new NotFoundException($e->getMessage());
+        }
+    }
 }

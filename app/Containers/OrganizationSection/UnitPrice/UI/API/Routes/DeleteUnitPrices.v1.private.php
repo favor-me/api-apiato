@@ -15,23 +15,26 @@
  * @apiGroup OrganizationUnitPrice
  * @apiName trashOrDeleteOrganizationUnitPrices
 
- * @api {delete} /v1/organization/unit-prices Архивировать|Удалить
- * @apiDescription Архивировать или удалить.
+ * @api {delete} /v1/organization/unit-prices/:model/:model_id Удалить
+ * @apiDescription Удалить.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
- * @apiBody {Array} ids Список id
- * @apiBody {String="1"} [force-delete] Произвести жёсткое удаление (удаляется запись из базы).
+ * @apiParam {String=contract} model Тип модели (сущность к которой привязывается цена)
+ * @apiParam {String} model_id Уникальный идентификатор сущности
+ *
+ * @apiBody {Array} unit_ids Список id услуг или товаров
  *
  * @apiSuccessExample {json} Успешный ответ:
 HTTP/1.1 200 OK
  */
 
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\UI\API\Controllers\DeleteUnitPricesController;
 use Illuminate\Support\Facades\Route;
 
-Route::delete(Container::getApiUri(), DeleteUnitPricesController::class)
+Route::delete(Container::getApiUri('{' . UnitPrice::MODEL_ID . '}'), DeleteUnitPricesController::class)
     ->name('api_organization_unit_price_delete_unit_prices')
     ->middleware(['auth:api']);
