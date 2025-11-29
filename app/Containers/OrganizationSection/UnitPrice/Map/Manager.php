@@ -45,6 +45,11 @@ class Manager extends AbstractManager
         $this->items->put($item->getModelKey(), $item);
     }
 
+    protected function getItemAccessorKey(string $key): string
+    {
+        return (new ($key))->getModelKey();
+    }
+
     protected function findFiles(): Finder
     {
         return parent::findFiles()

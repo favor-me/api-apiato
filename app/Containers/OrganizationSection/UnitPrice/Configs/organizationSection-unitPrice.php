@@ -15,6 +15,7 @@
 
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Validation\Rules\ExistsUnitPriceModelRule;
+use App\Containers\OrganizationSection\UnitPrice\Validation\Rules\ExistsUnitPriceModelIdRule;
 
 return [
 
@@ -23,7 +24,8 @@ return [
             new ExistsUnitPriceModelRule()
         ],
         UnitPrice::MODEL_ID => [
-            'numeric'
+            'numeric',
+            new ExistsUnitPriceModelIdRule()
         ],
         UnitPrice::COST_PRICE => [
             'nullable',

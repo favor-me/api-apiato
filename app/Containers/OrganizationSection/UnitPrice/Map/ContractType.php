@@ -15,14 +15,14 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Map;
 
-use App\Containers\AccountingSection\Contract\Models\Contract;
+use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 
 class ContractType extends Type
 {
     public function getModelAccessor(): string
     {
-        return Contract::class;
+        return ContractModel::class;
     }
 
     public function getModelKey(): string
