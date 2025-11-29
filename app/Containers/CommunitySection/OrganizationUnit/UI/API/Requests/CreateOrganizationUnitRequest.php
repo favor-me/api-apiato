@@ -155,7 +155,7 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
 
         if ($this->has(OrganizationUnit::COST_PRICE)) {
             $costPrice = app('money')
-                ->addCurrency(
+                ->add(
                     $this->get(OrganizationUnit::COST_PRICE)
                 );
 
