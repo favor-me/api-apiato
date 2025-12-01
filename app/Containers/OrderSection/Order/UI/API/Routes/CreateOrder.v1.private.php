@@ -16,6 +16,7 @@
  *
  * @apiGroup Order
  * @apiName createOrderOrder
+ *
  * @api {post} /v1/order/orders Создать
  * @apiDescription Создание.
  *
@@ -34,6 +35,7 @@
         {
             "name": "Item unit name", // Название unit в заказе
             "unit_id": "aYOxlpzRMwrX3gD7", // Уникальный идентификатор unit
+            "type": "service", // Тип unit
             "sku": "rt-13", // Артикул unit
             "cost_price": "150", // Себестоимость unit
             "client_price": "200", // Цена для клиента unit

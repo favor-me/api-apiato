@@ -24,8 +24,7 @@ use App\Containers\OrderSection\Item\Traits\ItemValidationRules;
 use App\Containers\OrderSection\Order\Facades\Container;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Traits\OrderValidationRules;
-use App\Containers\OrderSection\Order\UI\API\Transformers\AdminOrderTransformer;
-use App\Containers\OrderSection\Order\UI\API\Transformers\OrderTransformer;
+use App\Containers\OrderSection\Order\UI\API\Transformers\OrderTransformerManager;
 use App\Containers\OrderSection\Status\Traits\StatusValidationRules;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
@@ -58,10 +57,11 @@ abstract class OrderApiRequest extends ApiRequest implements GettableTransformer
 
     public function getTransformer(): Transformer
     {
-        return $this->isAdminUser() ? new AdminOrderTransformer() : new OrderTransformer();
+        return (new OrderTransformerManager())
+            ->getDefaultOrAdmin();
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         $this->prepareForValidationOrganizationId();
     }

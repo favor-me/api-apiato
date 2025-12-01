@@ -27,6 +27,7 @@ use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\Functional\ApiTestCase;
 use App\Containers\OrderSection\PaymentType\CashType;
 use App\Containers\OrderSection\PaymentType\Manager;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class CreateOrderTest extends ApiTestCase
@@ -98,8 +99,8 @@ final class CreateOrderTest extends ApiTestCase
 
         $unitA = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(200)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(250)->val(),
+                UnitPrice::COST_PRICE => app('money')->addCurrency(200)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(250)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
@@ -155,15 +156,15 @@ final class CreateOrderTest extends ApiTestCase
 
         $unitA = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(100)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(210)->val(),
+                UnitPrice::COST_PRICE => app('money')->addCurrency(100)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(210)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
         $unitB = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(120)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(150)->val(),
+                UnitPrice::COST_PRICE => app('money')->addCurrency(120)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(150)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
@@ -175,7 +176,7 @@ final class CreateOrderTest extends ApiTestCase
             Order::ITEMS => [
                 [
                     Item::NAME => $unitA->name,
-                    Item::UNIT_ID => $unitA->id,
+                    Item::UNIT_ID => $unitA->getHashedKey(),
                     Item::SKU => $unitA->sku,
                     Item::COST_PRICE => $unitA->cost_price->currency()->val(),
                     Item::CLIENT_PRICE => $unitA->client_price->currency()->val(),
@@ -183,7 +184,8 @@ final class CreateOrderTest extends ApiTestCase
                 ],
                 [
                     Item::NAME => $unitB->name,
-                    Item::UNIT_ID => $unitB->id,
+                    Item::UNIT_ID => $unitB->getHashedKey(),
+                    Item::TYPE => $unitB->type->getName(),
                     Item::SKU => $unitB->sku,
                     Item::COST_PRICE => $unitB->cost_price->currency()->val(),
                     Item::CLIENT_PRICE => $unitB->client_price->currency()->val(),
@@ -200,16 +202,17 @@ final class CreateOrderTest extends ApiTestCase
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
                     ->where('data.' . OBJECT, OrderModel::RESOURCE_KEY)
-                    ->where('data.' . Order::PAYMENT_TYPE, $data[Order::PAYMENT_TYPE])
+                    ->where('data.' . Order::PAYMENT_TYPE, $paymentType->toArray())
                     ->where('data.' . Order::CLIENT_ID, $data[Order::CLIENT_ID])
                     ->where('data.' . Order::COMMENT, $data[Order::COMMENT])
                     ->where('data.' . Order::TOTAL . '.currency.value', $data[Order::TOTAL])
                     ->has('data.' . Order::ITEMS . '.data', count($data[Order::ITEMS]))
 
-                    // Check unitA
+                    // Check unitA.
                     ->where('data.' . Order::ITEMS . '.data.0.' . Item::NAME, $unitA->name)
                     ->where('data.' . Order::ITEMS . '.data.0.' . Item::UNIT_ID, $unitA->getHashedKey())
                     ->where('data.' . Order::ITEMS . '.data.0.' . Item::SKU, $unitA->sku)
+                    ->where('data.' . Order::ITEMS . '.data.0.' . Item::TYPE, null)
                     ->where(
                         'data.' . Order::ITEMS . '.data.0.' . Item::COST_PRICE . '.currency.value',
                         (int)$unitA->cost_price->currency()->val()
@@ -220,10 +223,11 @@ final class CreateOrderTest extends ApiTestCase
                     )
                     ->where('data.' . Order::ITEMS . '.data.0.' . Item::AMOUNT, $data[Order::ITEMS][0][Item::AMOUNT])
 
-                    // Check unitB
+                    // Check unitB.
                     ->where('data.' . Order::ITEMS . '.data.1.' . Item::NAME, $unitB->name)
                     ->where('data.' . Order::ITEMS . '.data.1.' . Item::UNIT_ID, $unitB->getHashedKey())
                     ->where('data.' . Order::ITEMS . '.data.1.' . Item::SKU, $unitB->sku)
+                    ->where('data.' . Order::ITEMS . '.data.1.' . Item::TYPE, $unitB->type->toArray())
                     ->where(
                         'data.' . Order::ITEMS . '.data.1.' . Item::COST_PRICE . '.currency.value',
                         (int)$unitB->cost_price->currency()->val()

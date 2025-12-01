@@ -70,6 +70,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
             Order::ITEMS . '.*.' . Item::CLIENT_PRICE => $this->getItemClientPriceValidationRules(),
             Order::ITEMS . '.*.' . Item::COST_PRICE => $this->getItemCostPriceValidationRules(),
             Order::ITEMS . '.*.' . Item::SKU => $this->getOrganizationUnitSkuValidationRules(),
+            Order::ITEMS . '.*.' . Item::TYPE => $this->getItemTypeValidationRules(),
             Order::ITEMS . '.*.' . Item::UNIT_ID => $this->getOrganizationUnitIdValidationRules(),
         ];
     }
