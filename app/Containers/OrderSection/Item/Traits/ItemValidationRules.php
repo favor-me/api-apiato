@@ -36,6 +36,11 @@ trait ItemValidationRules
         return validation_rules(Container::getConfig('rules.' . Item::NAME));
     }
 
+    public function getItemTypeValidationRules(): ValidationRules
+    {
+        return validation_rules(Container::getConfig('rules.' . Item::TYPE));
+    }
+
     public function getItemSkuValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . Item::SKU));

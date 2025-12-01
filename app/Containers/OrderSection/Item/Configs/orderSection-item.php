@@ -13,26 +13,45 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
+use App\Containers\CommunitySection\OrganizationUnitType\Validation\Rules\ExistsOrganizationUnitTypeRule;
 use App\Containers\OrderSection\Item\Foundation\Item;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 
 return [
 
     'rules' => [
-        Item::NAME => [
-            // write more
-        ],
-        Item::SKU => [
-            // write more
-        ],
-        Item::COST_PRICE => [
-            // write more
-        ],
-        Item::CLIENT_PRICE => [
-            // write more
-        ],
+
         Item::AMOUNT => [
-            // write more
+            'numeric'
+        ],
+
+        Item::TYPE => [
+            'nullable',
+            new ExistsOrganizationUnitTypeRule()
+        ],
+
+        Item::NAME => [
+            'string'
+        ],
+
+        UnitPrice::CLIENT_PRICE => [
+            'nullable',
+            'numeric',
+            'max:' . UnitPrice::PRICE_MAX_LENGTH
+        ],
+
+        UnitPrice::COST_PRICE => [
+            'nullable',
+            'numeric',
+            'max:' . UnitPrice::PRICE_MAX_LENGTH
+        ],
+
+        Item::SKU => [
+            'nullable',
+            'string',
+            'no_spaces'
         ]
+
     ]
 
 ];
