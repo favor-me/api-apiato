@@ -26,6 +26,7 @@ final class OrderRepository extends Repository
 {
     protected $fieldSearchable = [
         ID => '=',
+        CREATED_BY => 'in',
         Order::PAYMENT_TYPE => '=',
         Order::CLIENT_ID => '=',
         Order::STATUS_ID => '=',
