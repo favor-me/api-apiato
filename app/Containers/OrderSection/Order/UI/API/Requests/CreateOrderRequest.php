@@ -144,12 +144,6 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         ]);
     }
 
-    public function getOrganizationClientIdValidationRules(): ValidationRules
-    {
-        return parent::getOrganizationClientIdValidationRules()
-            ->addRequired();
-    }
-
     public function getOrganizationIdValidationRules(): ValidationRules
     {
         return parent::getOrganizationIdValidationRules()
