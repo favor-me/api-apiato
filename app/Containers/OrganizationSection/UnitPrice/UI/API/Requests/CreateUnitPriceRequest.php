@@ -92,12 +92,6 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
             ->addRequired();
     }
 
-    public function getUnitPricePriceUpValidationRules(): ValidationRules
-    {
-        return parent::getUnitPricePriceUpValidationRules()
-            ->addRequired();
-    }
-
     public function getUnitPriceClientPriceValidationRules(): ValidationRules
     {
         $rules = parent::getUnitPriceClientPriceValidationRules();
