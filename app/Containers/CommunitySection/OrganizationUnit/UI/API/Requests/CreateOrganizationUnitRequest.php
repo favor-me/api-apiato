@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Dto\CreateOrganizationUnitDto;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
@@ -26,6 +27,10 @@ use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Request\CanPrepareMoney;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
+/**
+ * @property-read int $cost_price
+ * @property-read int $client_price
+ */
 class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implements GettableDto
 {
     use CanPrepareMoney;
@@ -54,9 +59,9 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
             OrganizationUnit::TYPE => $this->getOrganizationUnitTypeValidationRules(),
             OrganizationUnit::SKU => $this->getOrganizationUnitSkuValidationRules(),
             OrganizationUnit::ORDERING => $this->getOrganizationUnitOrderingValidationRules(),
-            OrganizationUnit::COST_PRICE => $this->getOrganizationUnitCostPriceValidationRules(),
-            OrganizationUnit::PRICE_UP => $this->getOrganizationUnitPriceUpValidationRules(),
-            OrganizationUnit::CLIENT_PRICE => $this->getOrganizationUnitClientPriceValidationRules(),
+            UnitPrice::COST_PRICE => $this->getOrganizationUnitCostPriceValidationRules(),
+            UnitPrice::PRICE_UP => $this->getOrganizationUnitPriceUpValidationRules(),
+            UnitPrice::CLIENT_PRICE => $this->getOrganizationUnitClientPriceValidationRules(),
             OrganizationUnit::ORGANIZATION_ID => $this->getOrganizationUnitOrganizationIdValidationRules(),
             OrganizationUnit::SYSTEM_UNIT_ID => $this->getOrganizationUnitSystemUnitIdValidationRules(),
         ];
@@ -109,8 +114,8 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
     {
         $messages = parent::messages();
 
-        if ($this->has(OrganizationUnit::COST_PRICE)) {
-            $messages[OrganizationUnit::CLIENT_PRICE . '.size'] = Container::trans('validation.client_price.size', [
+        if ($this->has(UnitPrice::COST_PRICE)) {
+            $messages[UnitPrice::CLIENT_PRICE . '.size'] = Container::trans('validation.client_price.size', [
                 'size' => $this->internalClientPrice->currency()->text()
             ]);
         }
@@ -122,8 +127,8 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
     {
         $rules = parent::getOrganizationUnitClientPriceValidationRules();
 
-        $priceUp = (float)$this->get(OrganizationUnit::PRICE_UP);
-        if ($this->has(OrganizationUnit::COST_PRICE) && $priceUp > 0) {
+        $priceUp = (float)$this->get(UnitPrice::PRICE_UP);
+        if ($this->has(UnitPrice::COST_PRICE) && $priceUp > ZERO) {
             $rules->add('size:' . $this->internalClientPrice->val());
         }
 
@@ -139,10 +144,10 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
 
     protected function prepareForValidationIsInfinityBalance(): void
     {
-        $isInfinityBalance = (bool)$this->get(OrganizationUnit::IS_INFINITY_BALANCE);
+        $isInfinityBalance = (bool)$this->get(UnitPrice::IS_INFINITY_BALANCE);
         if ($isInfinityBalance) {
             $this->merge([
-                OrganizationUnit::BALANCE => ZERO
+                UnitPrice::BALANCE => ZERO
             ]);
         }
     }
@@ -150,26 +155,26 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
     protected function prepareForValidationOrganizationClientPrice(): void
     {
         $this
-            ->prepareMoney(OrganizationUnit::COST_PRICE)
-            ->prepareMoney(OrganizationUnit::CLIENT_PRICE);
+            ->prepareMoney(UnitPrice::COST_PRICE)
+            ->prepareMoney(UnitPrice::CLIENT_PRICE);
 
-        if ($this->has(OrganizationUnit::COST_PRICE)) {
+        if ($this->has(UnitPrice::COST_PRICE)) {
             $costPrice = app('money')
                 ->add(
-                    $this->get(OrganizationUnit::COST_PRICE)
+                    $this->cost_price
                 );
 
             $clientPrice = app('money')->add($costPrice);
-            $priceUp = (float)$this->get(OrganizationUnit::PRICE_UP);
+            $priceUp = (float)$this->get(UnitPrice::PRICE_UP);
 
             if ($priceUp > ZERO) {
                 $clientPrice->add($priceUp . '%');
             }
 
             $this->internalClientPrice = $clientPrice;
-            if (empty($this->get(OrganizationUnit::CLIENT_PRICE))) {
+            if (empty($this->get(UnitPrice::CLIENT_PRICE))) {
                 $this->merge([
-                    OrganizationUnit::CLIENT_PRICE => $this->internalClientPrice->val()
+                    UnitPrice::CLIENT_PRICE => $this->internalClientPrice->val()
                 ]);
             }
         }
