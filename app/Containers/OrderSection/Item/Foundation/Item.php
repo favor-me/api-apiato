@@ -25,6 +25,8 @@ final class Item extends SectionContainer
     public const NAME = 'name';
     public const ORDER_ID = 'order_id';
     public const SKU = 'sku';
+    public const TYPE = 'type';
+    public const TYPE_MAX_LENGTH = '15';
     public const UNIT_ID = 'unit_id';
 
     protected string $gender = 'female';

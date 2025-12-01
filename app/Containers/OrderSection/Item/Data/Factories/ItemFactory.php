@@ -18,6 +18,8 @@ namespace App\Containers\OrderSection\Item\Data\Factories;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\CommunitySection\OrganizationUnitType\Manager;
+use App\Containers\CommunitySection\OrganizationUnitType\ProductType;
 use App\Containers\OrderSection\Item\Foundation\Item;
 use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Foundation\Order;
@@ -54,6 +56,7 @@ final class ItemFactory extends Factory
             Item::AMOUNT => 1,
             Item::CLIENT_PRICE => $clientPrice->val(),
             Item::COST_PRICE => 0,
+            Item::TYPE => Manager::getInstance()->get(ProductType::class)->getName(),
             Item::NAME => $this->faker->title,
             Item::ORDER_ID => $order,
             Item::SKU => $this->faker->text(50),

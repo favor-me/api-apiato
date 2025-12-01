@@ -19,8 +19,7 @@ use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Traits\IsOrganizationUser;
 use App\Containers\CommunitySection\OrganizationUnit\Traits\OrganizationUnitValidationRules;
 use App\Containers\OrderSection\Item\Traits\ItemValidationRules;
-use App\Containers\OrderSection\Item\UI\API\Transformers\AdminItemTransformer;
-use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformer;
+use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformerManager;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Traits\OrderValidationRules;
 use App\Ship\Contracts\GettableTransformer;
@@ -36,7 +35,7 @@ abstract class ItemApiRequest extends ApiRequest implements GettableTransformer
 
     public function getTransformer(): Transformer
     {
-        return $this->isAdminUser() ? new AdminItemTransformer() : new ItemTransformer();
+        return (new ItemTransformerManager())->getDefaultOrAdmin();
     }
 
     protected function getCheckAuthorizeMethods(): array
@@ -46,7 +45,7 @@ abstract class ItemApiRequest extends ApiRequest implements GettableTransformer
         ]);
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         $this->prepareForValidationOrganizationId();
     }

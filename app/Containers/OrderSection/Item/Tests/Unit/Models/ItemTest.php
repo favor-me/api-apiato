@@ -16,6 +16,7 @@
 namespace App\Containers\OrderSection\Item\Tests\Unit\Models;
 
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
 use App\Containers\OrderSection\Item\Foundation\Item;
 use App\Containers\OrderSection\Item\Models\Item as ItemModel;
@@ -69,12 +70,14 @@ final class ItemTest extends UnitTestCase
             Item::SKU,
             Item::COST_PRICE,
             Item::CLIENT_PRICE,
-            Item::AMOUNT
+            Item::AMOUNT,
+            Item::TYPE
         ], $this->model->getFillable());
     }
 
     public function testCasts(): void
     {
+        $this->assertInstanceOf(Type::class, $this->model->type);
         $this->assertInstanceOf(Money::class, $this->model->cost_price);
         $this->assertInstanceOf(Money::class, $this->model->client_price);
     }

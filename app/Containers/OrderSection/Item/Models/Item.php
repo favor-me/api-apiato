@@ -16,6 +16,8 @@
 namespace App\Containers\OrderSection\Item\Models;
 
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnitType\Casts\OrganizationUnitType;
+use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
 use App\Containers\OrderSection\Item\Data\Factories\ItemFactory;
 use App\Containers\OrderSection\Item\Foundation\Item as BaseItem;
@@ -30,8 +32,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read int $id Уникальный идентификатор.
- * @property-read int $order_id Уникальный идентификатор.
- * @property-read int $unit_id Уникальный идентификатор.
+ * @property-read int $order_id Уникальный идентификатор заказа.
+ * @property-read int $unit_id Уникальный идентификатор юнита организации (товар, услуга).
+ * @property-read string|Type $type Тип.
  * @property-read string $name Имя.
  * @property-read string $sku Артикул.
  * @property-read Money $cost_price Себестоимость.
@@ -46,10 +49,10 @@ class Item extends Model
 {
     use IsNumbered;
 
-    public $timestamps = false;
-    public const TABLE = 'order_items';
-    public const RESOURCE_KEY = 'Item';
+    public const string TABLE = 'order_items';
+    public const string RESOURCE_KEY = 'Item';
 
+    public $timestamps = false;
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;
 
@@ -60,12 +63,14 @@ class Item extends Model
         BaseItem::SKU,
         BaseItem::COST_PRICE,
         BaseItem::CLIENT_PRICE,
-        BaseItem::AMOUNT
+        BaseItem::AMOUNT,
+        BaseItem::TYPE
     ];
 
     protected $casts = [
         BaseItem::COST_PRICE => MoneyCast::class,
-        BaseItem::CLIENT_PRICE => MoneyCast::class
+        BaseItem::CLIENT_PRICE => MoneyCast::class,
+        BaseItem::TYPE => OrganizationUnitType::class
     ];
 
     public function getProfit(): Money
@@ -77,7 +82,7 @@ class Item extends Model
 
     public function getTotalClientPrice(): Money
     {
-        if ($this->amount > 0) {
+        if ($this->amount > ZERO) {
             return $this->client_price->multiply($this->amount, true);
         }
 

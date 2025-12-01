@@ -23,11 +23,14 @@ class ItemTransformer extends Transformer
 {
     public function transform(ItemModel $item): array
     {
+        $type = (!is_null($item->type)) ? $item->type->toArray() : null;
+
         return [
             OBJECT => $item->getResourceKey(),
             ID => $item->getHashedKey(),
             Item::ORDER_ID => $item->getHashedKey(Item::ORDER_ID),
             Item::UNIT_ID => $item->getHashedKey(Item::UNIT_ID),
+            Item::TYPE => $type,
             Item::NAME => $item->name,
             Item::SKU => $item->sku,
             Item::COST_PRICE => $this->money($item->cost_price),

@@ -13,18 +13,19 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\OrderSection\Item\Dto;
+namespace App\Containers\OrderSection\Item\UI\API\Transformers;
 
-use App\Ship\Dto\Dto;
+use App\Ship\Transformers\TransformerManager;
 
-class CreateItemDto extends Dto
+class ItemTransformerManager extends TransformerManager
 {
-    public ?float $amount = 1;
-    public ?int $client_price;
-    public ?int $cost_price;
-    public ?string $name;
-    public ?int $order_id;
-    public ?string $sku;
-    public ?int $unit_id;
-    public ?string $type = null;
+    public function getDefault(): ItemTransformer
+    {
+        return new ItemTransformer();
+    }
+
+    public function getAdmin(): AdminItemTransformer
+    {
+        return new AdminItemTransformer();
+    }
 }
