@@ -224,6 +224,10 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
             $this->merge([
                 Order::CLIENT_ID => null
             ]);
+        } else {
+            $this->merge([
+                Order::CONTRACT_ID => null
+            ]);
         }
     }
 
