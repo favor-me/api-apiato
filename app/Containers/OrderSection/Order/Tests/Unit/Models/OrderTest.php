@@ -25,6 +25,7 @@ use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\UnitTestCase;
+use App\Containers\OrderSection\PaymentType\CashType;
 use App\Containers\OrderSection\PaymentType\Type;
 use App\Containers\OrderSection\Status\Foundation\Status;
 use App\Containers\OrderSection\Status\Models\Status as StatusModel;
@@ -312,5 +313,16 @@ final class OrderTest extends UnitTestCase
         $this->assertInstanceOf(BelongsTo::class, $order->counterparty());
         $this->assertInstanceOf(Counterparty::class, $order->counterparty()->getModel());
         $this->assertInstanceOf(Counterparty::class, $order->counterparty);
+    }
+
+    public function testPaymentTypeIs(): void
+    {
+        $orderA = OrderModel::factory()
+            ->make([
+                Order::PAYMENT_TYPE => CashType::class
+            ]);
+
+        $this->assertTrue($orderA->paymentTypeIs(CashType::class));
+        $this->assertTrue($orderA->paymentTypeIs('cash'));
     }
 }

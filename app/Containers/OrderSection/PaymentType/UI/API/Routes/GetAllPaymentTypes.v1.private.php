@@ -14,6 +14,7 @@
  *
  * @apiGroup OrderPaymentType
  * @apiName getAllOrderPaymentTypes
+ *
  * @api {get} /v1/order/payment-types Список
  * @apiDescription Получить список доступных типов оплатов.
  *

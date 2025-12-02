@@ -23,11 +23,12 @@
  * @apiVersion 1.0.0
  * @apiPermission Аутентифицированный пользователь
  *
- * @apiBody {String=cash,cashless} payment_type Тип оплаты (см. <a href="#api-OrderPaymentType-getAllOrderPaymentTypes">типы оплат</a>)
+ * @apiBody {String=cash,cashless,contract} payment_type Тип оплаты (см. <a href="#api-OrderPaymentType-getAllOrderPaymentTypes">типы оплат</a>)
  * @apiBody {String} total Итоговая цена
  * @apiBody {String} comment Комментарий
  * @apiBody {String} client_id Уникальный идентификатор клиента
- * @apiBody {Array} items Позиции заказа.
+ * @apiBody {Array} items Позиции заказа
+ * @apiBody {Array} [contract_id] Уникальный идентификатор договора. `Обязателен` если выбрат тип оплаты `Договор=contract`
  *
  * @apiParamExample {json} Пример для items:
 {

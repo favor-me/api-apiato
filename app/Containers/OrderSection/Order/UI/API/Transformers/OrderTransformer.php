@@ -15,7 +15,9 @@
 
 namespace App\Containers\OrderSection\Order\UI\API\Transformers;
 
+use App\Containers\AccountingSection\Contract\UI\API\Transformers\ContractTransformerManager;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
+use App\Containers\CommunitySection\Counterparty\UI\API\Transformers\CounterpartyTransformerManager;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
 use App\Containers\CommunitySection\OrganizationClient\UI\API\Transformers\OrganizationClientTransformer;
 use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformer;
@@ -39,6 +41,8 @@ class OrderTransformer extends Transformer
         Order::CLIENT,
         Order::CREATOR,
         Order::UPDATER,
+        Order::CONTRACT,
+        Order::COUNTERPARTY,
         Order::ORGANIZATION
     ];
 
@@ -55,6 +59,8 @@ class OrderTransformer extends Transformer
             Order::PROFIT => $this->money($order->profit),
             Order::COMMENT => $order->comment,
             Order::CLIENT_ID => $order->getHashedKey(Order::CLIENT_ID),
+            Order::COUNTERPARTY_ID => $order->getHashedKey(Order::COUNTERPARTY_ID),
+            Order::CONTRACT_ID => $order->getHashedKey(Order::CONTRACT_ID),
             CREATED_BY => $order->getHashedKey(CREATED_BY),
             UPDATED_BY => $order->getHashedKey(UPDATED_BY),
             Order::CANCELED_AT => $this->time($order->canceled_at),
@@ -63,6 +69,22 @@ class OrderTransformer extends Transformer
             UPDATED_AT => $this->time($order->updated_at),
             DELETED_AT => $this->time($order->deleted_at)
         ];
+    }
+
+    protected function includeContract(OrderModel $order): Item
+    {
+        return $this->primitiveNullOrItem(
+            $order->contract,
+            (new ContractTransformerManager())->getDefaultOrAdmin()
+        );
+    }
+
+    protected function includeCounterparty(OrderModel $order): Item
+    {
+        return $this->primitiveNullOrItem(
+            $order->counterparty,
+            (new CounterpartyTransformerManager())->getDefaultOrAdmin()
+        );
     }
 
     protected function includeOrganization(OrderModel $order): Item

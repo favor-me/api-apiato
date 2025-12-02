@@ -23,6 +23,8 @@ use App\Containers\OrderSection\Order\Dto\CreateOrderDto;
 use App\Containers\OrderSection\Order\Facades\Container;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Requests\OrderApiRequest;
+use App\Containers\OrderSection\PaymentType\ContractType;
+use App\Containers\OrderSection\PaymentType\Manager;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\SimpleTypes\Type\Money;
@@ -52,6 +54,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
 
         $this->mergeDecode([
             Order::CLIENT_ID,
+            Order::CONTRACT_ID,
             Order::ITEMS . '.*.' . Item::UNIT_ID
         ]);
     }
@@ -64,6 +67,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
             Order::TOTAL => $this->getOrderTotalValidationRules(),
             Order::COMMENT => $this->getOrderCommentValidationRules(),
             Order::CLIENT_ID => $this->getOrganizationClientIdValidationRules(),
+            Order::CONTRACT_ID => $this->getContractIdValidationRules(),
             Order::ITEMS => $this->getOrderItemsValidationRules(),
             Order::ITEMS . '.*.' . Item::AMOUNT => $this->getItemAmountValidationRules(),
             Order::ITEMS . '.*.' . Item::NAME => $this->getItemNameValidationRules(),
@@ -94,10 +98,27 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         ]);
     }
 
+    public function getContractIdValidationRules(): ValidationRules
+    {
+        $rules = parent::getContractIdValidationRules();
+
+        if ($this->isContractPaymentType()) {
+            $rules->addRequired();
+        }
+
+        return $rules;
+    }
+
     public function getOrganizationUnitSkuExistsValidationRule(string $column = 'NULL'): Exists
     {
         return parent::getOrganizationUnitSkuExistsValidationRule($column)
             ->where(OrganizationUnit::ORGANIZATION_ID, $this->organization_id);
+    }
+
+    public function getContractIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getContractIdExistsValidationRule($column)
+            ->where(Order::ORGANIZATION_ID, $this->organization_id);
     }
 
     public function getOrganizationUnitIdValidationRules(): ValidationRules
@@ -191,11 +212,22 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
-        $this->prepareItemsPrices();
-        $this->prepareForValidationTotal();
+
+        $this->prepareItemsPricesForValidation();
+        $this->prepareClientIdForValidation();
+        $this->prepareTotalForValidation();
     }
 
-    protected function prepareItemsPrices(): void
+    protected function prepareClientIdForValidation(): void
+    {
+        if ($this->isContractPaymentType()) {
+            $this->merge([
+                Order::CLIENT_ID => null
+            ]);
+        }
+    }
+
+    protected function prepareItemsPricesForValidation(): void
     {
         $total = app('money');
 
@@ -234,8 +266,16 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         }
     }
 
-    protected function prepareForValidationTotal(): void
+    protected function prepareTotalForValidation(): void
     {
         $this->prepareMoney(Order::TOTAL);
+    }
+
+    protected function isContractPaymentType(): bool
+    {
+        $contractPaymentType = Manager::getInstance()
+            ->get(ContractType::class);
+
+        return $this->get(Order::PAYMENT_TYPE) === $contractPaymentType->getName();
     }
 }

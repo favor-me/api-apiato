@@ -15,6 +15,8 @@
 
 namespace App\Containers\OrderSection\Order\Tests\Functional\API;
 
+use App\Containers\AccountingSection\Contract\Foundation\Contract;
+use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
@@ -26,6 +28,7 @@ use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\Functional\ApiTestCase;
 use App\Containers\OrderSection\PaymentType\CashType;
+use App\Containers\OrderSection\PaymentType\ContractType;
 use App\Containers\OrderSection\PaymentType\Manager;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -143,7 +146,81 @@ final class CreateOrderTest extends ApiTestCase
             );
     }
 
-    public function testSuccess(): void
+    public function testSuccessForContract(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $client = OrganizationClientModel::factory()
+            ->create([
+                OrganizationClient::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $contract = ContractModel::factory()
+            ->counterparty($user->organization_id)
+            ->create();
+
+        $paymentType = Manager::getInstance()->get(ContractType::class);
+
+        $unitA = OrganizationUnitModel::factory()
+            ->create([
+                UnitPrice::COST_PRICE => app('money')->addCurrency(100)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(210)->val(),
+                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+            ]);
+
+        $data = [
+            Order::PAYMENT_TYPE => $paymentType->getName(),
+            Order::CLIENT_ID => $client->getHashedKey(),
+            Order::CONTRACT_ID => $contract->getHashedKey(),
+            Order::COMMENT => 'Order test comment',
+            Order::TOTAL => 210 * 2,
+            Order::ITEMS => [
+                [
+                    Item::NAME => $unitA->name,
+                    Item::UNIT_ID => $unitA->getHashedKey(),
+                    Item::SKU => $unitA->sku,
+                    Item::COST_PRICE => $unitA->cost_price->currency()->val(),
+                    Item::CLIENT_PRICE => $unitA->client_price->currency()->val(),
+                    Item::AMOUNT => 2
+                ]
+            ]
+        ];
+
+        $this->makeCall($data);
+
+        $this->response
+            ->assertCreated()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . OBJECT, OrderModel::RESOURCE_KEY)
+                    ->where('data.' . Order::PAYMENT_TYPE, $paymentType->toArray())
+                    ->where('data.' . Order::CLIENT_ID, null)
+                    ->where('data.' . Order::CONTRACT_ID, $contract->getHashedKey())
+                    ->where('data.' . Order::COUNTERPARTY_ID, $contract->getHashedKey(Contract::COUNTERPARTY_ID))
+                    ->where('data.' . Order::COMMENT, $data[Order::COMMENT])
+                    ->where('data.' . Order::TOTAL . '.currency.value', $data[Order::TOTAL])
+                    ->has('data.' . Order::ITEMS . '.data', count($data[Order::ITEMS]))
+
+                    // Check unitA.
+                    ->where('data.' . Order::ITEMS . '.data.0.' . Item::NAME, $unitA->name)
+                    ->where('data.' . Order::ITEMS . '.data.0.' . Item::UNIT_ID, $unitA->getHashedKey())
+                    ->where('data.' . Order::ITEMS . '.data.0.' . Item::SKU, $unitA->sku)
+                    ->where('data.' . Order::ITEMS . '.data.0.' . Item::TYPE, null)
+                    ->where(
+                        'data.' . Order::ITEMS . '.data.0.' . Item::COST_PRICE . '.currency.value',
+                        (int)$unitA->cost_price->currency()->val()
+                    )
+                    ->where(
+                        'data.' . Order::ITEMS . '.data.0.' . Item::CLIENT_PRICE . '.currency.value',
+                        (int)$unitA->client_price->currency()->val()
+                    )
+                    ->where('data.' . Order::ITEMS . '.data.0.' . Item::AMOUNT, $data[Order::ITEMS][0][Item::AMOUNT])
+                    ->etc()
+            );
+    }
+
+    public function testSuccessForClient(): void
     {
         $user = $this->getTestingOrganizationUser();
 

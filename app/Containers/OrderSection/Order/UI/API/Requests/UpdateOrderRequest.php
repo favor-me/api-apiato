@@ -158,9 +158,9 @@ class UpdateOrderRequest extends CreateOrderRequest
         }
     }
 
-    protected function prepareItemsPrices(): void
+    protected function prepareItemsPricesForValidation(): void
     {
-        parent::prepareItemsPrices();
+        parent::prepareItemsPricesForValidation();
 
         $items = collect((array)$this->items);
 

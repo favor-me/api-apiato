@@ -26,6 +26,7 @@ use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Data\Factories\OrderFactory;
 use App\Containers\OrderSection\Order\Foundation\Order as BaseOrder;
 use App\Containers\OrderSection\PaymentType\Casts\PaymentType as PaymentTypeCast;
+use App\Containers\OrderSection\PaymentType\Manager;
 use App\Containers\OrderSection\PaymentType\Type as PaymentType;
 use App\Containers\OrderSection\Status\Models\Status;
 use App\Ship\Database\Casts\Money as MoneyCast;
@@ -109,6 +110,11 @@ class Order extends Model
         BaseOrder::CANCELED_AT => 'datetime'
     ];
 
+    public function paymentTypeIs(string $type): bool
+    {
+        return Manager::getInstance()->get($type) === $this->payment_type;
+    }
+
     public function calculateTotal(bool $write = false): self
     {
         $total = app('money');
@@ -145,17 +151,20 @@ class Order extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(OrganizationClient::class, BaseOrder::CLIENT_ID, ID);
+        return $this->belongsTo(OrganizationClient::class, BaseOrder::CLIENT_ID, ID)
+            ->withTrashed();
     }
 
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, CREATED_BY, ID);
+        return $this->belongsTo(User::class, CREATED_BY, ID)
+            ->withTrashed();
     }
 
     public function updater(): BelongsTo
     {
-        return $this->belongsTo(User::class, UPDATED_BY, ID);
+        return $this->belongsTo(User::class, UPDATED_BY, ID)
+            ->withTrashed();
     }
 
     public function status(): BelongsTo
@@ -165,12 +174,14 @@ class Order extends Model
 
     public function contract(): BelongsTo
     {
-        return $this->belongsTo(Contract::class, BaseOrder::CONTRACT_ID, ID);
+        return $this->belongsTo(Contract::class, BaseOrder::CONTRACT_ID, ID)
+            ->withTrashed();
     }
 
     public function counterparty(): BelongsTo
     {
-        return $this->belongsTo(Counterparty::class, BaseOrder::COUNTERPARTY_ID, ID);
+        return $this->belongsTo(Counterparty::class, BaseOrder::COUNTERPARTY_ID, ID)
+            ->withTrashed();
     }
 
     public function setCompletedAt(): self

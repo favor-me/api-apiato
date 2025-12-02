@@ -20,6 +20,8 @@ use App\Ship\Dto\Dto;
 class CreateOrderDto extends Dto
 {
     public ?int $client_id;
+    public ?int $counterparty_id;
+    public ?int $contract_id;
     public ?string $comment;
     public ?int $organization_id;
     public ?string $payment_type;

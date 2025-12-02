@@ -35,6 +35,8 @@ final class Order extends SectionContainer
     public const string CREATOR = 'creator';
     public const string CLIENT = 'client';
     public const string UPDATER = 'updater';
+    public const string CONTRACT = 'contract';
+    public const string COUNTERPARTY = 'counterparty';
     public const string STATUS = 'status';
     public const string ORGANIZATION = 'organization';
 

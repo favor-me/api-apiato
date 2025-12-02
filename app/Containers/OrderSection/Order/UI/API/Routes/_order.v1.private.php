@@ -60,6 +60,8 @@
         },
         "comment": null,
         "client_id": "noa8G5O6GybxKjA6",
+        "counterparty_id": null,
+        "contract_id": null,
         "created_by": "Q9V2RLOKZ0wEm1qY",
         "updated_by": "Q9V2RLOKZ0wEm1qY",
         "created_at": {
@@ -141,6 +143,8 @@
             "creator",
             "updater",
             "status",
+            "contract",
+            "counterparty",
             "organization"
         ]
     }

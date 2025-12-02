@@ -15,6 +15,7 @@
 
 namespace App\Containers\OrderSection\Order\Requests;
 
+use App\Containers\AccountingSection\Contract\Traits\ContractValidationRules;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Traits\IsOrganizationUser;
 use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
@@ -38,10 +39,11 @@ abstract class OrderApiRequest extends ApiRequest implements GettableTransformer
     use IsOrganizationUser;
     use ItemValidationRules;
     use OrderValidationRules;
+    use StatusValidationRules;
+    use ContractValidationRules;
     use OrganizationValidationRules;
     use OrganizationUnitValidationRules;
     use OrganizationClientValidationRules;
-    use StatusValidationRules;
 
     protected array $decode = [
         Order::ORGANIZATION_ID
