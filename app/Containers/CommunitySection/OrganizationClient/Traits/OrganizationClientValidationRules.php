@@ -15,7 +15,6 @@
 
 namespace App\Containers\CommunitySection\OrganizationClient\Traits;
 
-use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\OrganizationClient\Facades\Container;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
@@ -29,6 +28,7 @@ trait OrganizationClientValidationRules
     public function getOrganizationClientIdValidationRules(): ValidationRules
     {
         return validation_rules([
+            'nullable',
             $this->getOrganizationClientIdExistsValidationRule(ID)
         ]);
     }
