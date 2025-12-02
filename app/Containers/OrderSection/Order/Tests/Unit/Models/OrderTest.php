@@ -15,11 +15,13 @@
 
 namespace App\Containers\OrderSection\Order\Tests\Unit\Models;
 
+use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\AppSection\User\Models\User;
-use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
-use App\Containers\OrderSection\Item\Models\Item as ItemModel;
+use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient;
+use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
+use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\UnitTestCase;
@@ -71,6 +73,8 @@ final class OrderTest extends UnitTestCase
             Order::PROFIT,
             Order::COMMENT,
             Order::CLIENT_ID,
+            Order::COUNTERPARTY_ID,
+            Order::CONTRACT_ID,
             Order::STATUS_ID,
             Order::COMPLETED_AT,
             Order::CANCELED_AT,
@@ -280,5 +284,33 @@ final class OrderTest extends UnitTestCase
         $this->assertInstanceOf(HasMany::class, $order->items());
         $this->assertInstanceOf(ItemEloquentCollection::class, $order->items);
         $this->assertCount($items->count(), $order->items);
+    }
+
+    public function testBelongsToContract(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->organization($user->organization_id)
+            ->contract()
+            ->create();
+
+        $this->assertInstanceOf(BelongsTo::class, $order->contract());
+        $this->assertInstanceOf(Contract::class, $order->contract()->getModel());
+        $this->assertInstanceOf(Contract::class, $order->contract);
+    }
+
+    public function testBelongsToCounterparty(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->organization($user->organization_id)
+            ->contract()
+            ->create();
+
+        $this->assertInstanceOf(BelongsTo::class, $order->counterparty());
+        $this->assertInstanceOf(Counterparty::class, $order->counterparty()->getModel());
+        $this->assertInstanceOf(Counterparty::class, $order->counterparty);
     }
 }

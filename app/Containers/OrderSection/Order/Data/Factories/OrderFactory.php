@@ -15,6 +15,9 @@
 
 namespace App\Containers\OrderSection\Order\Data\Factories;
 
+use App\Containers\AccountingSection\Contract\Foundation\Contract;
+use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
+use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
@@ -49,12 +52,45 @@ final class OrderFactory extends Factory
 
         return [
             Order::CLIENT_ID => $client->id,
+            Order::COUNTERPARTY_ID => null,
+            Order::CONTRACT_ID => null,
             Order::COMMENT => $this->faker->text(50),
             Order::ORGANIZATION_ID => $organization->id,
             Order::PAYMENT_TYPE => CashType::class,
             Order::TOTAL => ZERO,
             Order::PROFIT => ZERO
         ];
+    }
+
+    public function organization(int $id): self
+    {
+        return $this->state(fn() => [
+            Order::ORGANIZATION_ID => $id
+        ]);
+    }
+
+    public function contract(?ContractModel $contract = null): self
+    {
+        return $this->state(function (array $state) use ($contract) {
+            if (is_null($contract)) {
+                $counterparty = CounterpartyModel::factory()
+                    ->organization($state[Order::ORGANIZATION_ID])
+                    ->create();
+
+                $contract = ContractModel::factory()
+                    ->create([
+                        Contract::COUNTERPARTY_ID => $counterparty->id,
+                        Contract::ORGANIZATION_ID => $counterparty->organization_id
+                    ]);
+            }
+
+            return [
+                Order::CLIENT_ID => null,
+                Order::CONTRACT_ID => $contract->id,
+                Order::COUNTERPARTY_ID => $contract->counterparty_id,
+                Order::ORGANIZATION_ID => $contract->organization_id
+            ];
+        });
     }
 
     public function completed(): self

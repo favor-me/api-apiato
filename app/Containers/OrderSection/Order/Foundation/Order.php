@@ -22,7 +22,7 @@ final class Order extends SectionContainer
     public const string CLIENT_ID = 'client_id';
     public const string COMMENT = 'comment';
     public const string CONTRACT_ID = 'contract_id';
-    public const string COUNTERPARTY_ID = 'counterpart_id';
+    public const string COUNTERPARTY_ID = 'counterparty_id';
     public const string COMPLETED_AT = 'completed_at';
     public const string CANCELED_AT = 'canceled_at';
     public const string OID = 'oid';

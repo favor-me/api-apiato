@@ -15,7 +15,9 @@
 
 namespace App\Containers\OrderSection\Order\Models;
 
+use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\AppSection\User\Models\User;
+use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient;
 use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
@@ -45,9 +47,11 @@ use Illuminate\Support\Carbon;
  * @property-read Money $total Итоговая сумма.
  * @property-read Money $profit Прибыль.
  * @property-read null|string $comment Комментарий.
- * @property-read null|int $client_id Уникальный идентификатор.
- * @property-read null|int $created_by Уникальный идентификатор.
- * @property-read null|int $updated_by Уникальный идентификатор.
+ * @property-read null|int $client_id Уникальный идентификатор клиента.
+ * @property-read null|int $counterparty_id Уникальный идентификатор контрагента.
+ * @property-read null|int $contract_id Уникальный идентификатор контракта.
+ * @property-read null|int $created_by Уникальный идентификатор пользователя который создал.
+ * @property-read null|int $updated_by Уникальный идентификатор пользователя который обновил.
  * @property-read null|int $status_id Уникальный идентификатор статуса.
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $completed_at Дата и время завершения.
@@ -56,6 +60,8 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon|null $deleted_at Дата и время удаления.
  * @property-read Organization $organization Связанная модель организации.
  * @property-read OrganizationClient $client Связанная модель клиента.
+ * @property-read null|Contract $contract Связанная модель договора.
+ * @property-read null|Counterparty $counterparty Связанная модель контракта.
  * @property-read null|User $creator Связанная модель пользователя который создал заказ.
  * @property-read null|User $updater Связанная модель пользователя который обновил заказ.
  * @property-read null|Status $status Связанная модель статуса.
@@ -88,6 +94,8 @@ class Order extends Model
         BaseOrder::PROFIT,
         BaseOrder::COMMENT,
         BaseOrder::CLIENT_ID,
+        BaseOrder::COUNTERPARTY_ID,
+        BaseOrder::CONTRACT_ID,
         BaseOrder::STATUS_ID,
         BaseOrder::COMPLETED_AT,
         BaseOrder::CANCELED_AT
@@ -153,6 +161,16 @@ class Order extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class, BaseOrder::STATUS_ID, ID);
+    }
+
+    public function contract(): BelongsTo
+    {
+        return $this->belongsTo(Contract::class, BaseOrder::CONTRACT_ID, ID);
+    }
+
+    public function counterparty(): BelongsTo
+    {
+        return $this->belongsTo(Counterparty::class, BaseOrder::COUNTERPARTY_ID, ID);
     }
 
     public function setCompletedAt(): self
