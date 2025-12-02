@@ -19,22 +19,24 @@ use App\Ship\Foundation\SectionContainer;
 
 final class Order extends SectionContainer
 {
-    public const CLIENT_ID = 'client_id';
-    public const COMMENT = 'comment';
-    public const COMPLETED_AT = 'completed_at';
-    public const CANCELED_AT = 'canceled_at';
-    public const OID = 'oid';
-    public const STATUS_ID = 'status_id';
-    public const ORGANIZATION_ID = 'organization_id';
-    public const PAYMENT_TYPE = 'payment_type';
-    public const TOTAL = 'total';
-    public const ITEMS = 'items';
-    public const PROFIT = 'profit';
-    public const CREATOR = 'creator';
-    public const CLIENT = 'client';
-    public const UPDATER = 'updater';
-    public const STATUS = 'status';
-    public const ORGANIZATION = 'organization';
+    public const string CLIENT_ID = 'client_id';
+    public const string COMMENT = 'comment';
+    public const string CONTRACT_ID = 'contract_id';
+    public const string COUNTERPARTY_ID = 'counterpart_id';
+    public const string COMPLETED_AT = 'completed_at';
+    public const string CANCELED_AT = 'canceled_at';
+    public const string OID = 'oid';
+    public const string STATUS_ID = 'status_id';
+    public const string ORGANIZATION_ID = 'organization_id';
+    public const string PAYMENT_TYPE = 'payment_type';
+    public const string TOTAL = 'total';
+    public const string ITEMS = 'items';
+    public const string PROFIT = 'profit';
+    public const string CREATOR = 'creator';
+    public const string CLIENT = 'client';
+    public const string UPDATER = 'updater';
+    public const string STATUS = 'status';
+    public const string ORGANIZATION = 'organization';
 
     protected string $apiBaseUri = 'order/orders';
 }
