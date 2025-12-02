@@ -35,6 +35,10 @@ class ExistsUnitPriceModelIdRule extends ValidationRule
 
     protected function hasModel(): bool
     {
+        if (!$this->getModel()) {
+            return false;
+        }
+
         return $this->getManager()
             ->has(
                 $this->getModel()
