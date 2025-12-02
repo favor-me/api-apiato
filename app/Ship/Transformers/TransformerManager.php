@@ -36,7 +36,7 @@ abstract class TransformerManager
 
     public function canUseAdminTransformer(): bool
     {
-        if (app()->environment('local')) {
+        if (app()->environment('local') || app()->runningUnitTests()) {
             return true;
         }
 
