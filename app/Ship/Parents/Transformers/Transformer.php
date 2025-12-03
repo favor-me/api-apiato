@@ -65,8 +65,12 @@ abstract class Transformer extends AbstractTransformer
         return $this->item($data, $transformer, $resourceKey);
     }
 
-    public function money(Money $money): array
+    public function money(mixed $money): array
     {
+        if (!$money instanceof Money) {
+            $money = app('money')->add($money);
+        }
+
         return (new MoneyTransformer())->transform($money);
     }
 

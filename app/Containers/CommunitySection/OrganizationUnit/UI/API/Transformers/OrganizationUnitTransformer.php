@@ -1,26 +1,24 @@
 <?php
 
 /**
- * __PROJECT_NAME__
+ * FavorMe system
  *
- * This file is part of the __PROJECT_NAME__ package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license __PROJECT_LICENCE__
- * @copyright Copyright (C) __PROJECT_AUTHOR__, All rights reserved ©.
- * @link __PROJECT_URL__
- * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers;
 
-use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\HistorySection\ModelNote\UI\API\Transformers\ModelNoteTransformer;
-use App\Containers\OrganizationSection\UnitPrice\UI\API\Transformers\UnitPriceTransformer;
-use App\Containers\OrganizationSection\UnitPrice\UI\API\Transformers\UnitPriceTransformerManager;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\Vendor\Unit\UI\API\Transformers\UnitTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
@@ -33,13 +31,12 @@ class OrganizationUnitTransformer extends Transformer
     ];
 
     protected array $availableIncludes = [
-        OrganizationUnit::MODEL_NOTES,
-        OrganizationUnit::CONTACT_PRICE_LIST
+        OrganizationUnit::MODEL_NOTES
     ];
 
     public function transform(OrganizationUnitModel $organizationUnit): array
     {
-        return [
+        $response = [
             OBJECT => $organizationUnit->getResourceKey(),
             ID => $organizationUnit->getHashedKey(),
             OrganizationUnitModel::NUMBER => $organizationUnit->getNumber(),
@@ -53,12 +50,25 @@ class OrganizationUnitTransformer extends Transformer
             UnitPrice::CLIENT_PRICE => $this->money($organizationUnit->client_price),
             UnitPrice::BALANCE => (float)$organizationUnit->balance,
             UnitPrice::IS_INFINITY_BALANCE => $organizationUnit->is_infinity_balance,
+            OrganizationUnit::PRIORITY_FROM => $organizationUnit->getAttribute(OrganizationUnit::PRIORITY_FROM),
+            OrganizationUnit::PRIORITY_COST_PRICE => $this->money($organizationUnit
+                ->getAttribute(OrganizationUnit::PRIORITY_COST_PRICE)),
+            OrganizationUnit::PRIORITY_PRICE_UP => $organizationUnit
+                ->getAttribute(OrganizationUnit::PRIORITY_PRICE_UP),
+            OrganizationUnit::PRIORITY_CLIENT_PRICE => $this->money($organizationUnit
+                ->getAttribute(OrganizationUnit::PRIORITY_CLIENT_PRICE)),
+            OrganizationUnit::PRIORITY_BALANCE => $organizationUnit
+                ->getAttribute(OrganizationUnit::PRIORITY_BALANCE),
+            OrganizationUnit::PRIORITY_IS_INFINITY_BALANCE => $organizationUnit
+                ->getAttribute(OrganizationUnit::PRIORITY_IS_INFINITY_BALANCE),
             OrganizationUnit::ORGANIZATION_ID => $organizationUnit->getHashedKey(OrganizationUnit::ORGANIZATION_ID),
             OrganizationUnit::SYSTEM_UNIT_ID => $organizationUnit->getHashedKey(OrganizationUnit::SYSTEM_UNIT_ID),
             CREATED_AT => $this->time($organizationUnit->created_at),
             UPDATED_AT => $this->time($organizationUnit->updated_at),
             DELETED_AT => $this->time($organizationUnit->deleted_at)
         ];
+
+        return $response;
     }
 
     protected function includeSystemUnit(OrganizationUnitModel $organizationUnit): Item
@@ -69,13 +79,5 @@ class OrganizationUnitTransformer extends Transformer
     protected function includeModelNotes(OrganizationUnitModel $organizationUnit): Collection
     {
         return $this->collection($organizationUnit->modelNotes, new ModelNoteTransformer());
-    }
-
-    protected function includeContractPriceList(OrganizationUnitModel $organizationUnit): Collection
-    {
-        return $this->collection(
-            $organizationUnit->contractPriceList,
-            (new UnitPriceTransformerManager())->getDefaultOrAdmin()
-        );
     }
 }
