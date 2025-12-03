@@ -35,11 +35,12 @@ class FindOrganizationUnitByIdController extends ApiController
         FindOrganizationUnitByIdAction $action
     ): JsonResponse {
         $unit = $action
-            ->priceList(
-                $request->getPriceModel(),
-                $request->getPriceModelId()
+            ->setPriceFrom(
+                $request->getPriceFrom()
             )
-            ->run($request->id);
+            ->run(
+                $request->id
+            );
 
         return Response::create(
             $unit,

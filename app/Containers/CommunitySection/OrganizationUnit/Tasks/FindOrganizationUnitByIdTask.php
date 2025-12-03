@@ -15,15 +15,16 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tasks;
 
-use App\Containers\AccountingSection\Contract\Models\Contract;
+use App\Containers\CommunitySection\OrganizationUnit\Data\Criterias\JoinUnitPriceCriteria;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit;
-use App\Containers\OrganizationSection\UnitPrice\Traits\UnitPriceList;
+use App\Containers\CommunitySection\OrganizationUnit\Traits\SetPriceFrom;
 use App\Ship\Exceptions\NotFoundException;
 use Exception;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class FindOrganizationUnitByIdTask extends OrganizationUnitTask
 {
-    use UnitPriceList;
+    use SetPriceFrom;
 
     /**
      * @param int $id
@@ -39,27 +40,20 @@ class FindOrganizationUnitByIdTask extends OrganizationUnitTask
         }
     }
 
+    /**
+     * @param int $id
+     * @return OrganizationUnit
+     * @throws RepositoryException
+     */
     protected function find(int $id): OrganizationUnit
     {
-        $unit = $this->repository->find($id);
-
-        if ($this->isContractPriceList()) {
-            $unit
-                ->setAttribute(
-                    'contractPriceList',
-                    $unit
-                        ->contractPriceList(
-                            $this->priceListModelId
-                        )
-                        ->get()
+        if ($this->hasPriceFrom()) {
+            $this->repository
+                ->pushCriteria(
+                    new JoinUnitPriceCriteria($this->priceFrom)
                 );
         }
 
-        return $unit;
-    }
-
-    protected function isContractPriceList(): bool
-    {
-        return $this->getPriceListModelType()->getModelAccessor() === Contract::class;
+        return $this->repository->find($id);
     }
 }

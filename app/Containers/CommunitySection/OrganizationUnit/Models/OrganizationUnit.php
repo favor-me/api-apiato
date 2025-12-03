@@ -15,9 +15,9 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Models;
 
-use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\CommunitySection\OrganizationUnit\Data\Factories\OrganizationUnitFactory;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit as BaseOrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnit\Services\SetPricePriorityModelAttributesService;
 use App\Containers\CommunitySection\OrganizationUnitType\Casts\OrganizationUnitType;
 use App\Containers\CommunitySection\OrganizationUnitType\Manager;
 use App\Containers\CommunitySection\OrganizationUnitType\ServiceType;
@@ -25,7 +25,6 @@ use App\Containers\CommunitySection\OrganizationUnitType\Type;
 use App\Containers\HistorySection\ModelNote\Foundation\ModelNote;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
-use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\Vendor\Unit\Models\Unit as UnitModel;
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Database\Casts\Money as MoneyCast;
@@ -59,7 +58,6 @@ use JBZoo\Data\JSON;
  * @property-read null|Carbon $deleted_at Дата и время удаления.
  * @property-read UnitModel $systemUnit Связанная модель еденицы измерения.
  * @property-read Collection $modelNotes Колекция заметок для событий модели (История).
- * @property-read Collection $contractPriceList
  *
  * @method static OrganizationUnitFactory factory(...$parameters)
  */
@@ -97,11 +95,17 @@ class OrganizationUnit extends Model
         PARAMS => JsonCast::class,
         UnitPrice::PRICE_UP => 'float',
         UnitPrice::BALANCE => 'float',
-        BaseOrganizationUnit::TYPE => OrganizationUnitType::class,
         UnitPrice::COST_PRICE => MoneyCast::class,
         UnitPrice::CLIENT_PRICE => MoneyCast::class,
-        UnitPrice::IS_INFINITY_BALANCE => 'boolean'
+        UnitPrice::IS_INFINITY_BALANCE => 'boolean',
+        BaseOrganizationUnit::TYPE => OrganizationUnitType::class
     ];
+
+    public function setRawAttributes(array $attributes, $sync = false): self
+    {
+        $attributes = (new SetPricePriorityModelAttributesService($attributes))->run();
+        return parent::setRawAttributes($attributes, $sync);
+    }
 
     public function systemUnit(): BelongsTo
     {
@@ -116,19 +120,6 @@ class OrganizationUnit extends Model
             ->orderByDesc(ID)
             ->orderByDesc(self::CREATED_AT)
             ->limit($limit);
-    }
-
-    public function contractPriceList(?int $modelId = null): HasMany
-    {
-        $relation = $this
-            ->hasMany(UnitPriceModel::class, UnitPrice::UNIT_ID, ID)
-            ->where(UnitPrice::MODEL, Contract::class);
-
-        if (!is_null($modelId)) {
-            $relation = $relation->where(UnitPrice::MODEL_ID, $modelId);
-        }
-
-        return $relation;
     }
 
     protected function performInsert(Builder $query): bool

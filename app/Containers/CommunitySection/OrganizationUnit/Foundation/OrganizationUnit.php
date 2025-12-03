@@ -1,16 +1,16 @@
 <?php
 
 /**
- * __PROJECT_NAME__
+ * FavorMe system
  *
- * This file is part of the __PROJECT_NAME__ package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license __PROJECT_LICENCE__
- * @copyright Copyright (C) __PROJECT_AUTHOR__, All rights reserved ©.
- * @link __PROJECT_URL__
- * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Foundation;
@@ -51,12 +51,12 @@ final class OrganizationUnit extends SectionContainer
     public const string TYPE = 'type';
     public const string SYSTEM_UNIT = 'systemUnit';
     public const string MODEL_NOTES = 'modelNotes';
-    public const string CONTACT_PRICE_LIST = 'contractPriceList';
-
-    /**
-     * @deprecated use UnitPrice::PRICE_MAX_LENGTH
-     */
-    public const int PRICE_MAX_LENGTH = 200000 * 100;
+    public const string PRIORITY_FROM = 'priority_from';
+    public const string PRIORITY_BALANCE = 'priority_balance';
+    public const string PRIORITY_PRICE_UP = 'priority_price_up';
+    public const string PRIORITY_COST_PRICE = 'priority_cost_price';
+    public const string PRIORITY_CLIENT_PRICE = 'priority_client_price';
+    public const string PRIORITY_IS_INFINITY_BALANCE = 'priority_is_infinity_balance';
 
     protected string $apiBaseUri = 'community/organization-units';
 }

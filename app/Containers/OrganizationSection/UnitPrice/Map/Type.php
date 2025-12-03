@@ -23,12 +23,14 @@ use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceMo
 use App\Ship\Contracts\Namebled;
 use App\Ship\Parents\Models\Model;
 use App\Ship\Validation\Rule;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
 
 abstract class Type implements Namebled
 {
+    abstract public function setPriorityModelAttributes(Collection $attributes, array &$priorityAttributes): void;
     abstract public function getModelAccessor(): string;
     abstract public function getModelKey(): string;
 
@@ -72,5 +74,15 @@ abstract class Type implements Namebled
     protected function user(): User
     {
         return Auth::user();
+    }
+
+    protected function withPrefix(string $value): string
+    {
+        return $this->prefix() . '_' . $value;
+    }
+
+    protected function prefix(): string
+    {
+        return $this->getModelKey() . '_';
     }
 }

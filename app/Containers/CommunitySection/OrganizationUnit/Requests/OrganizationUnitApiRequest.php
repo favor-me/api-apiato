@@ -1,16 +1,16 @@
 <?php
 
 /**
- * __PROJECT_NAME__
+ * FavorMe system
  *
- * This file is part of the __PROJECT_NAME__ package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license __PROJECT_LICENCE__
- * @copyright Copyright (C) __PROJECT_AUTHOR__, All rights reserved ©.
- * @link __PROJECT_URL__
- * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Requests;
@@ -22,6 +22,7 @@ use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Traits\OrganizationUnitValidationRules;
 use App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers\OrganizationUnitTransformerManager;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Traits\UnitPriceValidationRules;
 use App\Containers\Vendor\Unit\Traits\HasUnitValidationRules;
 use App\Ship\Contracts\GettableTransformer;
@@ -40,12 +41,12 @@ abstract class OrganizationUnitApiRequest extends ApiRequest implements Gettable
     use OrganizationValidationRules;
     use OrganizationUnitValidationRules;
 
-    public const string PRICE_MODEL = 'price_model';
-    public const string PRICE_MODEL_ID = 'price_model_id';
+    public const string PRICE_FROM = 'price_from';
+    public const string PRICE_FROM_CLEAR = 'price_from_clear';
 
     protected array $decode = [
-        self::PRICE_MODEL_ID,
-        OrganizationUnit::ORGANIZATION_ID
+        OrganizationUnit::ORGANIZATION_ID,
+        self::PRICE_FROM_CLEAR . '.*.' . UnitPrice::MODEL_ID
     ];
 
     public function getTransformer(): Transformer
@@ -65,30 +66,43 @@ abstract class OrganizationUnitApiRequest extends ApiRequest implements Gettable
         ];
     }
 
-    public function getPriceModel(): ?string
+    public function getPriceFrom(): array
     {
-        return $this->get(self::PRICE_MODEL);
+        return (array)$this->validated(self::PRICE_FROM_CLEAR);
     }
 
-    public function getPriceModelId(): ?int
+    protected function priceFromRules(): array
     {
-        return $this->price_model_id;
-    }
-
-    protected function priceListRules(): array
-    {
-        $priceModelRules = $this->getUnitPriceModelValidationRules()
-            ->add('required_with:' . self::PRICE_MODEL_ID);
-
         return [
-            self::PRICE_MODEL => $priceModelRules,
-            self::PRICE_MODEL_ID => $this->getUnitPriceModelIdValidationRules(),
+            self::PRICE_FROM_CLEAR . '.*.' . UnitPrice::MODEL => $this->getUnitPriceModelValidationRules(),
+            self::PRICE_FROM_CLEAR . '.*.' . UnitPrice::MODEL_ID => $this->getUnitPriceModelIdValidationRules()
         ];
     }
 
     protected function prepareForValidation(): void
     {
         $this->prepareForValidationOrganizationId();
+        $this->prepareForValidationPrice();
+    }
+
+    protected function prepareForValidationPrice(): void
+    {
+        if ($this->has(self::PRICE_FROM)) {
+            $prices = explode(';', $this->get(self::PRICE_FROM));
+
+            $clearPrices = collect($prices)
+                ->map(function (string $price) {
+                    list($model, $id) = explode(':', $price, 2);
+                    return [
+                        UnitPrice::MODEL => $model,
+                        UnitPrice::MODEL_ID => $id
+                    ];
+                });
+
+            $this->merge([
+                self::PRICE_FROM_CLEAR => $clearPrices->toArray()
+            ]);
+        }
     }
 
     protected function prepareForValidationOrganizationId(): void

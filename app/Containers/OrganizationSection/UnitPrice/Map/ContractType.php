@@ -18,8 +18,11 @@ namespace App\Containers\OrganizationSection\UnitPrice\Map;
 use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\AccountingSection\Contract\Tasks\FindContractByIdTask;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Ship\Exceptions\NotFoundException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Exists;
 
@@ -62,5 +65,33 @@ class ContractType extends Type
     {
         return parent::existsUnitIdValidationRule()
             ->where(Contract::ORGANIZATION_ID, $this->user()->organization_id);
+    }
+
+    public function setPriorityModelAttributes(Collection $attributes, array &$priorityAttributes): void
+    {
+        $contractAttributes = $attributes
+            ->where(function ($value, $key) {
+                return str_starts_with($key, $this->prefix()) &&
+                    !in_array($key, $this->excludePriorityModelAttributes());
+            });
+
+        if ($contractAttributes->isNotEmpty()) {
+            $priorityAttributes[OrganizationUnit::PRIORITY_FROM] = $this->getModelKey();
+        }
+
+        $contractAttributes
+            ->each(function ($value, $key) use (&$priorityAttributes) {
+                $name = str_replace($this->prefix(), '', $key);
+                $priorityAttributes['priority_' . $name] = $value;
+            });
+    }
+
+    protected function excludePriorityModelAttributes(): array
+    {
+        return [
+            $this->withPrefix(UnitPrice::BALANCE),
+            $this->withPrefix(UnitPrice::COST_PRICE),
+            $this->withPrefix(UnitPrice::IS_INFINITY_BALANCE)
+        ];
     }
 }
