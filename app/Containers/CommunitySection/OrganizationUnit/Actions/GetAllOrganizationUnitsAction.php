@@ -1,22 +1,23 @@
 <?php
 
 /**
- * __PROJECT_NAME__
+ * FavorMe system
  *
- * This file is part of the __PROJECT_NAME__ package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license __PROJECT_LICENCE__
- * @copyright Copyright (C) __PROJECT_AUTHOR__, All rights reserved ©.
- * @link __PROJECT_URL__
- * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Actions;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\CommunitySection\OrganizationUnit\Tasks\GetAllOrganizationUnitsTask;
+use App\Containers\CommunitySection\OrganizationUnit\Traits\SetPriceFrom;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Traits\Actions\SettableOrganization;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -24,6 +25,7 @@ use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllOrganizationUnitsAction extends Action
 {
+    use SetPriceFrom;
     use SettableOrganization;
 
     /**
@@ -43,6 +45,10 @@ class GetAllOrganizationUnitsAction extends Action
 
         if (!is_null($this->organizationId)) {
             $task->organization($this->organizationId);
+        }
+
+        if ($this->hasPriceFrom()) {
+            $task->setPriceFrom($this->priceFrom);
         }
 
         return $task

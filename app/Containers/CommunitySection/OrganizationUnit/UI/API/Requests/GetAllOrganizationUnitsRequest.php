@@ -32,6 +32,11 @@ class GetAllOrganizationUnitsRequest extends OrganizationUnitApiRequest implemen
         ]
     ];
 
+    public function rules(): array
+    {
+        return $this->priceFromRules();
+    }
+
     public function isOnlyTrashed(): bool
     {
         if (!$this->user()->hasRole(RoleModel::ORGANIZATION_OWNER)) {

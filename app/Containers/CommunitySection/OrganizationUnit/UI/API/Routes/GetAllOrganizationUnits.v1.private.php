@@ -1,19 +1,22 @@
 <?php
 
 /**
- * __PROJECT_NAME__
+ * FavorMe system
  *
- * This file is part of the __PROJECT_NAME__ package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license __PROJECT_LICENCE__
- * @copyright Copyright (C) __PROJECT_AUTHOR__, All rights reserved ©.
- * @link __PROJECT_URL__
- * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
+ *
+ * @codingStandardsIgnoreStart
  *
  * @apiGroup CommunityOrganizationUnit
  * @apiName getAllCommunityOrganizationUnit
+ *
  * @api {get} /v1/community/organization-units Список
  * @apiDescription Получить список.
  *
@@ -21,6 +24,7 @@
  * @apiPermission Аутентифицированный пользователь с ролями `organization_owner`, `organization_worker`
  *
  * @apiParam {String="1,0"} [only-trashed] Вкл.\Откл.показ корзины. Корзина доступна только пользователю с ролью `organization_owner`
+ * @apiParam {String} [price_from] Подключить цены из контекста. Для использования model:model_id. Пример для договора `price_from=contract:Yx9DE6y7PN2XqbWv`
  *
  * @apiSuccessExample {json} Успешный ответ:
  * HTTP/1.1 200 OK
