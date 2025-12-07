@@ -78,7 +78,7 @@ abstract class Type implements Namebled
 
     protected function withPrefix(string $value): string
     {
-        return $this->prefix() . '_' . $value;
+        return $this->prefix() . $value;
     }
 
     protected function prefix(): string

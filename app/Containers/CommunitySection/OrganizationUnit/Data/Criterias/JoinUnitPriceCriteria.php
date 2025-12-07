@@ -22,6 +22,7 @@ use App\Containers\OrganizationSection\UnitPrice\Map\Type;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Ship\Parents\Criterias\Criteria;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 class JoinUnitPriceCriteria extends Criteria
@@ -47,6 +48,11 @@ class JoinUnitPriceCriteria extends Criteria
         return $model;
     }
 
+    /**
+     * @param Builder $model
+     * @param array $priceFrom
+     * @return Builder
+     */
     protected function joinPrice($model, array $priceFrom): Builder
     {
         $priceModel = $priceFrom[UnitPrice::MODEL];
@@ -59,22 +65,20 @@ class JoinUnitPriceCriteria extends Criteria
         $unitPriceAsTable = $priceModel . '_' . $unitPriceTable;
 
         return $model
-            ->leftJoin(
-                $unitPriceTable . ' as  ' . $unitPriceAsTable,
-                $unitTable . '.' . ID,
-                '=',
-                $unitPriceAsTable . '.' . UnitPrice::UNIT_ID
-            )
+            ->leftJoin($unitPriceTable . ' as  ' . $unitPriceAsTable, fn (JoinClause $join) =>
+                $join
+                    ->on($unitTable . '.' . ID, '=', $unitPriceAsTable . '.' . UnitPrice::UNIT_ID)
+                    ->where($unitPriceAsTable . '.' . UnitPrice::MODEL, $priceType->getModelAccessor())
+                    ->where($unitPriceAsTable . '.' . UnitPrice::MODEL_ID, $priceModelId))
             ->select([
                 $unitTable . '.*',
+                $this->priceAsTableSelect($unitPriceAsTable, ID, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::COST_PRICE, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::PRICE_UP, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::CLIENT_PRICE, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::BALANCE, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::IS_INFINITY_BALANCE, $priceModel)
-            ])
-            ->where($unitPriceAsTable . '.' . UnitPrice::MODEL, $priceType->getModelAccessor())
-            ->where($unitPriceAsTable . '.' . UnitPrice::MODEL_ID, $priceModelId);
+            ]);
     }
 
     protected function priceAsTableSelect(string $table, string $field, string $prefix): string

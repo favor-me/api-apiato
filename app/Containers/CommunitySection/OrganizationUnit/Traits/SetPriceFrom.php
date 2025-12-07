@@ -17,7 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationUnit\Traits;
 
 trait SetPriceFrom
 {
-    protected array $priceFrom;
+    protected array $priceFrom = [];
 
     public function setPriceFrom(array $value): self
     {

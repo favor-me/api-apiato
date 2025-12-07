@@ -75,7 +75,7 @@ class ContractType extends Type
                     !in_array($key, $this->excludePriorityModelAttributes());
             });
 
-        if ($contractAttributes->isNotEmpty()) {
+        if ($contractAttributes->isNotEmpty() && $contractAttributes->get($this->withPrefix(ID))) {
             $priorityAttributes[OrganizationUnit::PRIORITY_FROM] = $this->getModelKey();
         }
 
