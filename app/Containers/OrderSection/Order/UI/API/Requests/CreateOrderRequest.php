@@ -75,7 +75,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
             Order::ITEMS . '.*.' . Item::COST_PRICE => $this->getItemCostPriceValidationRules(),
             Order::ITEMS . '.*.' . Item::SKU => $this->getOrganizationUnitSkuValidationRules(),
             Order::ITEMS . '.*.' . Item::TYPE => $this->getItemTypeValidationRules(),
-            Order::ITEMS . '.*.' . Item::UNIT_ID => $this->getOrganizationUnitIdValidationRules(),
+            Order::ITEMS . '.*.' . Item::UNIT_ID => $this->getOrganizationUnitIdValidationRules()
         ];
     }
 
@@ -119,12 +119,6 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
     {
         return parent::getContractIdExistsValidationRule($column)
             ->where(Order::ORGANIZATION_ID, $this->organization_id);
-    }
-
-    public function getOrganizationUnitIdValidationRules(): ValidationRules
-    {
-        return parent::getOrganizationUnitIdValidationRules()
-            ->addRequired();
     }
 
     public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists
@@ -221,13 +215,9 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
     protected function prepareClientIdForValidation(): void
     {
         if ($this->isContractPaymentType()) {
-            $this->merge([
-                Order::CLIENT_ID => null
-            ]);
+            $this->offsetUnset(Order::CLIENT_ID);
         } else {
-            $this->merge([
-                Order::CONTRACT_ID => null
-            ]);
+            $this->offsetUnset(Order::CONTRACT_ID);
         }
     }
 
