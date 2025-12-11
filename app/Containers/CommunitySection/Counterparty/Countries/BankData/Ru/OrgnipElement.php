@@ -33,7 +33,6 @@ class OrgnipElement extends Element
     public function getValidationMessages(): array
     {
         return [
-            $this->validationRuleName('required') => $this->trans('rules.required'),
             $this->validationRuleName('numeric') => $this->trans('rules.numeric'),
             $this->validationRuleName('digits') => $this->trans('rules.digits', [
                 'digits' => self::DIGITS
