@@ -25,7 +25,6 @@ class OrgnipElement extends Element
     protected string $name = 'orgnip';
 
     protected array $rules = [
-        'required',
         'numeric',
         'digits:' . self::DIGITS
     ];
