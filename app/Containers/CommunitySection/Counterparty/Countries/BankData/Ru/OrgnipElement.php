@@ -26,6 +26,7 @@ class OrgnipElement extends Element
 
     protected array $rules = [
         'numeric',
+        'nullable',
         'digits:' . self::DIGITS
     ];
 
