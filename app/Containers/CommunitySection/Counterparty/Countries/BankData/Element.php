@@ -27,7 +27,7 @@ abstract class Element implements JsonSerializable, Arrayable
     public const string TYPE_STRING = 'string';
 
     protected string $type;
-    protected string $country = 'rus';
+    protected string $country = 'ru';
     protected string $name;
     protected string $title;
     protected mixed $value = null;
