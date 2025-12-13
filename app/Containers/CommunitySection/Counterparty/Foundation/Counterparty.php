@@ -24,7 +24,7 @@ final class Counterparty extends SectionContainer
     public const string BANK_DATA = 'bank_data';
     public const string BANK_DATA_SCHEMA = 'bank_data_schema';
     public const string COUNTRY = 'country';
-    public const int COUNTRY_MAX_LENGTH = 10;
+    public const int COUNTRY_MAX_LENGTH = 2;
     public const string EMAIL = 'email';
     public const string NAME = 'name';
     public const string ORGANIZATION_ID = 'organization_id';
