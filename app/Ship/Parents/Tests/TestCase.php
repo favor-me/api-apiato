@@ -129,15 +129,13 @@ abstract class TestCase extends AbstractTestCase
         return $this;
     }
 
-    public function assertGivenDataIsInvalid(): self
+    public function assertGivenDataIsInvalid(): TestResponse
     {
-        $this->response
+        return $this->response
             ->assertUnprocessable()
             ->assertJson([
                 MESSAGE => __('ship::exception.given_data_was_invalid')
             ]);
-
-        return $this;
     }
 
     /**
