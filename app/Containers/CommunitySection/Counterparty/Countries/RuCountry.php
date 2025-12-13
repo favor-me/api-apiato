@@ -66,4 +66,9 @@ class RuCountry extends Country
                 new OkatoElement($data)
             );
     }
+
+    public function getUniqueElement(): string
+    {
+        return (new InnElement())->getName();
+    }
 }

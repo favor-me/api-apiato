@@ -16,6 +16,8 @@
 namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
+use App\Containers\CommunitySection\Organization\Validation\Rules\UniqueOrganizationRule;
+use JBZoo\Data\JSON;
 
 class InnElement extends Element
 {
@@ -31,6 +33,12 @@ class InnElement extends Element
         'min_digits:' . self::MIN_DIGITS,
         'max_digits:' . self::MAX_DIGITS
     ];
+
+    public function __construct(JSON $data = null)
+    {
+        parent::__construct($data);
+        $this->rules[] = new UniqueOrganizationRule();
+    }
 
     public function getValidationMessages(): array
     {

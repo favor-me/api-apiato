@@ -27,6 +27,8 @@ abstract class Country implements Namebled, Arrayable
 {
     abstract public function getBankDataSchema(?JSON $data = null): Schema;
 
+    abstract public function getUniqueElement(): string;
+
     public function getName(): string
     {
         $reflectionType = new ReflectionClass(static::class);
