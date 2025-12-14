@@ -19,7 +19,7 @@
  * @apiDescription Список типов собственности организации.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission ПубличноУП
  *
  * @apiSuccessExample {json} Успешный ответ:
  * HTTP/1.1 200 OK
@@ -42,5 +42,4 @@ use App\Containers\OrganizationSection\OwnershipType\UI\API\Controllers\GetAllOw
 use Illuminate\Support\Facades\Route;
 
 Route::get(Container::getApiUri(), GetAllOwnershipTypesController::class)
-    ->name('api_organization_ownership_types_create_ownership_types')
-    ->middleware(['auth:api']);
+    ->name('api_organization_ownership_types_create_ownership_types');
