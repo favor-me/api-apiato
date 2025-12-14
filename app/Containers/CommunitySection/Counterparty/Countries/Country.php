@@ -32,7 +32,7 @@ abstract class Country implements Namebled, Arrayable
     public function getName(): string
     {
         $reflectionType = new ReflectionClass(static::class);
-        $name = str_replace('Country', '', $reflectionType->getShortName());
+        $name = str_replace(Manager::PREFIX, '', $reflectionType->getShortName());
         return Str::snake($name);
     }
 
