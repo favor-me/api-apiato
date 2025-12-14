@@ -13,14 +13,8 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-return [
-    'ip' => [
-        'title' => 'ИП'
-    ],
-    'self_employed' => [
-        'title' => 'Самзанятый'
-    ],
-    'ooo' => [
-        'title' => 'ООО'
-    ]
-];
+namespace App\Containers\OrganizationSection\OwnershipType;
+
+class OooType extends Type
+{
+}
