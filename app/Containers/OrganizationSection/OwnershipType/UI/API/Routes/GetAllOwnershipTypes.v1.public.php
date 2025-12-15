@@ -19,7 +19,7 @@
  * @apiDescription Список типов собственности организации.
  *
  * @apiVersion 1.0.0
- * @apiPermission ПубличноУП
+ * @apiPermission Публично
  *
  * @apiSuccessExample {json} Успешный ответ:
  * HTTP/1.1 200 OK

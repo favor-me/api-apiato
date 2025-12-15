@@ -18,7 +18,7 @@ return [
         'title' => 'ИП'
     ],
     'self_employed' => [
-        'title' => 'Самзанятый'
+        'title' => 'Самозанятый'
     ],
     'ooo' => [
         'title' => 'ООО'
