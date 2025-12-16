@@ -17,6 +17,7 @@ namespace App\Containers\CommunitySection\Organization\Tests\Unit\Models;
 
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Organization\Tests\UnitTestCase;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
@@ -25,6 +26,7 @@ use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch
 use App\Ship\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use JBZoo\Data\JSON;
 
 final class OrganizationTest extends UnitTestCase
 {
@@ -33,7 +35,10 @@ final class OrganizationTest extends UnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = OrganizationModel::factory()->make();
+
+        $this->model = OrganizationModel::factory()
+            ->ru()
+            ->make();
     }
 
     public function testInstance(): void
@@ -60,12 +65,19 @@ final class OrganizationTest extends UnitTestCase
     {
         $this->assertSame([
             Organization::NAME,
-            Organization::INN,
+            Organization::BANK_DATA,
+            Organization::COUNTRY,
             Organization::PHONE_NUMBER,
             Organization::EMAIL,
             Organization::USER_OWNER_ID,
             PARAMS
         ], $this->model->getFillable());
+    }
+
+    public function testCasts(): void
+    {
+        $this->assertInstanceOf(Country::class, $this->model->country);
+        $this->assertInstanceOf(JSON::class, $this->model->bank_data);
     }
 
     public function testBelongsToUserOwner(): void

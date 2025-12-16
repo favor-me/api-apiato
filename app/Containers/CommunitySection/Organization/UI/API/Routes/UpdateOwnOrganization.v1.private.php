@@ -21,7 +21,6 @@
  * @apiPermission Аутентифицированный пользователь (Собственник организации)
  *
  * @apiBody {String} [name] Название организации.
- * @apiBody {String} [inn] ИНН.
  * @apiBody {String} [phone_number] Контактный номер телефона.
  * @apiBody {String} [email] Контактный адрес электронной почты.
  *

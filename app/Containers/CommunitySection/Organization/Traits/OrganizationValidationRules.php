@@ -15,8 +15,9 @@
 
 namespace App\Containers\CommunitySection\Organization\Traits;
 
-use App\Containers\CommunitySection\Organization\Facades\Container;
+use App\Containers\CommunitySection\Counterparty\Validation\Rules\ExistsCounterpartyCountryRule;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Ship\Traits\Validation\HasParamsValidationRules;
 use App\Ship\Validation\Rules\PhoneNumber as PhoneNumberValidationRule;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Ship\Collections\ValidationRules;
@@ -27,6 +28,8 @@ use Illuminate\Validation\Rules\Exists;
 
 trait OrganizationValidationRules
 {
+    use HasParamsValidationRules;
+
     public function getOrganizationIdValidationRules(): ValidationRules
     {
         return validation_rules([
@@ -37,25 +40,13 @@ trait OrganizationValidationRules
     public function getOrganizationNameValidationRules(): ValidationRules
     {
         return validation_rules([
-            $this->getOrganizationNameUniqueValidationRule()
+            'string'
         ]);
     }
 
     public function getOrganizationNameUniqueValidationRule(): Unique
     {
         return Rule::unique(OrganizationModel::TABLE, Organization::NAME);
-    }
-
-    public function getOrganizationInnValidationRules(): ValidationRules
-    {
-        return validation_rules([
-            $this->getOrganizationInnUniqueValidationRule()
-        ]);
-    }
-
-    public function getOrganizationInnUniqueValidationRule(): Unique
-    {
-        return Rule::unique(OrganizationModel::TABLE, Organization::INN);
     }
 
     public function getOrganizationPhoneNumberValidationRules(): ValidationRules
@@ -91,5 +82,17 @@ trait OrganizationValidationRules
     public function getOrganizationIdExistsValidationRule(string $column = 'NULL'): Exists
     {
         return Rule::exists(OrganizationModel::TABLE, $column);
+    }
+
+    public function getOrganizationCountryValidationRules(): ValidationRules
+    {
+        return validation_rules([
+            new ExistsCounterpartyCountryRule()
+        ]);
+    }
+
+    public function getOrganizationBankDataValidationRules(): ValidationRules
+    {
+        return $this->getParamsValidationRules();
     }
 }

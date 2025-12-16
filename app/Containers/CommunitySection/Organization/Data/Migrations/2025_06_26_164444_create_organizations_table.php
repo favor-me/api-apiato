@@ -34,10 +34,6 @@ return new class extends CreateTableMigration
             ->string(Organization::NAME, Organization::NAME_MAX_LENGTH)
             ->unique();
 
-        $table->string(Organization::INN, Organization::INN_MAX_LENGTH)
-            ->unique()
-            ->nullable();
-
         $table->string(Organization::PHONE_NUMBER, PhoneNumber::MAX_LENGTH)
             ->unique()
             ->nullable();

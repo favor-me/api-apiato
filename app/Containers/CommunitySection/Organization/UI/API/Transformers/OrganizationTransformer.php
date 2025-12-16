@@ -38,10 +38,11 @@ class OrganizationTransformer extends Transformer
             ID => $organization->getHashedKey(),
             Organization::USER_OWNER_ID => $organization->getHashedKey(Organization::USER_OWNER_ID),
             Organization::NAME => $organization->name,
-            Organization::INN => $organization->inn,
             Organization::PHONE_NUMBER => $organization->phone_number,
             Organization::EMAIL => $organization->email,
             PARAMS => $organization->params,
+            Organization::BANK_DATA => $organization->bank_data,
+            Organization::COUNTRY => $organization->country->toArray(),
             CREATED_AT => $this->nullOrTimestamp($organization->created_at),
             UPDATED_AT => $this->nullOrTimestamp($organization->updated_at),
             DELETED_AT => $this->nullOrTimestamp($organization->deleted_at)

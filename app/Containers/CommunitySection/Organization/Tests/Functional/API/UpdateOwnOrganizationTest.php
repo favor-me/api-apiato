@@ -26,7 +26,6 @@ final class UpdateOwnOrganizationTest extends ApiTestCase
 {
     protected array $testData = [
         Organization::NAME => 'New name',
-        Organization::INN => 22334455,
         Organization::EMAIL => 'email@test.ru',
         Organization::PHONE_NUMBER => 79271110011
     ];
@@ -64,7 +63,6 @@ final class UpdateOwnOrganizationTest extends ApiTestCase
                     ->has('data')
                     ->where('data.' . ID, $organization->getHashedKey())
                     ->where('data.' . Organization::NAME, $this->testData[Organization::NAME])
-                    ->where('data.' . Organization::INN, $this->testData[Organization::INN])
                     ->where('data.' . Organization::EMAIL, $this->testData[Organization::EMAIL])
                     ->where('data.' . Organization::PHONE_NUMBER, $this->testData[Organization::PHONE_NUMBER])
                     ->where('data.' . Organization::USER_OWNER_ID, $ownerUser->getHashedKey())

@@ -1,15 +1,16 @@
 <?php
 
 /**
- * YouBM application system.
+ * FavorMe system
  *
- * This file is part of the YouBM application system package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license YouBM license.
- * @copyright Copyright (C) YouBM.ru, All rights reserved.
- * @link https://youbm.ru
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\Organization\Actions;
@@ -32,6 +33,9 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RegistrationOrganizationAction extends Action
 {
     /**
@@ -81,15 +85,16 @@ class RegistrationOrganizationAction extends Action
      * @param RegistrationOrganizationDto $dto
      * @return OrganizationModel
      * @throws CreateResourceFailedException
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     protected function createOrganization(UserModel $ownerUser, RegistrationOrganizationDto $dto): OrganizationModel
     {
         try {
             $createOrganizationDto = new CreateOrganizationDto([
                 Organization::NAME => $dto->name,
-                Organization::INN => $dto->inn,
                 Organization::PHONE_NUMBER => $dto->phone_number,
-                Organization::USER_OWNER_ID => $ownerUser->id
+                Organization::USER_OWNER_ID => $ownerUser->id,
+                Organization::BANK_DATA => []
             ]);
 
             return app(CreateOrganizationTask::class)->run($createOrganizationDto);

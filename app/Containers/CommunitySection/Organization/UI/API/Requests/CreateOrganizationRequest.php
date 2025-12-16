@@ -15,6 +15,9 @@
 
 namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 
+use App\Containers\CommunitySection\Counterparty\Countries\Country;
+use App\Containers\CommunitySection\Counterparty\Countries\Manager as CountryManager;
+use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Organization\Dto\CreateOrganizationDto;
 use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
@@ -39,11 +42,18 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
     {
         return [
             Organization::NAME => $this->getOrganizationNameValidationRules(),
-            Organization::INN => $this->getOrganizationInnValidationRules(),
             Organization::PHONE_NUMBER => $this->getOrganizationPhoneNumberValidationRules(),
             Organization::EMAIL => $this->getOrganizationEmailValidationRules(),
-            Organization::USER_OWNER_ID => $this->getOrganizationUserOwnerIdValidationRules()
+            Organization::USER_OWNER_ID => $this->getOrganizationUserOwnerIdValidationRules(),
+            Organization::BANK_DATA => $this->getOrganizationBankDataValidationRules(),
+            Organization::COUNTRY => $this->getOrganizationCountryValidationRules()
         ];
+    }
+
+    public function getOrganizationCountryValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationCountryValidationRules()
+            ->addRequired();
     }
 
     public function getOrganizationUserOwnerIdValidationRules(): ValidationRules
@@ -89,13 +99,29 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
             [
                 Organization::NAME . '.required' => Container::trans('validation.name.required'),
                 Organization::NAME . '.unique' => Container::trans('validation.name.unique'),
-                Organization::PHONE_NUMBER . '.required' => Container::trans('validation.phone_number.required'),
+                Organization::COUNTRY . '.required' => Container::trans('validation.country.required'),
+                Organization::PHONE_NUMBER . '.required' => Container::trans('validation.phone_number.required')
             ];
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
+        $this->prepareForValidationCountry();
         $this->prepareForValidationPhoneNumber();
+    }
+
+    protected function prepareForValidationCountry(): void
+    {
+        $country = $this->defaultCountry();
+        $countryInput = $this->get(Organization::COUNTRY, $country->getName());
+
+        if (empty($countryInput)) {
+            $countryInput = $country->getName();
+        }
+
+        $this->merge([
+            Organization::COUNTRY => $countryInput
+        ]);
     }
 
     protected function prepareForValidationPhoneNumber(): void
@@ -105,5 +131,10 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
                 Organization::PHONE_NUMBER => Str::toPhoneNumber($this->get(Organization::PHONE_NUMBER))
             ]);
         }
+    }
+
+    protected function defaultCountry(): Country
+    {
+        return CountryManager::getInstance()->get(RuCountry::class);
     }
 }

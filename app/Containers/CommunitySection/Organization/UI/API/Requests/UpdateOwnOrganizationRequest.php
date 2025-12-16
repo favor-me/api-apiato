@@ -71,12 +71,6 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
             ->ignore($this->id);
     }
 
-    public function getOrganizationInnUniqueValidationRule(): Unique
-    {
-        return parent::getOrganizationInnUniqueValidationRule()
-            ->ignore($this->id);
-    }
-
     public function getOrganizationPhoneNumberUniqueValidationRule(): Unique
     {
         return parent::getOrganizationPhoneNumberUniqueValidationRule()
@@ -86,12 +80,6 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
     public function getOrganizationEmailValidationRules(): ValidationRules
     {
         return parent::getOrganizationEmailValidationRules()
-            ->add('nullable');
-    }
-
-    public function getOrganizationInnValidationRules(): ValidationRules
-    {
-        return parent::getOrganizationInnValidationRules()
             ->add('nullable');
     }
 

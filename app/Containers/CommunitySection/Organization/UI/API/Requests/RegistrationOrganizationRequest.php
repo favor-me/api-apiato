@@ -1,15 +1,16 @@
 <?php
 
 /**
- * YouBM application system.
+ * FavorMe system
  *
- * This file is part of the YouBM application system package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license YouBM license.
- * @copyright Copyright (C) YouBM.ru, All rights reserved.
- * @link https://youbm.ru
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
@@ -20,6 +21,8 @@ use App\Containers\CommunitySection\Organization\Dto\RegistrationOrganizationDto
 use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Validation\Rules\IsOwnerNameRule;
+use App\Containers\OrganizationSection\OwnershipType\Manager;
+use App\Containers\OrganizationSection\OwnershipType\OooType;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Parents\Transformers\Transformer;
 
@@ -80,5 +83,21 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
             'required',
             new IsOwnerNameRule()
         ]);
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->prepareForValidationName();
+        parent::prepareForValidation();
+    }
+
+    protected function prepareForValidationName(): void
+    {
+        $oooType = Manager::getInstance()->get(OooType::class);
+        if ($this->get(Organization::OWNERSHIP_TYPE) !== $oooType->getName()) {
+            $this->merge([
+                Organization::NAME => str_replace('|', ' ', $this->get(Organization::OWNER_NAME))
+            ]);
+        }
     }
 }

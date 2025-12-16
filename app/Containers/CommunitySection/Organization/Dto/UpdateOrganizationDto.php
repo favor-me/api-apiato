@@ -15,6 +15,9 @@
 
 namespace App\Containers\CommunitySection\Organization\Dto;
 
+/**
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 class UpdateOrganizationDto extends CreateOrganizationDto
 {
     public int $id;

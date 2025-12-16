@@ -20,8 +20,12 @@ return [
     'phone_number' => [
         'required' => 'Необходимо указать контактный номер телефона'
     ],
+    'country' => [
+        'required' => 'Укажите страну'
+    ],
     'owner_name' => [
         'required' => 'Укажите имя'
     ],
-    'is_owner_name' => 'Не верно указано ФИО'
+    'is_owner_name' => 'Не верно указано ФИО',
+    'unique_organization' => 'Организация была зарегистрирована ранее'
 ];

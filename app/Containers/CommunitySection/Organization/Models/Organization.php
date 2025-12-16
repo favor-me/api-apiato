@@ -17,6 +17,8 @@ namespace App\Containers\CommunitySection\Organization\Models;
 
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\CommunitySection\Counterparty\Casts\CounterpartyCountry;
+use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Organization\Data\Factories\OrganizationFactory;
 use App\Containers\CommunitySection\Organization\Foundation\Organization as BaseOrganization;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
@@ -34,11 +36,12 @@ use JBZoo\Data\JSON;
 /**
  * @property-read int $id Уникальный идентификатор.
  * @property-read string $name Название.
- * @property-read string|null $inn ИНН.
  * @property-read int $phone_number Контактный номер телефона.
  * @property-read int $user_owner_id Уникальный идентификатор пользователя который владеет компанией.
  * @property-read string|null $email Адрес электронной почты.
  * @property-read JSON $params Дополнительные параметры.
+ * @property-read JSON $bank_data Реквизиты банка.
+ * @property-read Country $country Страна.
  * @property-read null|Carbon $created_at Дата и время создания.
  * @property-read null|Carbon $updated_at Дата и время обновления.
  * @property-read null|Carbon $deleted_at Дата и время удаления.
@@ -53,15 +56,16 @@ class Organization extends Model
     use SoftDeletes;
     use IsNumbered;
 
-    public const TABLE = 'organizations';
-    public const RESOURCE_KEY = 'Organization';
+    public const string TABLE = 'organizations';
+    public const string RESOURCE_KEY = 'Organization';
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;
 
     protected $fillable = [
         BaseOrganization::NAME,
-        BaseOrganization::INN,
+        BaseOrganization::BANK_DATA,
+        BaseOrganization::COUNTRY,
         BaseOrganization::PHONE_NUMBER,
         BaseOrganization::EMAIL,
         BaseOrganization::USER_OWNER_ID,
@@ -69,12 +73,13 @@ class Organization extends Model
     ];
 
     protected $casts = [
-        BaseOrganization::INN => 'int',
-        BaseOrganization::PHONE_NUMBER => 'int',
-        PARAMS => JsonCast::class,
         CREATED_AT => 'datetime',
         UPDATED_AT => 'datetime',
-        DELETED_AT => 'datetime'
+        DELETED_AT => 'datetime',
+        PARAMS => JsonCast::class,
+        BaseOrganization::PHONE_NUMBER => 'int',
+        BaseOrganization::BANK_DATA => JsonCast::class,
+        BaseOrganization::COUNTRY => CounterpartyCountry::class
     ];
 
     public function userOwner(): BelongsTo

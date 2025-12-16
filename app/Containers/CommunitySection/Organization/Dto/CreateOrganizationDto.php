@@ -17,12 +17,16 @@ namespace App\Containers\CommunitySection\Organization\Dto;
 
 use App\Ship\Dto\Dto;
 
+/**
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ */
 class CreateOrganizationDto extends Dto
 {
     public ?string $email;
-    public ?string $inn;
+    public string $country = 'ru';
     public ?string $name;
     public ?array $params = [];
+    public array $bank_data = [];
     public ?int $phone_number;
     public ?int $user_owner_id;
 }

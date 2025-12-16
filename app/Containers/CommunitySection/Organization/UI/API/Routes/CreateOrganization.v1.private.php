@@ -21,7 +21,6 @@
  * @apiPermission Аутентифицированный пользователь
  *
  * @apiBody {String} [name]
- * @apiBody {String} [inn]
  * @apiBody {String} [phone_number]
  * @apiBody {String} [email]
  * @apiBody {String} [params]

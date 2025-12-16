@@ -20,10 +20,23 @@ HTTP/1.1 200 OK
         "object": "Organization",
         "id": null,
         "name": "New Organization",
-        "inn": "7754566845",
         "phone_number": 79271112233,
         "email": "company@example.com",
         "params": null,
+        "country": {
+            "title": "Россия",
+            "name": "ru"
+        },
+        "bank_data": {
+            "bik": "123416434",
+            "inn": "1234567891",
+            "kpp": "187654321",
+            "bank": "BEATAE Bank",
+            "okpo": "16547364",
+            "orgnip": "123456781098765",
+            "payment_account": "12345178909876543212",
+            "correspondent_account": "12345678909876513212"
+        },
         "created_at": null,
         "updated_at": null,
         "deleted_at": null

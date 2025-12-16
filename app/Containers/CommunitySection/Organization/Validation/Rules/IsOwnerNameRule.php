@@ -20,9 +20,16 @@ use Closure;
 
 class IsOwnerNameRule extends ValidationRule
 {
-    public const SEPARATOR = '|';
-    public const TOTAL_DETAILS = 3;
+    public const string SEPARATOR = '|';
+    public const int TOTAL_DETAILS = 3;
 
+    /**
+     * @param string $attribute
+     * @param mixed $value
+     * @param Closure $fail
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $details = explode(self::SEPARATOR, $value);

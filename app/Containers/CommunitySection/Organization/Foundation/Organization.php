@@ -19,17 +19,19 @@ use App\Ship\Foundation\SectionContainer;
 
 final class Organization extends SectionContainer
 {
-    public const EMAIL = 'email';
-    public const INN = 'inn';
-    public const INN_MAX_LENGTH = 50;
-    public const NAME = 'name';
-    public const NAME_MAX_LENGTH = 100;
-    public const PHONE_NUMBER = 'phone_number';
-    public const USER_OWNER_ID = 'user_owner_id';
-    public const OWNER_NAME = 'owner_name';
-    public const INCLUDE_USER_OWNER = 'user_owner';
-    public const INCLUDE_USERS = 'users';
-    public const INCLUDE_BRANCHES = 'branches';
+    public const string COUNTRY = 'country';
+    public const string OWNERSHIP_TYPE = 'ownership_type';
+    public const int OWNERSHIP_TYPE_MAX_LENGTH = 20;
+    public const string EMAIL = 'email';
+    public const string BANK_DATA = 'bank_data';
+    public const string NAME = 'name';
+    public const int NAME_MAX_LENGTH = 100;
+    public const string PHONE_NUMBER = 'phone_number';
+    public const string USER_OWNER_ID = 'user_owner_id';
+    public const string OWNER_NAME = 'owner_name';
+    public const string INCLUDE_USER_OWNER = 'user_owner';
+    public const string INCLUDE_USERS = 'users';
+    public const string INCLUDE_BRANCHES = 'branches';
 
     protected string $apiBaseUri = 'community/organizations';
 }
