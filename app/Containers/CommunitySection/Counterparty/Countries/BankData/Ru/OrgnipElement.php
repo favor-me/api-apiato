@@ -16,6 +16,8 @@
 namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
+use App\Containers\OrganizationSection\OwnershipType\Manager;
+use App\Containers\OrganizationSection\OwnershipType\OooType;
 
 class OrgnipElement extends RuElement
 {
@@ -26,6 +28,7 @@ class OrgnipElement extends RuElement
     protected string $name = 'orgnip';
 
     protected array $rules = [
+        'required',
         'numeric',
         'nullable',
         'digits:' . self::DIGITS
@@ -38,6 +41,15 @@ class OrgnipElement extends RuElement
             $this->validationRuleName('digits') => $this->trans('rules.digits', [
                 'digits' => self::DIGITS
             ])
+        ];
+    }
+
+    public function forOwnershipTypes(): array
+    {
+        return [
+            Manager::getInstance()
+                ->get(OooType::class)
+                ->getName()
         ];
     }
 }
