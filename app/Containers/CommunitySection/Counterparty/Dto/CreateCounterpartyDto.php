@@ -28,6 +28,7 @@ class CreateCounterpartyDto extends Dto
     public ?string $country;
     public ?string $email;
     public ?string $name;
+    public ?string $ownership_type;
     public ?string $organization_id;
     public ?string $phone_number;
 }

@@ -29,6 +29,7 @@ use App\Ship\Utils\Str;
 use App\Ship\Validation\Rule;
 use Illuminate\Validation\Rules\Unique;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+use ReflectionException;
 
 class CreateCounterpartyRequest extends CounterpartyApiRequest implements GettableDto
 {
@@ -40,10 +41,15 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
 
     protected array $countryMessages = [];
 
+    /**
+     * @return array
+     * @throws ReflectionException
+     */
     public function rules(): array
     {
         $rules = [
             Counterparty::NAME => $this->getCounterpartyNameValidationRules(),
+            Counterparty::OWNERSHIP_TYPE => $this->getOrganizationOwnershipTypeValidationRules(),
             Counterparty::LEGAL_ADDRESS => $this->getCounterpartyAddressValidationRules(),
             Counterparty::MAILING_ADDRESS => $this->getCounterpartyMailingAddressValidationRules(),
             Counterparty::PHONE_NUMBER => $this->getCounterpartyPhoneNumberValidationRules(),
@@ -59,7 +65,10 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
             );
 
         if (!is_null($country)) {
-            $schema = $country->getBankDataSchema();
+            $schema = $country
+                ->setOwnershipType($this->get(Counterparty::OWNERSHIP_TYPE))
+                ->getBankDataSchema();
+
             $rules = array_merge($rules, $schema->getRules());
             $this->countryMessages = $schema->getValidationMessages();
         }
@@ -73,6 +82,9 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
             Counterparty::NAME . '.unique' => Container::trans(
                 'container.validation.name.unique'
             ),
+            Counterparty::OWNERSHIP_TYPE . '.required' => Container::trans(
+                'container.validation.ownership_type.required'
+            ),
             Counterparty::LEGAL_ADDRESS . '.required' => Container::trans(
                 'container.validation.legal_address.required'
             ),
@@ -80,6 +92,12 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
                 'container.validation.mailing_address.required'
             ),
         ], $this->countryMessages);
+    }
+
+    public function getOrganizationOwnershipTypeValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationOwnershipTypeValidationRules()
+            ->addRequired();
     }
 
     public function getCounterpartyMailingAddressValidationRules(): ValidationRules

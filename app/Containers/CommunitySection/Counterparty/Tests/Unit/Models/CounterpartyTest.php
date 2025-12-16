@@ -16,10 +16,11 @@
 namespace App\Containers\CommunitySection\Counterparty\Tests\Unit\Models;
 
 use App\Containers\CommunitySection\Counterparty\Countries\Country;
-use App\Containers\CommunitySection\Counterparty\Tests\UnitTestCase;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
+use App\Containers\CommunitySection\Counterparty\Tests\UnitTestCase;
 use App\Containers\CommunitySection\Organization\Models\Organization;
+use App\Containers\OrganizationSection\OwnershipType\Type as OwnershipType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use JBZoo\Data\JSON;
 
@@ -71,6 +72,7 @@ final class CounterpartyTest extends UnitTestCase
     public function testCasts(): void
     {
         $this->assertInstanceOf(Country::class, $this->model->country);
+        $this->assertInstanceOf(OwnershipType::class, $this->model->ownership_type);
         $this->assertInstanceOf(JSON::class, $this->model->bank_data);
         $this->assertIsInt($this->model->phone_number);
     }

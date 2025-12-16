@@ -19,6 +19,7 @@ use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Primitive;
+use ReflectionException;
 
 class CounterpartyTransformer extends Transformer
 {
@@ -33,6 +34,7 @@ class CounterpartyTransformer extends Transformer
             ID => $counterparty->getHashedKey(),
             CounterpartyModel::NUMBER => $counterparty->getNumber(),
             Counterparty::NAME => $counterparty->name,
+            Counterparty::OWNERSHIP_TYPE => $this->getOwnershipType($counterparty),
             Counterparty::LEGAL_ADDRESS => $counterparty->legal_address,
             Counterparty::MAILING_ADDRESS => $counterparty->mailing_address,
             Counterparty::PHONE_NUMBER => $counterparty->phone_number,
@@ -46,12 +48,23 @@ class CounterpartyTransformer extends Transformer
         ];
     }
 
+    /**
+     * @param CounterpartyModel $counterparty
+     * @return Primitive
+     * @throws ReflectionException
+     */
     protected function includeBankDataSchema(CounterpartyModel $counterparty): Primitive
     {
         return $this->primitive(
             $counterparty->country
+                ->setOwnershipType($counterparty->ownership_type)
                 ->getBankDataSchema($counterparty->bank_data)
                 ->toSchema()
         );
+    }
+
+    private function getOwnershipType(CounterpartyModel $counterparty): ?array
+    {
+        return !is_null($counterparty->ownership_type) ? $counterparty->ownership_type->toArray() : null;
     }
 }

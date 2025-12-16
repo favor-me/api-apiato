@@ -58,6 +58,12 @@ class UpdateCounterpartyRequest extends CreateCounterpartyRequest
             ->addRequired();
     }
 
+    public function getOrganizationOwnershipTypeValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationOwnershipTypeValidationRules()
+            ->removeRequired();
+    }
+
     public function getCounterpartyMailingAddressValidationRules(): ValidationRules
     {
         return parent::getCounterpartyMailingAddressValidationRules()

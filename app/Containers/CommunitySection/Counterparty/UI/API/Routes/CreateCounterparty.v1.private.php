@@ -25,6 +25,7 @@
  * @apiBody {String} mailing_address Почтовый адрес.
  * @apiBody {String} phone_number Номер телефона.
  * @apiBody {String} [email] Адрес электронной почты.
+ * @apiBody {String=ip,ooo,self_employed} ownership_type Тип собственности.
  * @apiBody {String=rus} country Страна.
  * @apiBody {Array|Object} bank_data Реквизиты банка.
  *

@@ -21,6 +21,7 @@ use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Counterparty\Data\Factories\CounterpartyFactory;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty as BaseCounterparty;
 use App\Containers\CommunitySection\Organization\Models\Organization;
+use App\Containers\OrganizationSection\OwnershipType\Type as OwnershipType;
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Parents\Models\Model;
 use App\Ship\Traits\Model\IsNumbered;
@@ -32,6 +33,7 @@ use JBZoo\Data\JSON;
 /**
  * @property-read int $id Уникальный идентификатор.
  * @property-read string $name Имя.
+ * @property-read null|OwnershipType $ownership_type Тип собственности.
  * @property-read string $legal_address Юридический адрес.
  * @property-read string $mailing_address Почтовый адрес.
  * @property-read int $phone_number Номер телефона.

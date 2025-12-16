@@ -15,12 +15,12 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Data\Factories;
 
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\BikElement;
-use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\OkpoElement;
 use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Containers\CommunitySection\Organization\Models\Organization;
+use App\Containers\OrganizationSection\OwnershipType\Manager as OwnershipTypeManager;
+use App\Containers\OrganizationSection\OwnershipType\OooType;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
 use App\Ship\Traits\Factory\HasTrashedState;
@@ -40,6 +40,7 @@ final class CounterpartyFactory extends Factory
     public function definition(): array
     {
         $country = new RuCountry();
+        $ownershipType = OwnershipTypeManager::getInstance()->get(OooType::class);
 
         return [
             Counterparty::LEGAL_ADDRESS => $this->faker->address(),
@@ -48,6 +49,7 @@ final class CounterpartyFactory extends Factory
             Counterparty::COUNTRY => $country->getName(),
             Counterparty::EMAIL => $this->faker->email,
             Counterparty::NAME => $this->faker->title,
+            Counterparty::OWNERSHIP_TYPE => $ownershipType->getName(),
             Counterparty::ORGANIZATION_ID => Organization::factory(),
             Counterparty::PHONE_NUMBER => $this->faker->e164PhoneNumber
         ];

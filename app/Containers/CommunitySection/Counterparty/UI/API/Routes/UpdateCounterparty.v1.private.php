@@ -14,7 +14,6 @@
  *
  * @apiGroup CommunityCounterparty
  * @apiName updateCommunityCounterparty
-
  * @api {post} /v1/community/counterparties/:id Изменить
  * @apiDescription Изменить.
  *
@@ -23,13 +22,14 @@
  *
  * @apiParam {String} id Уникальный идентификатор
  *
- * @apiBody {String} [name]
- * @apiBody {String} [address]
- * @apiBody {String} [phone_number]
- * @apiBody {String} [email]
- * @apiBody {String} [country]
- * @apiBody {String} [bank_data]
- * @apiBody {String} [organization_id]
+ * @apiBody {String} [name] Имя.
+ * @apiBody {String} [legal_address] Юридический адрес.
+ * @apiBody {String} [mailing_address] Почтовый адрес.
+ * @apiBody {String} [phone_number] Номер телефона.
+ * @apiBody {String} [email] Адрес электронной почты.
+ * @apiBody {String=ip,ooo,self_employed} [ownership_type] Тип собственности.
+ * @apiBody {String=rus} [country] Страна.
+ * @apiBody {Array|Object} bank_data Реквизиты банка.
  *
  * @apiUse CounterpartySuccessSingleResponse
  */
