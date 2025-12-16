@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Countries;
 
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\BankElement;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\BikElement;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\CorrespondentAccountElement;
@@ -28,6 +29,9 @@ use App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru\PaymentAc
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Schema;
 use JBZoo\Data\JSON;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RuCountry extends Country
 {
     public function getBankDataSchema(?JSON $data = null): Schema
@@ -67,8 +71,8 @@ class RuCountry extends Country
             );
     }
 
-    public function getUniqueElement(): string
+    public function getUniqueElement(): Element
     {
-        return (new InnElement())->getName();
+        return new InnElement();
     }
 }

@@ -19,7 +19,7 @@ use App\Containers\CommunitySection\Counterparty\Countries\BankData\Schema;
 use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Counterparty\Tests\UnitTestCase;
 
-final class RusCountryTest extends UnitTestCase
+final class RuCountryTest extends UnitTestCase
 {
     public function test(): void
     {

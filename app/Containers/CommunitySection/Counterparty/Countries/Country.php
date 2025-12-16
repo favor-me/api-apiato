@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Countries;
 
+use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Schema;
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Ship\Contracts\Namebled;
@@ -27,7 +28,7 @@ abstract class Country implements Namebled, Arrayable
 {
     abstract public function getBankDataSchema(?JSON $data = null): Schema;
 
-    abstract public function getUniqueElement(): string;
+    abstract public function getUniqueElement(): Element;
 
     public function getName(): string
     {
