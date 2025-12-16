@@ -27,6 +27,10 @@ HTTP/1.1 200 OK
             "title": "Россия",
             "name": "ru"
         },
+        "ownership_type": {
+            "title": "ИП",
+            "name": "ip"
+        },
         "bank_data": {
             "bik": "123416434",
             "inn": "1234567891",
