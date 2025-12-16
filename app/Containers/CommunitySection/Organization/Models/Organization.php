@@ -23,6 +23,8 @@ use App\Containers\CommunitySection\Organization\Data\Factories\OrganizationFact
 use App\Containers\CommunitySection\Organization\Foundation\Organization as BaseOrganization;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
+use App\Containers\OrganizationSection\OwnershipType\Type as OwnershipType;
+use App\Containers\OrganizationSection\OwnershipType\Casts\OwnershipType as OwnershipTypeCast;
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\Model;
@@ -42,6 +44,7 @@ use JBZoo\Data\JSON;
  * @property-read JSON $params Дополнительные параметры.
  * @property-read JSON $bank_data Реквизиты банка.
  * @property-read Country $country Страна.
+ * @property-read null|OwnershipType $ownership_type Тип собственности.
  * @property-read null|Carbon $created_at Дата и время создания.
  * @property-read null|Carbon $updated_at Дата и время обновления.
  * @property-read null|Carbon $deleted_at Дата и время удаления.
@@ -69,6 +72,7 @@ class Organization extends Model
         BaseOrganization::PHONE_NUMBER,
         BaseOrganization::EMAIL,
         BaseOrganization::USER_OWNER_ID,
+        BaseOrganization::OWNERSHIP_TYPE,
         PARAMS
     ];
 
@@ -79,7 +83,8 @@ class Organization extends Model
         PARAMS => JsonCast::class,
         BaseOrganization::PHONE_NUMBER => 'int',
         BaseOrganization::BANK_DATA => JsonCast::class,
-        BaseOrganization::COUNTRY => CounterpartyCountry::class
+        BaseOrganization::COUNTRY => CounterpartyCountry::class,
+        BaseOrganization::OWNERSHIP_TYPE => OwnershipTypeCast::class
     ];
 
     public function userOwner(): BelongsTo

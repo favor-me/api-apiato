@@ -29,4 +29,5 @@ class CreateOrganizationDto extends Dto
     public array $bank_data = [];
     public ?int $phone_number;
     public ?int $user_owner_id;
+    public ?string $ownership_type;
 }

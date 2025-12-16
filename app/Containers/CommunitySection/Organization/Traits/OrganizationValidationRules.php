@@ -17,6 +17,7 @@ namespace App\Containers\CommunitySection\Organization\Traits;
 
 use App\Containers\CommunitySection\Counterparty\Validation\Rules\ExistsCounterpartyCountryRule;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Containers\OrganizationSection\OwnershipType\Validation\Rules\ExistsOwnershipTypeRule;
 use App\Ship\Traits\Validation\HasParamsValidationRules;
 use App\Ship\Validation\Rules\PhoneNumber as PhoneNumberValidationRule;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
@@ -41,6 +42,13 @@ trait OrganizationValidationRules
     {
         return validation_rules([
             'string'
+        ]);
+    }
+
+    public function getOrganizationOwnershipTypeValidationRules(): ValidationRules
+    {
+        return validation_rules([
+            new ExistsOwnershipTypeRule()
         ]);
     }
 

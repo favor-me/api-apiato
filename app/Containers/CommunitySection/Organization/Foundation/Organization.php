@@ -24,6 +24,7 @@ final class Organization extends SectionContainer
     public const int OWNERSHIP_TYPE_MAX_LENGTH = 20;
     public const string EMAIL = 'email';
     public const string BANK_DATA = 'bank_data';
+    public const string BANK_DATA_SCHEMA = 'bank_data_schema';
     public const string NAME = 'name';
     public const int NAME_MAX_LENGTH = 100;
     public const string PHONE_NUMBER = 'phone_number';

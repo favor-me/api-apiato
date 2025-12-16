@@ -70,6 +70,7 @@ final class OrganizationTest extends UnitTestCase
             Organization::PHONE_NUMBER,
             Organization::EMAIL,
             Organization::USER_OWNER_ID,
+            Organization::OWNERSHIP_TYPE,
             PARAMS
         ], $this->model->getFillable());
     }

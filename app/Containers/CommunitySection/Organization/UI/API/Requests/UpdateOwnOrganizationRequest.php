@@ -65,12 +65,6 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
             ->addRequired();
     }
 
-    public function getOrganizationNameUniqueValidationRule(): Unique
-    {
-        return parent::getOrganizationEmailUniqueValidationRule()
-            ->ignore($this->id);
-    }
-
     public function getOrganizationPhoneNumberUniqueValidationRule(): Unique
     {
         return parent::getOrganizationPhoneNumberUniqueValidationRule()
@@ -81,6 +75,18 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
     {
         return parent::getOrganizationEmailValidationRules()
             ->add('nullable');
+    }
+
+    public function getOrganizationOwnershipTypeValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationOwnershipTypeValidationRules()
+            ->removeRequired();
+    }
+
+    public function getOrganizationEmailUniqueValidationRule(): Unique
+    {
+        return parent::getOrganizationEmailUniqueValidationRule()
+            ->ignore($this->id);
     }
 
     public function newDto(array $data = []): UpdateOrganizationDto

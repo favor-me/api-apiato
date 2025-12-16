@@ -61,7 +61,8 @@ final class FindOrganizationByIdTest extends ApiTestCase
                     ->where('meta.include', [
                         Organization::INCLUDE_USER_OWNER,
                         Organization::INCLUDE_USERS,
-                        Organization::INCLUDE_BRANCHES
+                        Organization::INCLUDE_BRANCHES,
+                        Organization::BANK_DATA_SCHEMA
                     ])
                     ->etc()
             );
