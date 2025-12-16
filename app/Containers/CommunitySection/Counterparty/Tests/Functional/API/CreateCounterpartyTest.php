@@ -55,7 +55,7 @@ final class CreateCounterpartyTest extends ApiTestCase
         $data = CounterpartyModel::factory()
             ->rus()
             ->organization($this->testingUser->organization_id)
-            ->create()
+            ->make()
             ->toArray();
 
         $this->makeCall($data);

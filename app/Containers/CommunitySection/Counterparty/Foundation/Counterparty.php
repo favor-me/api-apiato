@@ -22,6 +22,7 @@ final class Counterparty extends SectionContainer
     public const string LEGAL_ADDRESS = 'legal_address';
     public const string MAILING_ADDRESS = 'mailing_address';
     public const string BANK_DATA = 'bank_data';
+    public const string OWNERSHIP_TYPE = 'ownership_type';
     public const string BANK_DATA_SCHEMA = 'bank_data_schema';
     public const string COUNTRY = 'country';
     public const int COUNTRY_MAX_LENGTH = 2;

@@ -63,7 +63,8 @@ final class CounterpartyTest extends UnitTestCase
             Counterparty::EMAIL,
             Counterparty::COUNTRY,
             Counterparty::BANK_DATA,
-            Counterparty::ORGANIZATION_ID
+            Counterparty::ORGANIZATION_ID,
+            Counterparty::OWNERSHIP_TYPE
         ], $this->model->getFillable());
     }
 

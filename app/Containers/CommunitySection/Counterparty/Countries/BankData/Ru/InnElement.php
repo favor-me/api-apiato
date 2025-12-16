@@ -19,11 +19,12 @@ use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 use App\Containers\CommunitySection\Organization\Validation\Rules\UniqueOrganizationRule;
 use JBZoo\Data\JSON;
 
-class InnElement extends Element
+class InnElement extends RuElement
 {
     public const int MAX_DIGITS = 12;
     public const int MIN_DIGITS = 10;
 
+    protected int $ordering = 10;
     protected string $type = Element::TYPE_INT;
     protected string $name = 'inn';
 
@@ -34,9 +35,9 @@ class InnElement extends Element
         'max_digits:' . self::MAX_DIGITS
     ];
 
-    public function __construct(JSON $data = null)
+    public function __construct(JSON $data = null, ?string $ownershipType = null)
     {
-        parent::__construct($data);
+        parent::__construct($data, $ownershipType);
         $this->rules[] = new UniqueOrganizationRule();
     }
 

@@ -15,8 +15,13 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Countries\BankData;
 
+use App\Containers\CommunitySection\Counterparty\Countries\Country;
+use App\Containers\CommunitySection\Counterparty\Countries\Manager as CountryManager;
+use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
+use App\Containers\OrganizationSection\OwnershipType\Manager as OwnershipTypeManager;
+use App\Containers\OrganizationSection\OwnershipType\Type as OwnershipType;
 use Illuminate\Contracts\Support\Arrayable;
 use JBZoo\Data\JSON;
 use JsonSerializable;
@@ -26,25 +31,40 @@ abstract class Element implements JsonSerializable, Arrayable
     public const string TYPE_INT = 'int';
     public const string TYPE_STRING = 'string';
 
+    protected int $ordering = 0;
     protected string $type;
-    protected string $country = 'ru';
+    protected Country $country;
     protected string $name;
     protected string $title;
     protected mixed $value = null;
     protected array $rules = [];
     protected JSON|null $data = null;
+    protected ?OwnershipType $ownershipType = null;
 
-    public function __construct(JSON $data = null)
+    public function __construct(JSON $data = null, ?string $ownershipType = null)
     {
         $this->data = $data;
+
+        if (!is_null($ownershipType)) {
+            $this->ownershipType = OwnershipTypeManager::getInstance()->get($ownershipType);
+        }
+
+        $this
+            ->setCountry()
+            ->bindValue();
+
         $this->title = $this->trans('title');
-        $this->bindValue();
+    }
+
+    public function getOrdering(): int
+    {
+        return $this->ordering;
     }
 
     public function trans(?string $key = null, array $replace = []): mixed
     {
         return Container::trans(implode('.', [
-            $this->country,
+            $this->country->getName(),
             $this->name,
             $key
         ]), $replace);
@@ -84,6 +104,43 @@ abstract class Element implements JsonSerializable, Arrayable
     public function getValidationMessages(): array
     {
         return [];
+    }
+
+    public function canAddToSchema(): bool
+    {
+        if ($this->hasOwnershipType()) {
+            return in_array(
+                $this->ownershipType->getName(),
+                $this->forOwnershipTypes()
+            );
+        }
+
+        return false;
+    }
+
+    public function forOwnershipTypes(): array
+    {
+        return [];
+    }
+
+    protected function hasOwnershipType(): bool
+    {
+        return $this->ownershipType !== null;
+    }
+
+    protected function setCountry(): static
+    {
+        $this->country = CountryManager::getInstance()
+            ->get(
+                $this->getCountryAccessor()
+            );
+
+        return $this;
+    }
+
+    protected function getCountryAccessor(): string
+    {
+        return RuCountry::class;
     }
 
     protected function validationRuleName(string $rule): string

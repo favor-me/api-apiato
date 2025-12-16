@@ -64,6 +64,11 @@ trait CounterpartyValidationRules
         return validation_rules(Container::getConfig('rules.' . Counterparty::COUNTRY));
     }
 
+    public function getCounterpartyOwnershipTypeValidationRules(): ValidationRules
+    {
+        return validation_rules(Container::getConfig('rules.' . Counterparty::OWNERSHIP_TYPE));
+    }
+
     public function getCounterpartyBankDataValidationRules(): ValidationRules
     {
         return $this->getParamsValidationRules();

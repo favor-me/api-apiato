@@ -17,13 +17,14 @@ namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class OkpoElement extends Element
+class OkpoElement extends RuElement
 {
     public const int MAX_DIGITS = 10;
     public const int MIN_DIGITS = 8;
 
     protected string $type = Element::TYPE_INT;
     protected string $name = 'okpo';
+    protected int $ordering = 3;
 
     protected array $rules = [
         'required',

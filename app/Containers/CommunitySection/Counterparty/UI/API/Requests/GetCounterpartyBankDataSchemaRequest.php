@@ -22,6 +22,7 @@ use App\Ship\Collections\ValidationRules;
 
 /**
  * @property-read mixed $country
+ * @property-read mixed $ownership_type
  */
 class GetCounterpartyBankDataSchemaRequest extends CounterpartyApiRequest
 {
@@ -30,19 +31,27 @@ class GetCounterpartyBankDataSchemaRequest extends CounterpartyApiRequest
     ];
 
     protected array $urlParameters = [
-        Counterparty::COUNTRY
+        Counterparty::COUNTRY,
+        Counterparty::OWNERSHIP_TYPE
     ];
 
     public function rules(): array
     {
         return [
-            Counterparty::COUNTRY => $this->getCounterpartyCountryValidationRules()
+            Counterparty::COUNTRY => $this->getCounterpartyCountryValidationRules(),
+            Counterparty::OWNERSHIP_TYPE => $this->getCounterpartyOwnershipTypeValidationRules()
         ];
     }
 
     public function getCounterpartyCountryValidationRules(): ValidationRules
     {
         return parent::getCounterpartyCountryValidationRules()
+            ->addRequired();
+    }
+
+    public function getCounterpartyOwnershipTypeValidationRules(): ValidationRules
+    {
+        return parent::getCounterpartyOwnershipTypeValidationRules()
             ->addRequired();
     }
 }

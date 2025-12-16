@@ -17,17 +17,25 @@ namespace App\Containers\CommunitySection\Counterparty\Casts;
 
 use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Counterparty\Countries\Manager;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Database\Eloquent\SerializesCastableAttributes;
 
 class CounterpartyCountry implements CastsAttributes, SerializesCastableAttributes
 {
     /**
+     * @param OrganizationModel $model
+     * @param string $key
+     * @param $value
+     * @param array $attributes
+     * @return Country
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function get($model, string $key, $value, array $attributes)
+    public function get($model, string $key, $value, array $attributes): Country
     {
-        return Manager::getInstance()->get($value);
+        return Manager::getInstance()
+            ->get($value)
+            ->setOwnershipType($model->ownership_type);
     }
 
     /**

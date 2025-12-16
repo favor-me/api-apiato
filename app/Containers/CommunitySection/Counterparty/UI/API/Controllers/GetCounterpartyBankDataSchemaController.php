@@ -19,9 +19,16 @@ use App\Containers\CommunitySection\Counterparty\Actions\GetCounterpartyBankData
 use App\Containers\CommunitySection\Counterparty\UI\API\Requests\GetCounterpartyBankDataSchemaRequest;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
+use ReflectionException;
 
 class GetCounterpartyBankDataSchemaController extends ApiController
 {
+    /**
+     * @param GetCounterpartyBankDataSchemaRequest $request
+     * @param GetCounterpartyBankDataSchemaAction $action
+     * @return JsonResponse
+     * @throws ReflectionException
+     */
     public function __invoke(
         GetCounterpartyBankDataSchemaRequest $request,
         GetCounterpartyBankDataSchemaAction $action
@@ -29,6 +36,7 @@ class GetCounterpartyBankDataSchemaController extends ApiController
         return $this->json([
             'data' => $action->run(
                 $request->country,
+                $request->ownership_type,
                 (bool)$request->get('test_data')
             )
         ]);

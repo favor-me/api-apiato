@@ -17,13 +17,14 @@ namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class OkatoElement extends Element
+class OkatoElement extends RuElement
 {
     public const int MAX_DIGITS = 11;
     public const int MIN_DIGITS = 2;
 
     protected string $type = Element::TYPE_INT;
     protected string $name = 'okato';
+    protected int $ordering = 1;
 
     protected array $rules = [
         'numeric',

@@ -15,6 +15,7 @@
 
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Validation\Rules\ExistsCounterpartyCountryRule;
+use App\Containers\OrganizationSection\OwnershipType\Validation\Rules\ExistsOwnershipTypeRule;
 use App\Ship\Support\Email;
 use App\Ship\Support\PhoneNumber;
 
@@ -41,6 +42,9 @@ return [
         ],
         Counterparty::COUNTRY => [
             new ExistsCounterpartyCountryRule()
+        ],
+        Counterparty::OWNERSHIP_TYPE => [
+            new ExistsOwnershipTypeRule()
         ]
     ]
 

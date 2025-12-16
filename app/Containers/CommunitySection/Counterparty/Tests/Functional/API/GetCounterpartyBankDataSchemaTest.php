@@ -20,6 +20,7 @@ use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Tests\Functional\ApiTestCase;
+use App\Containers\OrganizationSection\OwnershipType\OooType;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class GetCounterpartyBankDataSchemaTest extends ApiTestCase
@@ -31,7 +32,8 @@ final class GetCounterpartyBankDataSchemaTest extends ApiTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->endpoint = 'get@v1/' . Container::getApiUri('{' . Counterparty::COUNTRY . '}/bank-data-schema');
+        $uri = '{' . Counterparty::COUNTRY . '}/{' . Counterparty::OWNERSHIP_TYPE . '}/bank-data-schema';
+        $this->endpoint = 'get@v1/' . Container::getApiUri($uri);
     }
 
     public function testSuccess(): void
@@ -42,6 +44,9 @@ final class GetCounterpartyBankDataSchemaTest extends ApiTestCase
             ->injectId(
                 (new RuCountry())
                     ->getName()
+            )
+            ->injectOwnershipType(
+                (new OooType())->getName()
             )
             ->makeCall();
 
@@ -60,6 +65,9 @@ final class GetCounterpartyBankDataSchemaTest extends ApiTestCase
 
         $this
             ->injectId('ggg')
+            ->injectOwnershipType(
+                (new OooType())->getName()
+            )
             ->makeCall();
 
         $this->assertGivenDataIsInvalid();
@@ -82,5 +90,10 @@ final class GetCounterpartyBankDataSchemaTest extends ApiTestCase
         string $replace = '{' . Counterparty::COUNTRY . '}'
     ): static {
         return parent::injectId($id, $skipEncoding, $replace);
+    }
+
+    protected function injectOwnershipType(string $value): self
+    {
+        return $this->injectId($value, true, '{' . Counterparty::OWNERSHIP_TYPE . '}');
     }
 }

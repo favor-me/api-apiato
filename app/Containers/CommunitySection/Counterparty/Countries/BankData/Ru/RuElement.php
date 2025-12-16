@@ -16,28 +16,21 @@
 namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
+use App\Containers\OrganizationSection\OwnershipType\IpType;
+use App\Containers\OrganizationSection\OwnershipType\Manager;
+use App\Containers\OrganizationSection\OwnershipType\OooType;
 
-class OrgnipElement extends RuElement
+abstract class RuElement extends Element
 {
-    public const int DIGITS = 15;
-
-    protected int $ordering = 8;
-    protected string $type = Element::TYPE_INT;
-    protected string $name = 'orgnip';
-
-    protected array $rules = [
-        'numeric',
-        'nullable',
-        'digits:' . self::DIGITS
-    ];
-
-    public function getValidationMessages(): array
+    public function forOwnershipTypes(): array
     {
         return [
-            $this->validationRuleName('numeric') => $this->trans('rules.numeric'),
-            $this->validationRuleName('digits') => $this->trans('rules.digits', [
-                'digits' => self::DIGITS
-            ])
+            Manager::getInstance()
+                ->get(OooType::class)
+                ->getName(),
+            Manager::getInstance()
+                ->get(IpType::class)
+                ->getName(),
         ];
     }
 }

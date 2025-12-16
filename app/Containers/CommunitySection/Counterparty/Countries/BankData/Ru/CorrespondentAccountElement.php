@@ -18,4 +18,5 @@ namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 class CorrespondentAccountElement extends PaymentAccountElement
 {
     protected string $name = 'correspondent_account';
+    protected int $ordering = 5;
 }

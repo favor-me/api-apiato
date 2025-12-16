@@ -17,10 +17,11 @@ namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class KppElement extends Element
+class KppElement extends RuElement
 {
     public const int DIGITS = 9;
 
+    protected int $ordering = 9;
     protected string $type = Element::TYPE_INT;
     protected string $name = 'kpp';
 

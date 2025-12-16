@@ -47,7 +47,7 @@ final class UpdateCounterpartyTest extends ApiTestCase
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has(MESSAGE)
-                    ->where(MESSAGE, __('ship::exception.message.empty_update_data'))
+                    ->where(MESSAGE, __('ship::exception.empty_update_data'))
                     ->etc()
             );
     }

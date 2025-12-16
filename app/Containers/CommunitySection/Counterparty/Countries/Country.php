@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Countries;
 
+use Apiato\Core\Foundation\Facades\Apiato;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Schema;
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
@@ -23,12 +24,42 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 use JBZoo\Data\JSON;
 use ReflectionClass;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
+use Illuminate\Support\Collection;
+use ReflectionException;
 
 abstract class Country implements Namebled, Arrayable
 {
-    abstract public function getBankDataSchema(?JSON $data = null): Schema;
+    protected ?string $ownershipType = null;
+
+    /**
+     * @param JSON|null $data
+     * @return Schema
+     * @throws ReflectionException
+     */
+    public function getBankDataSchema(?JSON $data = null): Schema
+    {
+        $schema = new Schema();
+
+        $this
+            ->getAllElements($data)
+            ->each(function (Element $element) use (&$schema) {
+                if ($element->canAddToSchema()) {
+                    $schema->addElement($element);
+                }
+            });
+
+        return $schema;
+    }
 
     abstract public function getUniqueElement(): Element;
+
+    public function setOwnershipType(?string $ownershipType): static
+    {
+        $this->ownershipType = $ownershipType;
+        return $this;
+    }
 
     public function getName(): string
     {
@@ -53,5 +84,41 @@ abstract class Country implements Namebled, Arrayable
     public function __toString(): string
     {
         return $this->getName();
+    }
+
+    /**
+     * @param JSON|null $data
+     * @return Collection
+     * @throws ReflectionException
+     */
+    public function getAllElements(?JSON $data = null): Collection
+    {
+        $elementsPath = Container::getPath('Countries/BankData/' . Str::ucfirst($this->getName()));
+
+        $finder = new Finder();
+
+        $files = $finder
+            ->files()
+            ->followLinks()
+            ->in($elementsPath);
+
+        $elements = collect();
+
+        /** @var SplFileInfo $file */
+        foreach ($files as $file) {
+            $className = Apiato::getClassFullNameFromFile($file->getPathname());
+            $elementClass = new ReflectionClass($className);
+            if ($elementClass->isInstantiable() && $elementClass->isSubclassOf(Element::class)) {
+                $elements
+                    ->add(
+                        new $className($data, $this->ownershipType)
+                    );
+            }
+        }
+
+        return $elements
+            ->sortByDesc(
+                fn (Element $element) => $element->getOrdering()
+            );
     }
 }

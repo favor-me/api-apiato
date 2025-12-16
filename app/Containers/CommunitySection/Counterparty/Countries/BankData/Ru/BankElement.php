@@ -17,10 +17,11 @@ namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class BankElement extends Element
+class BankElement extends RuElement
 {
     public const int MAX_LENGTH = 50;
 
+    protected int $ordering = 6;
     protected string $type = Element::TYPE_STRING;
     protected string $name = 'bank';
 

@@ -17,12 +17,13 @@ namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class OkvedElement extends Element
+class OkvedElement extends RuElement
 {
     public const int MAX_LENGTH = 50;
 
     protected string $type = Element::TYPE_STRING;
     protected string $name = 'okved';
+    protected int $ordering = 2;
 
     protected array $rules = [
         'string',

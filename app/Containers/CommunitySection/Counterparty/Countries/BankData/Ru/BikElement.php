@@ -17,12 +17,13 @@ namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
 
-class BikElement extends Element
+class BikElement extends RuElement
 {
     public const int DIGITS = 9;
 
     protected string $type = Element::TYPE_INT;
     protected string $name = 'bik';
+    protected int $ordering = 4;
 
     protected array $rules = [
         'required',

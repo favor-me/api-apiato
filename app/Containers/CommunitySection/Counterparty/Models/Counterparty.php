@@ -15,7 +15,8 @@
 
 namespace App\Containers\CommunitySection\Counterparty\Models;
 
-use App\Containers\CommunitySection\Counterparty\Casts\CounterpartyCountry;
+use App\Containers\CommunitySection\Counterparty\Casts\CounterpartyCountry as CounterpartyCountryCast;
+use App\Containers\OrganizationSection\OwnershipType\Casts\OwnershipType as OwnershipTypeCast;
 use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Counterparty\Data\Factories\CounterpartyFactory;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty as BaseCounterparty;
@@ -64,13 +65,15 @@ class Counterparty extends Model
         BaseCounterparty::EMAIL,
         BaseCounterparty::COUNTRY,
         BaseCounterparty::BANK_DATA,
-        BaseCounterparty::ORGANIZATION_ID
+        BaseCounterparty::ORGANIZATION_ID,
+        BaseCounterparty::OWNERSHIP_TYPE
     ];
 
     protected $casts = [
         BaseCounterparty::PHONE_NUMBER => 'int',
         BaseCounterparty::BANK_DATA => JsonCast::class,
-        BaseCounterparty::COUNTRY => CounterpartyCountry::class
+        BaseCounterparty::COUNTRY => CounterpartyCountryCast::class,
+        BaseCounterparty::OWNERSHIP_TYPE => OwnershipTypeCast::class
     ];
 
     public function organization(): BelongsTo

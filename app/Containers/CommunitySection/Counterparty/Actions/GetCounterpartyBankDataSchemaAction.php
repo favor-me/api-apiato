@@ -17,11 +17,19 @@ namespace App\Containers\CommunitySection\Counterparty\Actions;
 
 use App\Containers\CommunitySection\Counterparty\Tasks\GetCounterpartyBankDataSchemaTask;
 use App\Ship\Parents\Actions\Action;
+use ReflectionException;
 
 class GetCounterpartyBankDataSchemaAction extends Action
 {
-    public function run(string $country, bool $testData = false): ?array
+    /**
+     * @param string $country
+     * @param string $ownershipType
+     * @param bool $testData
+     * @return array|null
+     * @throws ReflectionException
+     */
+    public function run(string $country, string $ownershipType, bool $testData = false): ?array
     {
-        return app(GetCounterpartyBankDataSchemaTask::class)->run($country, $testData);
+        return app(GetCounterpartyBankDataSchemaTask::class)->run($country, $ownershipType, $testData);
     }
 }
