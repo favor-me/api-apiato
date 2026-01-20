@@ -27,9 +27,13 @@ use App\Containers\CommunitySection\Organization\Requests\OrganizationApiRequest
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\Utils\Str;
+use JBZoo\Data\JSON;
 use ReflectionException;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
+/**
+ * @property-read mixed $country
+ */
 class CreateOrganizationRequest extends OrganizationApiRequest implements GettableDto
 {
     protected array $access = [
@@ -58,21 +62,31 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
             Organization::OWNERSHIP_TYPE => $this->getOrganizationOwnershipTypeValidationRules()
         ];
 
-        $country = Manager::getInstance()
-            ->get(
-                (string)$this->get(Organization::COUNTRY)
-            );
+        $country = $this->getCountry();
 
         if (!is_null($country)) {
             $schema = $country
                 ->setOwnershipType($this->get(Organization::OWNERSHIP_TYPE))
-                ->getBankDataSchema();
+                ->getBankDataSchema($this->getBankData());
 
             $rules = array_merge($rules, $schema->getRules());
             $this->countryMessages = $schema->getValidationMessages();
         }
 
         return $rules;
+    }
+
+    protected function getCountry(): ?Country
+    {
+        return Manager::getInstance()
+            ->get(
+                (string)$this->country
+            );
+    }
+
+    public function getBankData(): ?JSON
+    {
+        return null;
     }
 
     public function getOrganizationOwnershipTypeValidationRules(): ValidationRules
