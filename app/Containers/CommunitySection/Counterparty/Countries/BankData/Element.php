@@ -22,6 +22,7 @@ use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\OrganizationSection\OwnershipType\Manager as OwnershipTypeManager;
 use App\Containers\OrganizationSection\OwnershipType\Type as OwnershipType;
+use App\Ship\Collections\ValidationRules;
 use Illuminate\Contracts\Support\Arrayable;
 use JBZoo\Data\JSON;
 use JsonSerializable;
@@ -72,6 +73,10 @@ abstract class Element implements JsonSerializable, Arrayable
 
     public function getRules(): array
     {
+        if ($this->canRemoveRequiredValidationRule()) {
+            unset($this->rules[array_search(ValidationRules::REQUIRED, $this->rules)]);
+        }
+
         return $this->rules;
     }
 
@@ -121,6 +126,11 @@ abstract class Element implements JsonSerializable, Arrayable
     public function forOwnershipTypes(): array
     {
         return [];
+    }
+
+    protected function canRemoveRequiredValidationRule(): bool
+    {
+        return in_array(ValidationRules::REQUIRED, $this->rules) && !is_null($this->value);
     }
 
     protected function hasOwnershipType(): bool
