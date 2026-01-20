@@ -137,11 +137,13 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
     protected function prepareForValidationBankData(): void
     {
         $organization = app(FindOrganizationByIdTask::class)->run($this->id);
+        $hasBankDataInput = $this->has(Organization::BANK_DATA);
+        $bankDataInput = (array)$this->get(Organization::BANK_DATA);
 
-        if (!is_null($organization)) {
+        if (!is_null($organization) && count($bankDataInput) && $hasBankDataInput) {
             $bankData = array_replace(
                 $organization->bank_data->getArrayCopy(),
-                (array)$this->get(Organization::BANK_DATA)
+                $bankDataInput
             );
 
             $this->merge([
