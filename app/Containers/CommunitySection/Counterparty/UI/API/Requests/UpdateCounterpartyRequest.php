@@ -16,14 +16,19 @@
 namespace App\Containers\CommunitySection\Counterparty\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Counterparty\Dto\UpdateCounterpartyDto;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
+use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
+use App\Containers\CommunitySection\Counterparty\Tasks\FindCounterpartyByIdTask;
 use App\Ship\Collections\ValidationRules;
+use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
+use JBZoo\Data\JSON;
 
 /**
  * @method UpdateCounterpartyDto getDto()
@@ -118,9 +123,46 @@ class UpdateCounterpartyRequest extends CreateCounterpartyRequest
     }
 
     /**
+     * @return CounterpartyModel|null
+     * @throws NotFoundException
+     */
+    protected function getFindBankDataModel(): ?CounterpartyModel
+    {
+        return app(FindCounterpartyByIdTask::class)->run($this->id);
+    }
+
+    protected function getBankData(): ?JSON
+    {
+        return new JSON($this->bank_data);
+    }
+
+    protected function getCountry(): ?Country
+    {
+        $country = parent::getCountry();
+
+        if (!is_null($country)) {
+            return $country
+                ->setContext(CounterpartyModel::class)
+                ->setIgnoreValue($this->id);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return void
+     * @throws NotFoundException
+     */
+    protected function prepareForValidation(): void
+    {
+        parent::prepareForValidation();
+        $this->prepareForValidationBankData();
+    }
+
+    /**
      * @return bool
-     * @throws ValidationFailedException
      * @throws AuthorizationException
+     * @throws ValidationFailedException
      */
     protected function passesAuthorization(): bool
     {

@@ -29,7 +29,7 @@
  * @apiBody {String} [email] Адрес электронной почты.
  * @apiBody {String=ip,ooo,self_employed} [ownership_type] Тип собственности.
  * @apiBody {String=rus} [country] Страна.
- * @apiBody {Array|Object} bank_data Реквизиты банка.
+ * @apiBody {Array|Object} [bank_data] Реквизиты банка.
  *
  * @apiUse CounterpartySuccessSingleResponse
  */

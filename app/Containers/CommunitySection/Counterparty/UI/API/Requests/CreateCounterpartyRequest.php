@@ -17,29 +17,28 @@ namespace App\Containers\CommunitySection\Counterparty\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Traits\IsOrganizationOwner;
-use App\Containers\CommunitySection\Counterparty\Countries\Manager;
 use App\Containers\CommunitySection\Counterparty\Dto\CreateCounterpartyDto;
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Containers\CommunitySection\Counterparty\Foundation\Counterparty;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Containers\CommunitySection\Counterparty\Requests\CounterpartyApiRequest;
+use App\Containers\CommunitySection\Counterparty\Traits\RequestHasBankData;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\Utils\Str;
 use App\Ship\Validation\Rule;
 use Illuminate\Validation\Rules\Unique;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 use ReflectionException;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class CreateCounterpartyRequest extends CounterpartyApiRequest implements GettableDto
 {
+    use RequestHasBankData;
     use IsOrganizationOwner;
 
     protected array $access = [
         ROLES => RoleModel::ORGANIZATION_OWNER
     ];
-
-    protected array $countryMessages = [];
 
     /**
      * @return array
@@ -59,19 +58,7 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
             Counterparty::ORGANIZATION_ID => $this->getCounterpartyOrganizationIdValidationRules(),
         ];
 
-        $country = Manager::getInstance()
-            ->get(
-                (string)$this->get(Counterparty::COUNTRY)
-            );
-
-        if (!is_null($country)) {
-            $schema = $country
-                ->setOwnershipType($this->get(Counterparty::OWNERSHIP_TYPE))
-                ->getBankDataSchema();
-
-            $rules = array_merge($rules, $schema->getRules());
-            $this->countryMessages = $schema->getValidationMessages();
-        }
+        $this->getBankDataSchema($rules);
 
         return $rules;
     }
@@ -167,7 +154,9 @@ class CreateCounterpartyRequest extends CounterpartyApiRequest implements Gettab
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
+
         $this->prepareForValidationPhoneNumber();
+        $this->prepareForValidationCountry();
     }
 
     protected function prepareForValidationPhoneNumber(): void
