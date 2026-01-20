@@ -50,8 +50,13 @@ class UniqueOrganizationRule extends ValidationRule
         $exists = $query->exists();
 
         if ($exists) {
-            $fail(Container::trans('validation.unique_organization'));
+            $fail($this->message());
         }
+    }
+
+    protected function message(): string
+    {
+        return Container::trans('validation.unique_organization');
     }
 
     /**
@@ -72,6 +77,11 @@ class UniqueOrganizationRule extends ValidationRule
         return Organization::BANK_DATA;
     }
 
+    protected function getCountryKey(): string
+    {
+        return Organization::COUNTRY;
+    }
+
     protected function getTableName(): string
     {
         return OrganizationModel::TABLE;
@@ -81,7 +91,7 @@ class UniqueOrganizationRule extends ValidationRule
     {
         return Manager::getInstance()
             ->get(
-                $this->data->get(Organization::COUNTRY)
+                $this->data->get($this->getCountryKey())
             );
     }
 }
