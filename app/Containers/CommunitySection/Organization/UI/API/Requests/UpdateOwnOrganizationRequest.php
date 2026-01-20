@@ -17,15 +17,20 @@ namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Organization\Dto\UpdateOrganizationDto;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Containers\CommunitySection\Organization\Tasks\FindOrganizationByIdTask;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\Rules\Unique;
+use JBZoo\Data\JSON;
+use App\Ship\Exceptions\NotFoundException;
 
 /**
+ * @property-read mixed $bank_data
  * @method UpdateOrganizationDto getDto()
  */
 class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
@@ -51,6 +56,22 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
         return array_merge($rules, [
             ID => $this->getOrganizationIdValidationRules()
         ]);
+    }
+
+    public function getBankData(): ?JSON
+    {
+        return new JSON($this->bank_data);
+    }
+
+    protected function getCountry(): ?Country
+    {
+        $country = parent::getCountry();
+
+        if (!is_null($country)) {
+            return $country->setIgnoreValue($this->id);
+        }
+
+        return null;
     }
 
     public function getOrganizationPhoneNumberValidationRules(): ValidationRules
@@ -94,6 +115,10 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
         return new UpdateOrganizationDto($data);
     }
 
+    /**
+     * @return void
+     * @throws NotFoundException
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
@@ -101,6 +126,28 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
         $this->merge([
             ID => $this->user()->getHashedKey(User::ORGANIZATION_ID)
         ]);
+
+        $this->prepareForValidationBankData();
+    }
+
+    /**
+     * @return void
+     * @throws NotFoundException
+     */
+    protected function prepareForValidationBankData(): void
+    {
+        $organization = app(FindOrganizationByIdTask::class)->run($this->id);
+
+        if (!is_null($organization)) {
+            $bankData = array_replace(
+                $organization->bank_data->getArrayCopy(),
+                (array)$this->get(Organization::BANK_DATA)
+            );
+
+            $this->merge([
+                Organization::BANK_DATA => $bankData
+            ]);
+        }
     }
 
     /**
