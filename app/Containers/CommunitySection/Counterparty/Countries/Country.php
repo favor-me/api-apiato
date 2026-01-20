@@ -21,17 +21,18 @@ use App\Containers\CommunitySection\Counterparty\Countries\BankData\Schema;
 use App\Containers\CommunitySection\Counterparty\Facades\Container;
 use App\Ship\Contracts\Namebled;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use JBZoo\Data\JSON;
 use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Illuminate\Support\Collection;
-use ReflectionException;
 
 abstract class Country implements Namebled, Arrayable
 {
     protected ?string $ownershipType = null;
+    protected ?int $ignoreValue = null;
 
     /**
      * @param JSON|null $data
@@ -59,6 +60,17 @@ abstract class Country implements Namebled, Arrayable
     {
         $this->ownershipType = $ownershipType;
         return $this;
+    }
+
+    public function setIgnoreValue(?int $ignoreValue): static
+    {
+        $this->ignoreValue = $ignoreValue;
+        return $this;
+    }
+
+    public function getIgnoreValue(): ?int
+    {
+        return $this->ignoreValue;
     }
 
     public function getName(): string
@@ -109,10 +121,8 @@ abstract class Country implements Namebled, Arrayable
             $className = Apiato::getClassFullNameFromFile($file->getPathname());
             $elementClass = new ReflectionClass($className);
             if ($elementClass->isInstantiable() && $elementClass->isSubclassOf(Element::class)) {
-                $elements
-                    ->add(
-                        new $className($data, $this->ownershipType)
-                    );
+                $element = new $className($data, $this->ownershipType);
+                $elements->add($element);
             }
         }
 
