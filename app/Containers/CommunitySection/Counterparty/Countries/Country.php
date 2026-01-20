@@ -33,6 +33,7 @@ abstract class Country implements Namebled, Arrayable
 {
     protected ?string $ownershipType = null;
     protected ?int $ignoreValue = null;
+    protected ?string $context = null;
 
     /**
      * @param JSON|null $data
@@ -66,6 +67,17 @@ abstract class Country implements Namebled, Arrayable
     {
         $this->ignoreValue = $ignoreValue;
         return $this;
+    }
+
+    public function setContext(?string $context): static
+    {
+        $this->context = $context;
+        return $this;
+    }
+
+    public function getContext(): ?string
+    {
+        return $this->context;
     }
 
     public function getIgnoreValue(): ?int
