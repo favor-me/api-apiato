@@ -15,7 +15,7 @@
 namespace App\Ship\Traits\Request;
 
 /**
- * @property mixed $id
+ * @property-read mixed $id
  */
 trait HasInputId
 {
