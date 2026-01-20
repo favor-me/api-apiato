@@ -16,6 +16,8 @@
 namespace App\Containers\CommunitySection\Counterparty\Countries\BankData\Ru;
 
 use App\Containers\CommunitySection\Counterparty\Countries\BankData\Element;
+use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
+use App\Containers\CommunitySection\Counterparty\Validation\Rules\UniqueCounterpartyRule;
 use App\Containers\CommunitySection\Organization\Validation\Rules\UniqueOrganizationRule;
 use JBZoo\Data\JSON;
 
@@ -57,8 +59,12 @@ class InnElement extends RuElement
 
     public function getUniqValidationRule(): UniqueOrganizationRule
     {
-        return new UniqueOrganizationRule(
-            $this->country->getIgnoreValue()
-        );
+        $ignoreValue = $this->country->getIgnoreValue();
+
+        if ($this->country->getContext() === Counterparty::class) {
+            return new UniqueCounterpartyRule($ignoreValue);
+        }
+
+        return new UniqueOrganizationRule($ignoreValue);
     }
 }
