@@ -15,10 +15,7 @@
 
 namespace App\Containers\CommunitySection\Organization\UI\API\Requests;
 
-use App\Containers\CommunitySection\Counterparty\Countries\Country;
-use App\Containers\CommunitySection\Counterparty\Countries\Manager;
-use App\Containers\CommunitySection\Counterparty\Countries\Manager as CountryManager;
-use App\Containers\CommunitySection\Counterparty\Countries\RuCountry;
+use App\Containers\CommunitySection\Counterparty\Traits\RequestHasBankData;
 use App\Containers\CommunitySection\Organization\Dto\CreateOrganizationDto;
 use App\Containers\CommunitySection\Organization\Facades\Container;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
@@ -27,7 +24,6 @@ use App\Containers\CommunitySection\Organization\Requests\OrganizationApiRequest
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\Utils\Str;
-use JBZoo\Data\JSON;
 use ReflectionException;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
@@ -36,6 +32,8 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  */
 class CreateOrganizationRequest extends OrganizationApiRequest implements GettableDto
 {
+    use RequestHasBankData;
+
     protected array $access = [
         PERMISSIONS => Permissions::CREATE
     ];
@@ -62,31 +60,9 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
             Organization::OWNERSHIP_TYPE => $this->getOrganizationOwnershipTypeValidationRules()
         ];
 
-        $country = $this->getCountry();
-
-        if (!is_null($country)) {
-            $schema = $country
-                ->setOwnershipType($this->get(Organization::OWNERSHIP_TYPE))
-                ->getBankDataSchema($this->getBankData());
-
-            $rules = array_merge($rules, $schema->getRules());
-            $this->countryMessages = $schema->getValidationMessages();
-        }
+        $this->getBankDataSchema($rules);
 
         return $rules;
-    }
-
-    protected function getCountry(): ?Country
-    {
-        return Manager::getInstance()
-            ->get(
-                (string)$this->country
-            );
-    }
-
-    public function getBankData(): ?JSON
-    {
-        return null;
     }
 
     public function getOrganizationOwnershipTypeValidationRules(): ValidationRules
@@ -156,18 +132,19 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
         $this->prepareForValidationPhoneNumber();
     }
 
-    protected function prepareForValidationCountry(): void
+    protected function ownershipTypeKey(): string
     {
-        $country = $this->defaultCountry();
-        $countryInput = $this->get(Organization::COUNTRY, $country->getName());
+        return Organization::OWNERSHIP_TYPE;
+    }
 
-        if (empty($countryInput)) {
-            $countryInput = $country->getName();
-        }
+    protected function bankDataKey(): string
+    {
+        return Organization::BANK_DATA;
+    }
 
-        $this->merge([
-            Organization::COUNTRY => $countryInput
-        ]);
+    protected function countryKey(): string
+    {
+        return Organization::COUNTRY;
     }
 
     protected function prepareForValidationPhoneNumber(): void
@@ -177,10 +154,5 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
                 Organization::PHONE_NUMBER => Str::toPhoneNumber($this->get(Organization::PHONE_NUMBER))
             ]);
         }
-    }
-
-    protected function defaultCountry(): Country
-    {
-        return CountryManager::getInstance()->get(RuCountry::class);
     }
 }

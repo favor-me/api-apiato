@@ -20,14 +20,15 @@ use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Organization\Dto\UpdateOrganizationDto;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\Organization\Tasks\FindOrganizationByIdTask;
 use App\Ship\Collections\ValidationRules;
+use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\Rules\Unique;
 use JBZoo\Data\JSON;
-use App\Ship\Exceptions\NotFoundException;
 
 /**
  * @property-read mixed $bank_data
@@ -56,22 +57,6 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
         return array_merge($rules, [
             ID => $this->getOrganizationIdValidationRules()
         ]);
-    }
-
-    public function getBankData(): ?JSON
-    {
-        return new JSON($this->bank_data);
-    }
-
-    protected function getCountry(): ?Country
-    {
-        $country = parent::getCountry();
-
-        if (!is_null($country)) {
-            return $country->setIgnoreValue($this->id);
-        }
-
-        return null;
     }
 
     public function getOrganizationPhoneNumberValidationRules(): ValidationRules
@@ -130,26 +115,18 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
         $this->prepareForValidationBankData();
     }
 
+    protected function getBankData(): ?JSON
+    {
+        return new JSON($this->bank_data);
+    }
+
     /**
-     * @return void
+     * @return OrganizationModel|null
      * @throws NotFoundException
      */
-    protected function prepareForValidationBankData(): void
+    protected function getFindBankDataModel(): ?OrganizationModel
     {
-        $organization = app(FindOrganizationByIdTask::class)->run($this->id);
-        $hasBankDataInput = $this->has(Organization::BANK_DATA);
-        $bankDataInput = (array)$this->get(Organization::BANK_DATA);
-
-        if (!is_null($organization) && count($bankDataInput) && $hasBankDataInput) {
-            $bankData = array_replace(
-                $organization->bank_data->getArrayCopy(),
-                $bankDataInput
-            );
-
-            $this->merge([
-                Organization::BANK_DATA => $bankData
-            ]);
-        }
+        return app(FindOrganizationByIdTask::class)->run($this->id);
     }
 
     /**
@@ -172,6 +149,19 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
         return array_merge(parent::getCheckAuthorizeMethods(), [
             'isOrganizationOwner'
         ]);
+    }
+
+    protected function getCountry(): ?Country
+    {
+        $country = parent::getCountry();
+
+        if (!is_null($country)) {
+            return $country
+                ->setContext(OrganizationModel::class)
+                ->setIgnoreValue($this->id);
+        }
+
+        return null;
     }
 
     protected function isOrganizationOwner(): bool
