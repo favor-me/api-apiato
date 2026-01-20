@@ -22,6 +22,7 @@ use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Ship\Validation\ValidationRule;
 use Closure;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class UniqueOrganizationRule extends ValidationRule
@@ -40,12 +41,7 @@ class UniqueOrganizationRule extends ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $country = $this->getCountry();
-
-        $query = DB::table(OrganizationModel::TABLE)
-            ->whereJsonContains(Organization::BANK_DATA, [
-                $country->getUniqueElement()->getName() => $value
-            ]);
+        $query = $this->baseQuery($value);
 
         if ($this->ignoreValue !== null) {
             $query->where(ID, '<>', $this->ignoreValue);
@@ -56,6 +52,29 @@ class UniqueOrganizationRule extends ValidationRule
         if ($exists) {
             $fail(Container::trans('validation.unique_organization'));
         }
+    }
+
+    /**
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function baseQuery(mixed $value): Builder
+    {
+        $country = $this->getCountry();
+        return DB::table($this->getTableName())
+            ->whereJsonContains($this->getBankDataKey(), [
+                $country->getUniqueElement()->getName() => $value
+            ]);
+    }
+
+    protected function getBankDataKey(): string
+    {
+        return Organization::BANK_DATA;
+    }
+
+    protected function getTableName(): string
+    {
+        return OrganizationModel::TABLE;
     }
 
     protected function getCountry(): ?Country
