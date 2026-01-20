@@ -22,6 +22,7 @@
  *
  * @apiBody {String} [name] Название организации.
  * @apiBody {String=ip,ooo,self_employed} ownership_type Тип собственности.
+ * @apiBody {String=ru} [country] Код страны.
  * @apiBody {String} [phone_number] Контактный номер телефона.
  * @apiBody {String} [email] Контактный адрес электронной почты.
  *
