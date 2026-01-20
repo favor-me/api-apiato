@@ -120,13 +120,17 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
         return new JSON($this->bank_data);
     }
 
-    /**
-     * @return OrganizationModel|null
-     * @throws NotFoundException
-     */
     protected function getFindBankDataModel(): ?OrganizationModel
     {
-        return app(FindOrganizationByIdTask::class)->run($this->id);
+        if (is_null($this->id)) {
+            return null;
+        }
+
+        try {
+            return app(FindOrganizationByIdTask::class)->run($this->id);
+        } catch (NotFoundException) {
+            return null;
+        }
     }
 
     /**
