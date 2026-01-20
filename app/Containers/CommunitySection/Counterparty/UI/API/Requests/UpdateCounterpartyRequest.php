@@ -122,13 +122,17 @@ class UpdateCounterpartyRequest extends CreateCounterpartyRequest
             ->where(Counterparty::ORGANIZATION_ID, $this->organization_id);
     }
 
-    /**
-     * @return CounterpartyModel|null
-     * @throws NotFoundException
-     */
     protected function getFindBankDataModel(): ?CounterpartyModel
     {
-        return app(FindCounterpartyByIdTask::class)->run($this->id);
+        if (is_null($this->id)) {
+            return null;
+        }
+
+        try {
+            return app(FindCounterpartyByIdTask::class)->run($this->id);
+        } catch (NotFoundException) {
+            return null;
+        }
     }
 
     protected function getBankData(): ?JSON
