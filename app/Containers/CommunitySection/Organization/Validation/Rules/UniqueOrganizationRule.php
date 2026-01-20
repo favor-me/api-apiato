@@ -15,16 +15,22 @@
 
 namespace App\Containers\CommunitySection\Organization\Validation\Rules;
 
+use App\Containers\CommunitySection\Counterparty\Countries\Country;
 use App\Containers\CommunitySection\Counterparty\Countries\Manager;
 use App\Containers\CommunitySection\Organization\Facades\Container;
-use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Ship\Validation\ValidationRule;
 use Closure;
 use Illuminate\Support\Facades\DB;
 
 class UniqueOrganizationRule extends ValidationRule
 {
+    public function __construct(
+        protected ?int $ignoreValue = null
+    ) {
+    }
+
     /**
      * @param string $attribute
      * @param mixed $value
@@ -34,17 +40,29 @@ class UniqueOrganizationRule extends ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $countryVal = $this->data->get(Organization::COUNTRY);
-        $country = Manager::getInstance()->get($countryVal);
+        $country = $this->getCountry();
 
-        $exists = DB::table(OrganizationModel::TABLE)
+        $query = DB::table(OrganizationModel::TABLE)
             ->whereJsonContains(Organization::BANK_DATA, [
                 $country->getUniqueElement()->getName() => $value
-            ])
-            ->exists();
+            ]);
+
+        if ($this->ignoreValue !== null) {
+            $query->where(ID, '<>', $this->ignoreValue);
+        }
+
+        $exists = $query->exists();
 
         if ($exists) {
             $fail(Container::trans('validation.unique_organization'));
         }
+    }
+
+    protected function getCountry(): ?Country
+    {
+        return Manager::getInstance()
+            ->get(
+                $this->data->get(Organization::COUNTRY)
+            );
     }
 }

@@ -38,7 +38,7 @@ class InnElement extends RuElement
     public function __construct(JSON $data = null, ?string $ownershipType = null)
     {
         parent::__construct($data, $ownershipType);
-        $this->rules[] = new UniqueOrganizationRule();
+        $this->rules[] = $this->getUniqValidationRule();
     }
 
     public function getValidationMessages(): array
@@ -53,5 +53,12 @@ class InnElement extends RuElement
                 'digits' => self::MAX_DIGITS
             ])
         ];
+    }
+
+    public function getUniqValidationRule(): UniqueOrganizationRule
+    {
+        return new UniqueOrganizationRule(
+            $this->country->getIgnoreValue()
+        );
     }
 }
