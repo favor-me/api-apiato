@@ -25,6 +25,7 @@ final class Order extends SectionContainer
     public const string COUNTERPARTY_ID = 'counterparty_id';
     public const string COMPLETED_AT = 'completed_at';
     public const string CANCELED_AT = 'canceled_at';
+    public const string BRANCH_ID = 'branch_id';
     public const string OID = 'oid';
     public const string STATUS_ID = 'status_id';
     public const string ORGANIZATION_ID = 'organization_id';
