@@ -54,7 +54,7 @@ final class OrderFactory extends Factory
 
         return [
             Order::CLIENT_ID => $client->id,
-            Order::BRANCH_ID => null,
+            Order::ORGANIZATION_BRANCH_ID => null,
             Order::COUNTERPARTY_ID => null,
             Order::CONTRACT_ID => null,
             Order::COMMENT => $this->faker->text(50),
@@ -65,7 +65,7 @@ final class OrderFactory extends Factory
         ];
     }
 
-    public function branch(mixed $branch = null): self
+    public function organizationBranch(mixed $branch = null): self
     {
         if ($branch instanceof OrganizationBranchModel) {
             $branch = $branch->id;
@@ -82,7 +82,7 @@ final class OrderFactory extends Factory
             }
 
             return [
-                Order::BRANCH_ID => $branch
+                Order::ORGANIZATION_BRANCH_ID => $branch
             ];
         });
     }

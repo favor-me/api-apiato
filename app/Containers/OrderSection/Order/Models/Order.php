@@ -16,7 +16,8 @@
 namespace App\Containers\OrderSection\Order\Models;
 
 use App\Containers\AccountingSection\Contract\Models\Contract;
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
@@ -40,11 +41,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property-read int $id Уникальный идентификатор.
  * @property-read int $organization_id Уникальный идентификатор организации.
- * @property-read int|null $branch_id Уникальный идентификатор отделения.
+ * @property-read int|null $organization_branch_id Уникальный идентификатор отделения.
  * @property-read int $oid Уникальный идентификатор заказа внутри организации.
  * @property-read null|PaymentType $payment_type Тип оплаты.
  * @property-read Money $total Итоговая сумма.
@@ -65,9 +67,9 @@ use Illuminate\Support\Carbon;
  * @property-read OrganizationClient $client Связанная модель клиента.
  * @property-read null|Contract $contract Связанная модель договора.
  * @property-read null|Counterparty $counterparty Связанная модель контракта.
- * @property-read null|OrganizationBranch $branch Связанная модель отделения организации.
- * @property-read null|User $creator Связанная модель пользователя который создал заказ.
- * @property-read null|User $updater Связанная модель пользователя который обновил заказ.
+ * @property-read null|OrganizationBranch $organizationBranch Связанная модель отделения организации.
+ * @property-read null|UserModel $creator Связанная модель пользователя который создал заказ.
+ * @property-read null|UserModel $updater Связанная модель пользователя который обновил заказ.
  * @property-read null|Status $status Связанная модель статуса.
  * @property-read ItemEloquentCollection $items Коллекция позиций заказа.
  *
@@ -92,7 +94,7 @@ class Order extends Model
 
     protected $fillable = [
         BaseOrder::ORGANIZATION_ID,
-        BaseOrder::BRANCH_ID,
+        BaseOrder::ORGANIZATION_BRANCH_ID,
         BaseOrder::OID,
         BaseOrder::PAYMENT_TYPE,
         BaseOrder::TOTAL,
@@ -143,9 +145,9 @@ class Order extends Model
         return $this;
     }
 
-    public function branch(): BelongsTo
+    public function organizationBranch(): BelongsTo
     {
-        return $this->belongsTo(OrganizationBranch::class, BaseOrder::BRANCH_ID, ID)
+        return $this->belongsTo(OrganizationBranch::class, BaseOrder::ORGANIZATION_BRANCH_ID, ID)
             ->withTrashed();
     }
 
@@ -167,13 +169,13 @@ class Order extends Model
 
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, CREATED_BY, ID)
+        return $this->belongsTo(UserModel::class, CREATED_BY, ID)
             ->withTrashed();
     }
 
     public function updater(): BelongsTo
     {
-        return $this->belongsTo(User::class, UPDATED_BY, ID)
+        return $this->belongsTo(UserModel::class, UPDATED_BY, ID)
             ->withTrashed();
     }
 
@@ -192,6 +194,21 @@ class Order extends Model
     {
         return $this->belongsTo(Counterparty::class, BaseOrder::COUNTERPARTY_ID, ID)
             ->withTrashed();
+    }
+
+    public function setOrganizationBranchId(): self
+    {
+        /** @var UserModel|null $user */
+        $user = Auth::user();
+
+        if (!is_null($user)) {
+            $branchId = $user->getAttribute(User::ORGANIZATION_BRANCH_ID);
+            if (!is_null($branchId)) {
+                $this->setAttribute(BaseOrder::ORGANIZATION_BRANCH_ID, $branchId);
+            }
+        }
+
+        return $this;
     }
 
     public function setCompletedAt(): self

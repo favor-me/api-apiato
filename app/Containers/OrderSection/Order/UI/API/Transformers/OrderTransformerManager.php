@@ -17,7 +17,7 @@ namespace App\Containers\OrderSection\Order\UI\API\Transformers;
 
 use App\Ship\Transformers\TransformerManager;
 
-class OrderTransformerManager extends TransformerManager
+final class OrderTransformerManager extends TransformerManager
 {
     public function getDefault(): OrderTransformer
     {

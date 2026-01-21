@@ -18,6 +18,9 @@ namespace App\Containers\OrderSection\Order\Tests\Functional\API;
 use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
@@ -148,7 +151,7 @@ final class CreateOrderTest extends ApiTestCase
 
     public function testSuccessForContract(): void
     {
-        $user = $this->getTestingOrganizationUser();
+        $user = $this->getTestingOrganizationBranchUser();
 
         $client = OrganizationClientModel::factory()
             ->create([
@@ -196,6 +199,7 @@ final class CreateOrderTest extends ApiTestCase
                     ->where('data.' . OBJECT, OrderModel::RESOURCE_KEY)
                     ->where('data.' . Order::PAYMENT_TYPE, $paymentType->toArray())
                     ->where('data.' . Order::CLIENT_ID, null)
+                    ->where('data.' . Order::ORGANIZATION_BRANCH_ID, $user->getHashedKey(User::ORGANIZATION_BRANCH_ID))
                     ->where('data.' . Order::CONTRACT_ID, $contract->getHashedKey())
                     ->where('data.' . Order::COUNTERPARTY_ID, $contract->getHashedKey(Contract::COUNTERPARTY_ID))
                     ->where('data.' . Order::COMMENT, $data[Order::COMMENT])

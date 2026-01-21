@@ -26,25 +26,25 @@ return new class extends Migration
     {
         Schema::table($this->getTableName(), function (Blueprint $table) {
             $table
-                ->unsignedBigInteger(Order::BRANCH_ID)
+                ->unsignedBigInteger(Order::ORGANIZATION_BRANCH_ID)
                 ->nullable()
                 ->after(Order::ORGANIZATION_ID);
 
-            $table->foreign(Order::BRANCH_ID, $this->getFieldForeignKeyName(Order::BRANCH_ID))
+            $table->foreign(Order::ORGANIZATION_BRANCH_ID, $this->getFieldForeignKeyName(Order::ORGANIZATION_BRANCH_ID))
                 ->on(OrganizationBranch::TABLE)
                 ->references(ID)
                 ->nullOnDelete();
 
-            $table->index(Order::BRANCH_ID, $this->getFieldIndexName(Order::BRANCH_ID));
+            $table->index(Order::ORGANIZATION_BRANCH_ID, $this->getFieldIndexName(Order::ORGANIZATION_BRANCH_ID));
         });
     }
 
     public function down(): void
     {
         Schema::table($this->getTableName(), function (Blueprint $table) {
-            $table->dropForeign($this->getFieldForeignKeyName(Order::BRANCH_ID));
-            $table->dropIndex($this->getFieldIndexName(Order::BRANCH_ID));
-            $table->dropColumn(Order::BRANCH_ID);
+            $table->dropForeign($this->getFieldForeignKeyName(Order::ORGANIZATION_BRANCH_ID));
+            $table->dropIndex($this->getFieldIndexName(Order::ORGANIZATION_BRANCH_ID));
+            $table->dropColumn(Order::ORGANIZATION_BRANCH_ID);
         });
     }
 

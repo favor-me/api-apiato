@@ -18,7 +18,7 @@ namespace App\Containers\OrderSection\Order\UI\API\Transformers;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 
-class AdminOrderTransformer extends OrderTransformer
+final class AdminOrderTransformer extends OrderTransformer
 {
     public function transform(OrderModel $order): array
     {
@@ -26,6 +26,7 @@ class AdminOrderTransformer extends OrderTransformer
             [
                 $this->realKey(ID) => $order->id,
                 $this->realKey(Order::ORGANIZATION_ID) => $order->organization_id,
+                $this->realKey(Order::ORGANIZATION_BRANCH_ID) => $order->organization_branch_id,
                 $this->realKey(Order::STATUS_ID) => $order->status_id,
                 $this->realKey(Order::CLIENT_ID) => $order->client_id,
                 $this->realKey(Order::COUNTERPARTY_ID) => $order->counterparty_id,

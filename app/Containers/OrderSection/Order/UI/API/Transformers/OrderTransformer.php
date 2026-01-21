@@ -19,6 +19,7 @@ use App\Containers\AccountingSection\Contract\UI\API\Transformers\ContractTransf
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
 use App\Containers\CommunitySection\Counterparty\UI\API\Transformers\CounterpartyTransformerManager;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
+use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformerManager;
 use App\Containers\CommunitySection\OrganizationClient\UI\API\Transformers\OrganizationClientTransformer;
 use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformer;
 use App\Containers\OrderSection\Order\Foundation\Order;
@@ -43,7 +44,8 @@ class OrderTransformer extends Transformer
         Order::UPDATER,
         Order::CONTRACT,
         Order::COUNTERPARTY,
-        Order::ORGANIZATION
+        Order::ORGANIZATION,
+        Order::ORGANIZATION_BRANCH
     ];
 
     public function transform(OrderModel $order): array
@@ -52,6 +54,7 @@ class OrderTransformer extends Transformer
             OBJECT => $order->getResourceKey(),
             ID => $order->getHashedKey(),
             Order::ORGANIZATION_ID => $order->getHashedKey(Order::ORGANIZATION_ID),
+            Order::ORGANIZATION_BRANCH_ID => $order->getHashedKey(Order::ORGANIZATION_BRANCH_ID),
             Order::OID => $order->oid,
             Order::STATUS_ID => $order->getHashedKey(Order::STATUS_ID),
             Order::PAYMENT_TYPE => $order->payment_type->toArray(),
@@ -69,6 +72,14 @@ class OrderTransformer extends Transformer
             UPDATED_AT => $this->time($order->updated_at),
             DELETED_AT => $this->time($order->deleted_at)
         ];
+    }
+
+    protected function includeOrganizationBranch(OrderModel $order): Item|Primitive
+    {
+        return $this->primitiveNullOrItem(
+            $order->organizationBranch,
+            (new OrganizationBranchTransformerManager())->getDefaultOrAdmin()
+        );
     }
 
     protected function includeContract(OrderModel $order): Item

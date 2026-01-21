@@ -69,7 +69,7 @@ final class OrderTest extends UnitTestCase
     {
         $this->assertSame([
             Order::ORGANIZATION_ID,
-            Order::BRANCH_ID,
+            Order::ORGANIZATION_BRANCH_ID,
             Order::OID,
             Order::PAYMENT_TYPE,
             Order::TOTAL,
@@ -328,17 +328,17 @@ final class OrderTest extends UnitTestCase
         $this->assertTrue($orderA->paymentTypeIs('cash'));
     }
 
-    public function testBelongsToBranch(): void
+    public function testBelongsToOrganizationBranch(): void
     {
         $user = $this->getTestingOrganizationUser();
 
         $order = OrderModel::factory()
             ->organization($user->organization_id)
-            ->branch()
+            ->organizationBranch()
             ->create();
 
-        $this->assertInstanceOf(BelongsTo::class, $order->branch());
-        $this->assertInstanceOf(OrganizationBranch::class, $order->branch()->getModel());
-        $this->assertInstanceOf(OrganizationBranch::class, $order->branch);
+        $this->assertInstanceOf(BelongsTo::class, $order->organizationBranch());
+        $this->assertInstanceOf(OrganizationBranch::class, $order->organizationBranch()->getModel());
+        $this->assertInstanceOf(OrganizationBranch::class, $order->organizationBranch);
     }
 }

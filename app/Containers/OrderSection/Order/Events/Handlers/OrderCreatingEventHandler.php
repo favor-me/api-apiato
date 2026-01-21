@@ -35,6 +35,7 @@ class OrderCreatingEventHandler extends Event
         $this->setCompletedAt($order);
         $this->setCanceledAt($order);
         $this->setCounterpartyId($order);
+        $order->setOrganizationBranchId();
     }
 
     protected function setOid(OrderModel $order): void

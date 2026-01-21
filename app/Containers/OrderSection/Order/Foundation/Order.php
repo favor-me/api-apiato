@@ -25,7 +25,7 @@ final class Order extends SectionContainer
     public const string COUNTERPARTY_ID = 'counterparty_id';
     public const string COMPLETED_AT = 'completed_at';
     public const string CANCELED_AT = 'canceled_at';
-    public const string BRANCH_ID = 'branch_id';
+    public const string ORGANIZATION_BRANCH_ID = 'organization_branch_id';
     public const string OID = 'oid';
     public const string STATUS_ID = 'status_id';
     public const string ORGANIZATION_ID = 'organization_id';
@@ -37,6 +37,7 @@ final class Order extends SectionContainer
     public const string CLIENT = 'client';
     public const string UPDATER = 'updater';
     public const string CONTRACT = 'contract';
+    public const string ORGANIZATION_BRANCH = 'organization_branch';
     public const string COUNTERPARTY = 'counterparty';
     public const string STATUS = 'status';
     public const string ORGANIZATION = 'organization';
