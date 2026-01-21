@@ -19,6 +19,8 @@ use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
 use App\Containers\OrderSection\Order\Foundation\Order;
@@ -52,6 +54,7 @@ final class OrderFactory extends Factory
 
         return [
             Order::CLIENT_ID => $client->id,
+            Order::BRANCH_ID => null,
             Order::COUNTERPARTY_ID => null,
             Order::CONTRACT_ID => null,
             Order::COMMENT => $this->faker->text(50),
@@ -60,6 +63,28 @@ final class OrderFactory extends Factory
             Order::TOTAL => ZERO,
             Order::PROFIT => ZERO
         ];
+    }
+
+    public function branch(mixed $branch = null): self
+    {
+        if ($branch instanceof OrganizationBranchModel) {
+            $branch = $branch->id;
+        }
+
+        return $this->state(function (array $state) use ($branch) {
+            if (array_key_exists(Order::ORGANIZATION_ID, $state) && is_null($branch)) {
+                $organizationBranch = OrganizationBranchModel::factory()
+                    ->create([
+                        OrganizationBranch::ORGANIZATION_ID => $state[Order::ORGANIZATION_ID]
+                    ]);
+
+                $branch = $organizationBranch->id;
+            }
+
+            return [
+                Order::BRANCH_ID => $branch
+            ];
+        });
     }
 
     public function organization(int $id): self

@@ -19,6 +19,7 @@ use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
 use App\Containers\CommunitySection\Organization\Models\Organization;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient;
 use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
 use App\Containers\OrderSection\Item\Foundation\Item;
@@ -42,8 +43,9 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property-read int $id Уникальный идентификатор.
- * @property-read int $organization_id Уникальный идентификатор.
- * @property-read int $oid Уникальный идентификатор.
+ * @property-read int $organization_id Уникальный идентификатор организации.
+ * @property-read int|null $branch_id Уникальный идентификатор отделения.
+ * @property-read int $oid Уникальный идентификатор заказа внутри организации.
  * @property-read null|PaymentType $payment_type Тип оплаты.
  * @property-read Money $total Итоговая сумма.
  * @property-read Money $profit Прибыль.
@@ -63,6 +65,7 @@ use Illuminate\Support\Carbon;
  * @property-read OrganizationClient $client Связанная модель клиента.
  * @property-read null|Contract $contract Связанная модель договора.
  * @property-read null|Counterparty $counterparty Связанная модель контракта.
+ * @property-read null|OrganizationBranch $branch Связанная модель отделения организации.
  * @property-read null|User $creator Связанная модель пользователя который создал заказ.
  * @property-read null|User $updater Связанная модель пользователя который обновил заказ.
  * @property-read null|Status $status Связанная модель статуса.
@@ -89,6 +92,7 @@ class Order extends Model
 
     protected $fillable = [
         BaseOrder::ORGANIZATION_ID,
+        BaseOrder::BRANCH_ID,
         BaseOrder::OID,
         BaseOrder::PAYMENT_TYPE,
         BaseOrder::TOTAL,
@@ -137,6 +141,12 @@ class Order extends Model
         }
 
         return $this;
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationBranch::class, BaseOrder::BRANCH_ID, ID)
+            ->withTrashed();
     }
 
     public function items(): HasMany

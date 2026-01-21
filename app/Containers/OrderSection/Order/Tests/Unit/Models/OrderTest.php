@@ -19,6 +19,7 @@ use App\Containers\AccountingSection\Contract\Models\Contract;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\CommunitySection\Counterparty\Models\Counterparty;
 use App\Containers\CommunitySection\Organization\Models\Organization;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient;
 use App\Containers\OrderSection\Item\Collections\ItemEloquentCollection;
 use App\Containers\OrderSection\Item\Models\Item as ItemModel;
@@ -68,6 +69,7 @@ final class OrderTest extends UnitTestCase
     {
         $this->assertSame([
             Order::ORGANIZATION_ID,
+            Order::BRANCH_ID,
             Order::OID,
             Order::PAYMENT_TYPE,
             Order::TOTAL,
@@ -324,5 +326,19 @@ final class OrderTest extends UnitTestCase
 
         $this->assertTrue($orderA->paymentTypeIs(CashType::class));
         $this->assertTrue($orderA->paymentTypeIs('cash'));
+    }
+
+    public function testBelongsToBranch(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->organization($user->organization_id)
+            ->branch()
+            ->create();
+
+        $this->assertInstanceOf(BelongsTo::class, $order->branch());
+        $this->assertInstanceOf(OrganizationBranch::class, $order->branch()->getModel());
+        $this->assertInstanceOf(OrganizationBranch::class, $order->branch);
     }
 }
