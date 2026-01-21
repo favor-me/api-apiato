@@ -21,15 +21,19 @@ use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\CommunitySection\Organization\Foundation\Organization;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use Faker\Generator;
 use Illuminate\Contracts\Console\Kernel as ApiatoConsoleKernel;
 use Illuminate\Testing\TestResponse;
 use JsonException;
 
-/***
+/**
+ * @codingStandardsIgnoreStart
  * @property Generator $faker
  * @property null|UserModel $testingUser
  * @method mixed|UserModel getTestingUser(?array $userDetails = null, ?array $access = null, bool $createUserAsAdmin = false)
+ * @codingStandardsIgnoreEnd
  */
 abstract class TestCase extends AbstractTestCase
 {
@@ -170,6 +174,29 @@ abstract class TestCase extends AbstractTestCase
 
         $user->setAttribute(User::ORGANIZATION_ID, $organization->id);
         $user->update();
+
+        return $user;
+    }
+
+
+    public function getTestingOrganizationBranchUser(?array $userDetails = null, ?array $access = null): UserModel
+    {
+        $user = $this->getTestingUser($userDetails, $access);
+
+        $organization = OrganizationModel::factory()
+            ->create([
+                Organization::USER_OWNER_ID => $user->id
+            ]);
+
+        $branch = OrganizationBranchModel::factory()
+            ->create([
+                OrganizationBranch::ORGANIZATION_ID => $organization->id
+            ]);
+
+        $user
+            ->setAttribute(User::ORGANIZATION_ID, $organization->id)
+            ->setAttribute(User::ORGANIZATION_BRANCH_ID, $branch->id)
+            ->update();
 
         return $user;
     }
