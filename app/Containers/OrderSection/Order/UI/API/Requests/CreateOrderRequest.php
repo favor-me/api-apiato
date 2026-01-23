@@ -16,6 +16,7 @@
 namespace App\Containers\OrderSection\Order\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\OrderSection\Item\Foundation\Item;
 use App\Containers\OrderSection\Item\Models\Item as ItemModel;
@@ -55,6 +56,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         $this->mergeDecode([
             Order::CLIENT_ID,
             Order::CONTRACT_ID,
+            Order::ORGANIZATION_BRANCH_ID,
             Order::ITEMS . '.*.' . Item::UNIT_ID
         ]);
     }
@@ -63,6 +65,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
     {
         return [
             Order::ORGANIZATION_ID => $this->getOrganizationIdValidationRules(),
+            Order::ORGANIZATION_BRANCH_ID => $this->getOrganizationBranchIdValidationRules(),
             Order::PAYMENT_TYPE => $this->getOrderPaymentTypeValidationRules(),
             Order::TOTAL => $this->getOrderTotalValidationRules(),
             Order::COMMENT => $this->getOrderCommentValidationRules(),
@@ -89,6 +92,12 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         }
 
         return $rules;
+    }
+
+    public function getOrganizationBranchIdExistsValidationRule(string $column = ID): Exists
+    {
+        return parent::getOrganizationBranchIdExistsValidationRule($column)
+            ->where(OrganizationBranch::ORGANIZATION_ID, $this->organization_id);
     }
 
     public function getOrganizationUnitSkuValidationRules(): ValidationRules

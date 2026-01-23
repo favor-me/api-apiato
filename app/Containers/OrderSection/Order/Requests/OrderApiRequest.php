@@ -19,6 +19,7 @@ use App\Containers\AccountingSection\Contract\Traits\ContractValidationRules;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Traits\IsOrganizationUser;
 use App\Containers\CommunitySection\Organization\Traits\OrganizationValidationRules;
+use App\Containers\CommunitySection\OrganizationBranch\Traits\OrganizationBranchValidationRules;
 use App\Containers\CommunitySection\OrganizationClient\Traits\OrganizationClientValidationRules;
 use App\Containers\CommunitySection\OrganizationUnit\Traits\OrganizationUnitValidationRules;
 use App\Containers\OrderSection\Item\Traits\ItemValidationRules;
@@ -43,6 +44,7 @@ abstract class OrderApiRequest extends ApiRequest implements GettableTransformer
     use ContractValidationRules;
     use OrganizationValidationRules;
     use OrganizationUnitValidationRules;
+    use OrganizationBranchValidationRules;
     use OrganizationClientValidationRules;
 
     protected array $decode = [

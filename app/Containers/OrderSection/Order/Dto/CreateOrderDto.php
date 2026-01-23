@@ -22,7 +22,7 @@ class CreateOrderDto extends Dto
     public ?int $client_id;
     public ?int $counterparty_id;
     public ?int $contract_id;
-    public ?int $branch_id;
+    public ?int $organization_branch_id;
     public ?string $comment;
     public ?int $organization_id;
     public ?string $payment_type;

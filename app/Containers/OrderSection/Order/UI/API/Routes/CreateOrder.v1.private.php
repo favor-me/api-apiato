@@ -29,6 +29,7 @@
  * @apiBody {String} client_id Уникальный идентификатор клиента
  * @apiBody {Array} items Позиции заказа
  * @apiBody {Array} [contract_id] Уникальный идентификатор договора. `Обязателен` если выбрат тип оплаты `Договор=contract`
+ * @apiBody {Array} [organization_branch_id] Уникальный идентификатор отделения (Если не передать установится автоматически)
  *
  * @apiParamExample {json} Пример для items:
 {

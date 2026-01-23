@@ -34,9 +34,8 @@ class CreateOrderController extends ApiController
      */
     public function __invoke(
         CreateOrderRequest $request,
-        CreateOrderAction  $action
-    ): JsonResponse
-    {
+        CreateOrderAction $action
+    ): JsonResponse {
         return Response::create(
             $action->run($request->getDto()),
             $request->getTransformer()

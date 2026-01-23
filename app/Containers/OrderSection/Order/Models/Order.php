@@ -203,7 +203,7 @@ class Order extends Model
 
         if (!is_null($user)) {
             $branchId = $user->getAttribute(User::ORGANIZATION_BRANCH_ID);
-            if (!is_null($branchId)) {
+            if (!is_null($branchId) && is_null($this->organization_branch_id)) {
                 $this->setAttribute(BaseOrder::ORGANIZATION_BRANCH_ID, $branchId);
             }
         }
