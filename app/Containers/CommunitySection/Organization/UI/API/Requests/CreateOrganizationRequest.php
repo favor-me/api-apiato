@@ -92,6 +92,9 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
     public function getOrganizationPhoneNumberValidationRules(): ValidationRules
     {
         return parent::getOrganizationPhoneNumberValidationRules()
+            ->add(
+                $this->getUserUniquePhoneNumberValidationRule()
+            )
             ->addRequired();
     }
 

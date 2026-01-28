@@ -23,6 +23,7 @@ use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\Unique;
 
 trait HasUserValidationRules
 {
@@ -94,6 +95,11 @@ trait HasUserValidationRules
     {
         return Rule::exists(OrganizationBranchModel::TABLE, ID)
             ->where(OrganizationBranch::ORGANIZATION_ID, $organizationId);
+    }
+
+    public function getUserUniquePhoneNumberValidationRule($column = User::PHONE_NUMBER): Unique
+    {
+        return Rule::unique(UserModel::TABLE, $column);
     }
 
     public function getUserExistsInOrganizationValidationRule(mixed $organizationId): Exists
