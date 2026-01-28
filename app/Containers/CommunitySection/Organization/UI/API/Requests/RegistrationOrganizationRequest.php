@@ -91,6 +91,10 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
         parent::prepareForValidation();
     }
 
+    protected function getBankDataSchema(array &$rules): void
+    {
+    }
+
     protected function prepareForValidationName(): void
     {
         $oooType = Manager::getInstance()->get(OooType::class);
