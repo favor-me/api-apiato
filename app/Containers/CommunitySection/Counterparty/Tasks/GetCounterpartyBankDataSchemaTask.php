@@ -31,15 +31,14 @@ class GetCounterpartyBankDataSchemaTask extends CounterpartyTask
      */
     public function run(string $country, string $ownershipType, bool $testData = false): ?array
     {
-        $countryObj = Manager::getInstance()
-            ->get($country)
-            ->setOwnershipType($ownershipType);
+        $countryObj = Manager::getInstance()->get($country);
 
         if (is_null($countryObj)) {
             return null;
         }
 
         return $countryObj
+            ->setOwnershipType($ownershipType)
             ->getBankDataSchema(
                 $this->getTestBankData($testData)
             )

@@ -97,13 +97,18 @@ abstract class Element implements JsonSerializable, Arrayable
             'name' => $this->name,
             'title' => $this->title,
             'value' => $this->value,
-            'rules' => $this->rules
+            'rules' => $this->apiRules()
         ];
     }
 
     public function toArray(): array
     {
         return $this->jsonSerialize();
+    }
+
+    public function apiRules(): array
+    {
+        return array_filter($this->rules, fn ($rule) => is_string($rule));
     }
 
     public function getValidationMessages(): array
