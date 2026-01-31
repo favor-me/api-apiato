@@ -94,6 +94,7 @@ class RegistrationOrganizationAction extends Action
                 Organization::NAME => $dto->name,
                 Organization::PHONE_NUMBER => $dto->phone_number,
                 Organization::USER_OWNER_ID => $ownerUser->id,
+                Organization::OWNERSHIP_TYPE => $dto->ownership_type,
                 Organization::BANK_DATA => []
             ]);
 

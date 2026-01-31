@@ -21,6 +21,7 @@ use App\Ship\Exceptions\CreateResourceFailedException;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+use Throwable;
 
 class RegistrationOrganizationController extends ApiController
 {
@@ -29,6 +30,7 @@ class RegistrationOrganizationController extends ApiController
      * @param RegistrationOrganizationAction $action
      * @return JsonResponse
      * @throws CreateResourceFailedException
+     * @throws Throwable
      * @throws UnknownProperties
      */
     public function __invoke(
@@ -36,7 +38,9 @@ class RegistrationOrganizationController extends ApiController
         RegistrationOrganizationAction $action
     ): JsonResponse {
         $organization = $action->run($request->getDto());
-        return Response::create($organization, $request->getTransformer())
-            ->created();
+        return Response::create(
+            $organization,
+            $request->getTransformer()
+        )->created();
     }
 }

@@ -96,7 +96,6 @@ final class RegistrationOrganizationTest extends ApiTestCase
         ];
 
         $this->makeCall($data);
-
         $this->response->assertCreated();
 
         $organizationId = $this->getResponseContentObject()->data->id;
@@ -107,6 +106,7 @@ final class RegistrationOrganizationTest extends ApiTestCase
                 ->has('data')
                 ->where('data.' . OBJECT, OrganizationModel::RESOURCE_KEY)
                 ->where('data.' . Organization::NAME, $data[Organization::NAME])
+                ->where('data.' . Organization::OWNERSHIP_TYPE . '.name', $data[Organization::OWNERSHIP_TYPE])
                 ->where('data.' . Organization::COUNTRY, $defaultCountry->toArray())
                 ->where('data.' . Organization::PHONE_NUMBER, Str::toPhoneNumber($data[Organization::PHONE_NUMBER]))
                 ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::SURNAME, 'Ivanov')
