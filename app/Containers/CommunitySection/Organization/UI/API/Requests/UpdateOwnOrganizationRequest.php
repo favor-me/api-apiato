@@ -61,8 +61,10 @@ class UpdateOwnOrganizationRequest extends CreateOrganizationRequest
 
     public function getOrganizationPhoneNumberValidationRules(): ValidationRules
     {
-        return parent::getOrganizationPhoneNumberValidationRules()
-            ->removeRequired();
+        return validation_rules([
+            $this->getOrganizationPhoneNumberUniqueValidationRule(),
+            $this->getOrganizationPhoneNumberValidationRule()
+        ]);
     }
 
     public function getOrganizationIdValidationRules(): ValidationRules
