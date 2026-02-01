@@ -14,37 +14,73 @@
 
 namespace App\Containers\AppSection\User\UI\API\Requests;
 
+use App\Containers\AppSection\User\Dto\ResetUserPasswordDto;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Requests\UserApiRequest;
 use App\Ship\Collections\ValidationRules;
+use App\Ship\Contracts\GettableDto;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
-class ResetPasswordRequest extends UserApiRequest
+class ResetPasswordRequest extends UserApiRequest implements GettableDto
 {
-    public function getUserEmailRules(): ValidationRules
+    public function getUserPasswordRules(): ValidationRules
     {
-        return parent::getUserEmailValidationRules()
-            ->removeUnique()
+        return parent::getUserPasswordValidationRules()
             ->addRequired();
     }
 
-    public function getUserPasswordRules(): ValidationRules
+    public function getUserTokenRules(): ValidationRules
     {
-        return parent::getUserPasswordValidationRules()->addRequired();
+        return validation_rules([
+            'required',
+            'max:' . SCHEMA_DEFAULT_STRING_LENGTH
+        ]);
     }
 
-    public function getUserTokenRules(): array
+    public function getColumnNameValueValidationRules(): ValidationRules
     {
-        return [
-            'required',
-            'max:255'
-        ];
+        return $this->getUserPhoneNumberValidationRules()
+            ->removeUnique()
+            ->addRequired();
     }
 
     public function rules(): array
     {
         return [
             'token' => $this->getUserTokenRules(),
-            'email' => $this->getUserEmailRules(),
-            'password' => $this->getUserPasswordRules()
+            User::PASSWORD => $this->getUserPasswordRules(),
+            $this->getColumnNameForPasswordReset() => $this->getColumnNameValueValidationRules()
         ];
+    }
+
+    /**
+     * @return ResetUserPasswordDto
+     * @throws UnknownProperties
+     */
+    public function getDto(): ResetUserPasswordDto
+    {
+        $validated = $this->validated();
+
+        $data = array_merge($validated, [
+            'value' => $validated[$this->getColumnNameForPasswordReset()]
+        ]);
+
+        return $this->newDto($data);
+    }
+
+    /**
+     * @param array $data
+     * @return ResetUserPasswordDto
+     * @throws UnknownProperties
+     */
+    public function newDto(array $data = []): ResetUserPasswordDto
+    {
+        return new ResetUserPasswordDto($data);
+    }
+
+    protected function getColumnNameForPasswordReset(): string
+    {
+        return (new UserModel())->getColumnNameForPasswordReset();
     }
 }

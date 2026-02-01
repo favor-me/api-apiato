@@ -15,6 +15,7 @@
 namespace App\Containers\AppSection\User\Models;
 
 use Apiato\Core\Contracts\HasResourceKey;
+use App\Containers\AppSection\Authentication\Password\CanResetPassword;
 use App\Containers\AppSection\Authentication\Traits\AuthenticationTrait;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\Authorization\Traits\AuthorizationTrait;
@@ -22,8 +23,8 @@ use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Foundation\User as BaseUser;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
-use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Ship\Database\Casts\JSON;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\UserModel;
@@ -74,7 +75,7 @@ use JBZoo\Data\JSON as JsonData;
  * @method static int count()
  * @method static Builder where($column, $operator = null, $value = null, $boolean = 'and')
  */
-class User extends UserModel implements HasResourceKey
+class User extends UserModel implements HasResourceKey, CanResetPassword
 {
     use Notifiable;
     use SoftDeletes;
@@ -192,5 +193,15 @@ class User extends UserModel implements HasResourceKey
         }
 
         return false;
+    }
+
+    public function getColumnNameForPasswordReset(): string
+    {
+        return BaseUser::PHONE_NUMBER;
+    }
+
+    public function getColumnValueForPasswordReset(): string
+    {
+        return $this->phone_number;
     }
 }

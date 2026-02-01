@@ -12,18 +12,18 @@
  * @link        https://kalistratov.ru
  */
 
-use Illuminate\Database\Migrations\Migration;
+use App\Containers\AppSection\Authentication\Password\DatabaseTokenRepository;
+use App\Ship\Parents\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
-// @codingStandardsIgnoreStart
 
 return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
+        Schema::create($this->getTableName(), function (Blueprint $table) {
+            $table->string('column')->default(DatabaseTokenRepository::DEFAULT_COLUMN);
+            $table->string('value')->index();
             $table->string('token')->index();
             $table->timestamp(CREATED_AT)->nullable();
         });
@@ -31,6 +31,11 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::drop('password_resets');
+        Schema::drop($this->getTableName());
+    }
+
+    public function getTableName(): string
+    {
+        return 'password_resets';
     }
 };

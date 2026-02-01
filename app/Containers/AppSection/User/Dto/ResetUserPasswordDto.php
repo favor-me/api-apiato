@@ -14,11 +14,12 @@
 
 namespace App\Containers\AppSection\User\Dto;
 
+use App\Containers\AppSection\User\Models\User;
 use App\Ship\Dto\Dto;
 
 class ResetUserPasswordDto extends Dto
 {
-    public string $email;
+    public string $value;
     public string $token;
     public string $password;
     public ?string $password_confirmation;
@@ -30,6 +31,17 @@ class ResetUserPasswordDto extends Dto
     {
         parent::__construct(...$args);
         $this->setPassportConfirmation();
+    }
+
+    public function toCredentials(): array
+    {
+        $data = $this
+            ->except('value', 'password_confirmation')
+            ->toArray();
+
+        $data[(new User())->getColumnNameForPasswordReset()] = $this->value;
+
+        return $data;
     }
 
     protected function setPassportConfirmation(): self

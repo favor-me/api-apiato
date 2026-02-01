@@ -1,22 +1,23 @@
 <?php
 
 /**
- * Beauty application system
+ * FavorMe system
  *
- * This file is part of the Beauty application system package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license     Proprietary
- * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
- * @link        https://kalistratov.ru
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\AppSection\User\Tasks;
 
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Exceptions\InternalErrorException;
-use App\Ship\Parents\Exceptions\Exception;
+use Exception;
 
 class CreatePasswordResetTask extends UserTask
 {
@@ -28,7 +29,7 @@ class CreatePasswordResetTask extends UserTask
     public function run(User $user): string
     {
         try {
-            return app('auth.password.broker')->createToken($user);
+            return app('fm.auth.password.broker')->createToken($user);
         } catch (Exception $e) {
             throw new InternalErrorException();
         }

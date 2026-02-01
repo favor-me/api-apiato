@@ -25,13 +25,7 @@ use App\Containers\AppSection\User\Actions\GetAllAdminsAction;
 use App\Containers\AppSection\User\Actions\GetAllClientsAction;
 use App\Containers\AppSection\User\Actions\GetAllUsersAction;
 use App\Containers\AppSection\User\Actions\GetAuthenticatedUserAction;
-use App\Containers\AppSection\User\Actions\RegisterUserAction;
-use App\Containers\AppSection\User\Actions\ResetPasswordAction;
-use App\Containers\AppSection\User\Actions\UpdateUserAction;
-use App\Containers\AppSection\User\Dto\ForgotUserPasswordDto;
 use App\Containers\AppSection\User\Dto\RegisterUserDto;
-use App\Containers\AppSection\User\Dto\ResetUserPasswordDto;
-use App\Containers\AppSection\User\Dto\UpdateUserDto;
 use App\Containers\AppSection\User\Facades\Container;
 use App\Containers\AppSection\User\UI\API\Requests\CreateAdminRequest;
 use App\Containers\AppSection\User\UI\API\Requests\DeleteUserProfileRequest;
@@ -40,19 +34,13 @@ use App\Containers\AppSection\User\UI\API\Requests\FindUserByIdRequest;
 use App\Containers\AppSection\User\UI\API\Requests\ForgotPasswordRequest;
 use App\Containers\AppSection\User\UI\API\Requests\GetAllUsersRequest;
 use App\Containers\AppSection\User\UI\API\Requests\GetAuthenticatedUserRequest;
-use App\Containers\AppSection\User\UI\API\Requests\RegisterUserRequest;
-use App\Containers\AppSection\User\UI\API\Requests\ResetPasswordRequest;
-use App\Containers\AppSection\User\UI\API\Requests\UpdateUserRequest;
 use App\Containers\AppSection\User\UI\API\Transformers\UserPrivateProfileTransformer;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
 use App\Ship\Exceptions\CreateResourceFailedException;
 use App\Ship\Exceptions\DeleteResourceFailedException;
-use App\Ship\Exceptions\InternalErrorException;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Password;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
@@ -110,20 +98,6 @@ class Controller extends ApiController
     }
 
     /**
-     * @param ForgotPasswordRequest $request
-     * @return JsonResponse
-     * @throws InternalErrorException
-     * @throws NotFoundException
-     * @throws UnknownProperties
-     */
-    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
-    {
-        $dto = new ForgotUserPasswordDto($request->all());
-        app(ForgotPasswordAction::class)->run($dto);
-        return $this->noContent(202);
-    }
-
-    /**
      * @param GetAllUsersRequest $request
      * @return array
      * @throws CoreInternalErrorException
@@ -176,24 +150,5 @@ class Controller extends ApiController
     {
         $user = app(GetAuthenticatedUserAction::class)->run();
         return $this->transform($user, UserPrivateProfileTransformer::class);
-    }
-
-    /**
-     * @param ResetPasswordRequest $request
-     * @return JsonResponse
-     * @throws InternalErrorException
-     * @throws UnknownProperties
-     */
-    public function resetPassword(ResetPasswordRequest $request): JsonResponse
-    {
-        $dto = new ResetUserPasswordDto($request->all());
-        $resetPasswordStatus = app(ResetPasswordAction::class)->run($dto);
-
-        $responseStatus = $resetPasswordStatus === Password::PASSWORD_RESET ?
-            Response::HTTP_OK : Response::HTTP_EXPECTATION_FAILED;
-
-        return $this->json([
-            'message' => __($resetPasswordStatus)
-        ], $responseStatus);
     }
 }

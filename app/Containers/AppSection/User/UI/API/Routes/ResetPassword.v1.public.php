@@ -28,8 +28,8 @@
  * HTTP/1.1 204 No content
  */
 
+use App\Containers\AppSection\User\UI\API\Controllers\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
-use App\Containers\AppSection\User\UI\API\Controllers\Controller;
 
-Route::any('password/reset', [Controller::class, 'resetPassword'])
+Route::any('password/reset', ResetPasswordController::class)
     ->name('api_user_reset_password');
