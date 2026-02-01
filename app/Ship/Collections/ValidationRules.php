@@ -61,7 +61,11 @@ class ValidationRules extends Collection
     public function removeUnique(): self
     {
         return $this->filter(function ($rule) {
-            return !preg_match('/^' . self::UNIQUE . '/', $rule);
+            if (is_string($rule)) {
+                return !preg_match('/^' . self::UNIQUE . '/', $rule);
+            }
+
+            return true;
         });
     }
 }
