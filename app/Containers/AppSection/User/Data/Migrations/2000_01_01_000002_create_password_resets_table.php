@@ -22,7 +22,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create($this->getTableName(), function (Blueprint $table) {
-            $table->string('column')->default(DatabaseTokenRepository::DEFAULT_COLUMN);
+            $table->string('column');
             $table->string('value')->index();
             $table->string('token')->index();
             $table->timestamp(CREATED_AT)->nullable();
