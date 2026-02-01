@@ -30,6 +30,11 @@ class PasswordBroker implements PasswordBrokerContract
     ) {
     }
 
+    public function getTokens(): TokenRepositoryInterface
+    {
+        return $this->tokens;
+    }
+
     public function sendResetLink(array $credentials, ?Closure $callback = null): string
     {
         return static::INVALID_USER;

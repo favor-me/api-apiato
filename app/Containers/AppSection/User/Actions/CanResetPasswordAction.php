@@ -13,16 +13,15 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\AppSection\User\UI\API\Requests;
+namespace App\Containers\AppSection\User\Actions;
 
-use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Tasks\CanResetPasswordTask;
+use App\Containers\TelegramSection\Bot\Handlers\Actions\Action;
 
-class CanResetPasswordRequest extends ResetPasswordRequest
+class CanResetPasswordAction extends Action
 {
-    public function rules(): array
+    public function run(string $token, string $columnValue): bool
     {
-        $rules = parent::rules();
-        unset($rules[User::PASSWORD]);
-        return $rules;
+        return app(CanResetPasswordTask::class)->run($token, $columnValue);
     }
 }

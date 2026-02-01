@@ -20,9 +20,8 @@
  * @apiVersion 1.0.0
  * @apiPermission Всем
  *
- * @apiBody {String{40}} email Email адрес.
- * @apiBody {String{255}} token Токен высланный на email адрес
- * @apiBody {String{6..40}} password Новый пароль.
+ * @apiBody {String{14}} value Номер телефона.
+ * @apiBody {String{255}} token Токен
  *
  * @apiSuccessExample {json} Успешный ответ:
  * HTTP/1.1 204 No content
