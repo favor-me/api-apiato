@@ -14,7 +14,6 @@
  */
 
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
-use App\Containers\CommunitySection\Counterparty\Models\Counterparty as CounterpartyModel;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Ship\Parents\Database\Migration;
