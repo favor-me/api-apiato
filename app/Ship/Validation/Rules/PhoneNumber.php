@@ -20,7 +20,7 @@ use Closure;
 
 class PhoneNumber extends ValidationRule
 {
-    public const REGX = '/^\d{11,14}$/';
+    public const string REGX = '/^\d{11,14}$/';
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
