@@ -13,26 +13,23 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
  * @apiGroup User
- * @apiName resetPassword
- * @api {post} /v1/password/reset Обновить пароль
- * @apiDescription Обновление пароля пользователя.
+ * @apiName canResetPassword
+ * @api {post} /v1/password/reset/check Проверить обновления пароля
+ * @apiDescription Проверяет доступ для дальнейшего обновления пароля. Возможна ли смена пароля.
  *
  * @apiVersion 1.0.0
  * @apiPermission Всем
  *
- * @apiBody {String{14}} phone_number Email адрес.
+ * @apiBody {String{40}} email Email адрес.
  * @apiBody {String{255}} token Токен высланный на email адрес
  * @apiBody {String{6..40}} password Новый пароль.
  *
  * @apiSuccessExample {json} Успешный ответ:
- * HTTP/1.1 200 No content
-{
-    "message": "Ваш пароль был изменён!"
-}
+ * HTTP/1.1 204 No content
  */
 
-use App\Containers\AppSection\User\UI\API\Controllers\ResetPasswordController;
+use App\Containers\AppSection\User\UI\API\Controllers\CanResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
-Route::any('password/reset', ResetPasswordController::class)
-    ->name('api_user_reset_password');
+Route::any('password/reset/check', CanResetPasswordController::class)
+    ->name('api_user_reset_password_check');
