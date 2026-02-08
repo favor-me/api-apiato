@@ -19,4 +19,5 @@ use App\Ship\Foundation\SectionContainer;
 
 final class Bot extends SectionContainer
 {
+    protected string $apiBaseUri = 'telegram/bot';
 }

@@ -36,7 +36,6 @@
 }
  */
 
-
 use App\Containers\OrganizationSection\OwnershipType\Facades\Container;
 use App\Containers\OrganizationSection\OwnershipType\UI\API\Controllers\GetAllOwnershipTypesController;
 use Illuminate\Support\Facades\Route;
