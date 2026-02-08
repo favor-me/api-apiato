@@ -13,6 +13,8 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
+// @codingStandardsIgnoreStart
+
 return [
     'hello' => implode("\n", [
         'Добро пожаловать в FavorMe BOT.',
@@ -20,7 +22,9 @@ return [
         'Доступные команды:',
         '/forgot_password - Для восстановления пароля.'
     ]),
-    'remember_pwd' => 'Для продолжения восстановления пароля подтвердите свои данные.',
+    'remember_pwd' => implode(' ', [
+        'Для продолжения восстановления пароля подтвердите свои данные отправив контакт или указав свой номер в ответном сообщение.'
+    ]),
     'send_contact' => 'Отправить контакт',
     'invalid_client_phone_number' => implode("\n", [
         'Мы не получили от вас контакт или вы указали не верный номер телефона. Пожалуйста попробуйте ещё раз.'
