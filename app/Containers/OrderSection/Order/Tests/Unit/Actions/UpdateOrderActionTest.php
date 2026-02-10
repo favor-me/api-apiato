@@ -24,6 +24,7 @@ use App\Containers\OrderSection\Order\Dto\UpdateOrderDto;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\UnitTestCase;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 
 final class UpdateOrderActionTest extends UnitTestCase
@@ -46,15 +47,15 @@ final class UpdateOrderActionTest extends UnitTestCase
 
         $unitA = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(100)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(210)->val(),
+                UnitPrice::COST_PRICE => app('money')->addCurrency(100)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(210)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
         $unitB = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(120)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(150)->val(),
+                UnitPrice::COST_PRICE => app('money')->addCurrency(120)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(150)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
