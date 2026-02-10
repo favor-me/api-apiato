@@ -20,6 +20,7 @@ use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\OrderSection\Item\Foundation\Item;
+use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Order\Actions\CreateOrderAction;
 use App\Containers\OrderSection\Order\Dto\CreateOrderDto;
 use App\Containers\OrderSection\Order\Foundation\Order;
@@ -27,7 +28,11 @@ use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\UnitTestCase;
 use App\Containers\OrderSection\PaymentType\CashType;
 use App\Containers\OrderSection\PaymentType\Manager;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 final class CreateOrderActionTest extends UnitTestCase
 {
     public function testSuccess(): void
@@ -36,15 +41,15 @@ final class CreateOrderActionTest extends UnitTestCase
 
         $unitA = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => 100,
-                OrganizationUnit::CLIENT_PRICE => 210,
+                UnitPrice::COST_PRICE => 100,
+                UnitPrice::CLIENT_PRICE => 210,
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
         $unitB = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => 120,
-                OrganizationUnit::CLIENT_PRICE => 150,
+                UnitPrice::COST_PRICE => 120,
+                UnitPrice::CLIENT_PRICE => 150,
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
@@ -54,6 +59,7 @@ final class CreateOrderActionTest extends UnitTestCase
             ]);
 
         $paymentType = Manager::getInstance()->get(CashType::class);
+        $customClientPrice = 300.0;
 
         $data = [
             Order::ORGANIZATION_ID => $user->organization_id,
@@ -67,7 +73,7 @@ final class CreateOrderActionTest extends UnitTestCase
                     Item::UNIT_ID => $unitA->id,
                     Item::SKU => $unitA->sku,
                     Item::COST_PRICE => $unitA->cost_price->val(),
-                    Item::CLIENT_PRICE => $unitA->client_price->val(),
+                    Item::CLIENT_PRICE => $customClientPrice,
                     Item::AMOUNT => 2
                 ],
                 [
@@ -85,12 +91,21 @@ final class CreateOrderActionTest extends UnitTestCase
 
         $result = app(CreateOrderAction::class)->run($dto);
 
+        /** @var ItemModel $customPriceItem */
+        $customPriceItem = $result->items
+            ->first(
+                fn (ItemModel $item) => $item->unit_id === $unitA->id
+            );
+
+        $this->assertSame($unitA->client_price->val(), $customPriceItem->unit_client_price->val());
+        $this->assertSame($customClientPrice, $customPriceItem->client_price->val());
+
         $this->assertInstanceOf(OrderModel::class, $result);
 
-        // 210 + 210 + 150
-        $this->assertSame(570.0, $result->total->val());
+        // 300 + 300 + 150
+        $this->assertSame(750.0, $result->total->val());
 
-        // ((210 - 100) * 2) + (150 -120)
-        $this->assertSame(250.0, $result->profit->val());
+        // ((300 - 100) * 2) + (150 - 120)
+        $this->assertSame(430.0, $result->profit->val());
     }
 }

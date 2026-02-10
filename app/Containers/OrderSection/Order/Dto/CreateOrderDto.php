@@ -15,6 +15,7 @@
 
 namespace App\Containers\OrderSection\Order\Dto;
 
+use App\Containers\OrderSection\Item\Foundation\Item;
 use App\Ship\Dto\Dto;
 
 /**
@@ -37,5 +38,13 @@ class CreateOrderDto extends Dto
     public function hasItems(): bool
     {
         return count($this->items) > ZERO;
+    }
+
+    public function itemsIds(): array
+    {
+        return collect($this->items)
+            ->map(fn (array $data) => $data[Item::UNIT_ID])
+            ->values()
+            ->toArray();
     }
 }
