@@ -35,6 +35,7 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 /**
  * @property-read mixed $items
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CreateOrderRequest extends OrderApiRequest implements GettableDto
 {

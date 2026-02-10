@@ -17,6 +17,9 @@ namespace App\Containers\OrderSection\Order\Dto;
 
 use App\Ship\Dto\Dto;
 
+/**
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ */
 class CreateOrderDto extends Dto
 {
     public ?int $client_id;
