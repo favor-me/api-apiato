@@ -133,4 +133,25 @@ final class ItemTest extends UnitTestCase
         $this->assertInstanceOf(Money::class, $result);
         $this->assertSame(410.0, $result->val());
     }
+
+    public function testIsManualClientPrice(): void
+    {
+        $itemA = new ItemModel([
+            Item::COST_PRICE => 100,
+            Item::CLIENT_PRICE => 205,
+            Item::UNIT_CLIENT_PRICE => 200,
+            Item::AMOUNT => 2
+        ]);
+
+        $this->assertTrue($itemA->isManualClientPrice());
+
+        $itemB = new ItemModel([
+            Item::COST_PRICE => 100,
+            Item::CLIENT_PRICE => 205,
+            Item::UNIT_CLIENT_PRICE => 205,
+            Item::AMOUNT => 2
+        ]);
+
+        $this->assertFalse($itemB->isManualClientPrice());
+    }
 }

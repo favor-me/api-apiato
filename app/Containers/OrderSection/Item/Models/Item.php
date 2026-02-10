@@ -76,6 +76,11 @@ class Item extends Model
         BaseItem::TYPE => OrganizationUnitType::class
     ];
 
+    public function isManualClientPrice(): bool
+    {
+        return !$this->client_price->compare($this->unit_client_price);
+    }
+
     public function getProfit(): Money
     {
         return (new ProfitService())
