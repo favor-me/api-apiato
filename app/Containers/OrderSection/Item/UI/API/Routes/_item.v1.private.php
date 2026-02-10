@@ -56,6 +56,23 @@ HTTP/1.1 200 OK
                 "rule": "exchange"
             }
         },
+        "unit_client_price": {
+            "currency": {
+                "value": 130,
+                "symbol": "руб.",
+                "text": "130,00 руб.",
+                "no_style": "130,00",
+                "rule": "currency"
+            },
+            "exchange": {
+                "value": 13000,
+                "symbol": "коп.",
+                "text": "13 000 коп.",
+                "no_style": "13 000",
+                "rule": "exchange"
+            }
+        },
+        "is_manual_client_price": true,
         "amount": 1
     }
 }

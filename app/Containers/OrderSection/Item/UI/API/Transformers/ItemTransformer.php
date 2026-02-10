@@ -36,6 +36,7 @@ class ItemTransformer extends Transformer
             Item::COST_PRICE => $this->money($item->cost_price),
             Item::CLIENT_PRICE => $this->money($item->client_price),
             Item::UNIT_CLIENT_PRICE => $this->money($item->unit_client_price),
+            Item::IS_MANUAL_CLIENT_PRICE => $item->isManualClientPrice(),
             Item::AMOUNT => $item->amount
         ];
     }
