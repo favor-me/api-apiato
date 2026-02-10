@@ -55,6 +55,7 @@ final class ItemFactory extends Factory
         return [
             Item::AMOUNT => 1,
             Item::CLIENT_PRICE => $clientPrice->val(),
+            Item::UNIT_CLIENT_PRICE => $clientPrice->val(),
             Item::COST_PRICE => 0,
             Item::TYPE => Manager::getInstance()->get(ProductType::class)->getName(),
             Item::NAME => $this->faker->title,

@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read string $sku Артикул.
  * @property-read Money $cost_price Себестоимость.
  * @property-read Money $client_price Цена продажи.
+ * @property-read Money $unit_client_price Зафиксированная цена продажи товара или услуги.
  * @property-read float $amount Количество.
  * @property-read Order $order Связанная модель заказа.
  * @property-read null|OrganizationUnit $unit Связанная модель юнита.
@@ -63,6 +64,7 @@ class Item extends Model
         BaseItem::SKU,
         BaseItem::COST_PRICE,
         BaseItem::CLIENT_PRICE,
+        BaseItem::UNIT_CLIENT_PRICE,
         BaseItem::AMOUNT,
         BaseItem::TYPE
     ];
@@ -70,6 +72,7 @@ class Item extends Model
     protected $casts = [
         BaseItem::COST_PRICE => MoneyCast::class,
         BaseItem::CLIENT_PRICE => MoneyCast::class,
+        BaseItem::UNIT_CLIENT_PRICE => MoneyCast::class,
         BaseItem::TYPE => OrganizationUnitType::class
     ];
 

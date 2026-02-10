@@ -17,10 +17,14 @@ namespace App\Containers\OrderSection\Item\Dto;
 
 use App\Ship\Dto\Dto;
 
+/**
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ */
 class CreateItemDto extends Dto
 {
     public ?float $amount = 1;
     public ?int $client_price;
+    public ?int $unit_client_price;
     public ?int $cost_price;
     public ?string $name;
     public ?int $order_id;

@@ -19,15 +19,16 @@ use App\Ship\Foundation\SectionContainer;
 
 final class Item extends SectionContainer
 {
-    public const AMOUNT = 'amount';
-    public const CLIENT_PRICE = 'client_price';
-    public const COST_PRICE = 'cost_price';
-    public const NAME = 'name';
-    public const ORDER_ID = 'order_id';
-    public const SKU = 'sku';
-    public const TYPE = 'type';
-    public const TYPE_MAX_LENGTH = '15';
-    public const UNIT_ID = 'unit_id';
+    public const string AMOUNT = 'amount';
+    public const string CLIENT_PRICE = 'client_price';
+    public const string UNIT_CLIENT_PRICE = 'unit_client_price';
+    public const string COST_PRICE = 'cost_price';
+    public const string NAME = 'name';
+    public const string ORDER_ID = 'order_id';
+    public const string SKU = 'sku';
+    public const string TYPE = 'type';
+    public const string TYPE_MAX_LENGTH = '15';
+    public const string UNIT_ID = 'unit_id';
 
     protected string $gender = 'female';
 

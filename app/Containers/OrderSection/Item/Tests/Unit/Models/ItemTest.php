@@ -25,6 +25,9 @@ use App\Containers\OrderSection\Order\Models\Order;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 final class ItemTest extends UnitTestCase
 {
     protected ?ItemModel $model;
@@ -70,6 +73,7 @@ final class ItemTest extends UnitTestCase
             Item::SKU,
             Item::COST_PRICE,
             Item::CLIENT_PRICE,
+            Item::UNIT_CLIENT_PRICE,
             Item::AMOUNT,
             Item::TYPE
         ], $this->model->getFillable());
@@ -80,6 +84,7 @@ final class ItemTest extends UnitTestCase
         $this->assertInstanceOf(Type::class, $this->model->type);
         $this->assertInstanceOf(Money::class, $this->model->cost_price);
         $this->assertInstanceOf(Money::class, $this->model->client_price);
+        $this->assertInstanceOf(Money::class, $this->model->unit_client_price);
     }
 
     public function testBelongsToOrder(): void
