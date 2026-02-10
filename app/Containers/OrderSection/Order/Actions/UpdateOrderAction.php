@@ -64,6 +64,7 @@ class UpdateOrderAction extends Action
             collect($dto->items)
                 ->each(function (array $itemData) use ($order) {
                     $itemData[Item::ORDER_ID] = $order->id;
+                    $itemData[Item::UNIT_CLIENT_PRICE] = $itemData[Item::CLIENT_PRICE];
                     if (array_key_exists(ID, $itemData)) {
                         $this->updateItem($itemData);
                     } else {
