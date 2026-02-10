@@ -35,6 +35,7 @@ class ItemTransformer extends Transformer
             Item::SKU => $item->sku,
             Item::COST_PRICE => $this->money($item->cost_price),
             Item::CLIENT_PRICE => $this->money($item->client_price),
+            Item::UNIT_CLIENT_PRICE => $this->money($item->unit_client_price),
             Item::AMOUNT => $item->amount
         ];
     }
