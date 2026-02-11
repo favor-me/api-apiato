@@ -152,4 +152,12 @@ class ApiRequest extends Request
             'hasAccess'
         ];
     }
+
+    protected function clearAccess(): void
+    {
+        $this->access = [
+            PERMISSIONS => '',
+            ROLES => ''
+        ];
+    }
 }

@@ -15,6 +15,7 @@
 
 namespace App\Containers\CommunitySection\OrganizationBranch\UI\API\Requests;
 
+use Apiato\Core\Abstracts\Models\UserModel as User;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationBranch\Requests\OrganizationBranchApiRequest;
 use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchToListTransformer;
@@ -30,6 +31,15 @@ class GetAllOrganizationBranchesRequest extends OrganizationBranchApiRequest imp
             RoleModel::ORGANIZATION_OWNER
         ]
     ];
+
+    public function hasAccess(?User $user = null): bool
+    {
+        if ($this->isToList()) {
+            $this->clearAccess();
+        }
+
+        return parent::hasAccess($user);
+    }
 
     public function getToListTransformer(): OrganizationBranchToListTransformer
     {
