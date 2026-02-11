@@ -77,12 +77,6 @@ class UpdateContractRequest extends CreateContractRequest
             ->removeRequired();
     }
 
-    public function getContractFinishAtValidationRules(): ValidationRules
-    {
-        return parent::getContractFinishAtValidationRules()
-            ->removeRequired();
-    }
-
     public function getContractIdExistsValidationRule(string $column = 'NULL'): Exists
     {
         return parent::getContractIdExistsValidationRule($column)

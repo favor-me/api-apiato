@@ -27,6 +27,7 @@ return [
             'date_format:' . Transformer::HUMAN_DATE_FORMAT
         ],
         Contract::FINISH_AT => [
+            'nullable',
             'date_format:' . Transformer::HUMAN_DATE_FORMAT
         ]
     ]

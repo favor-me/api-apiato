@@ -31,7 +31,7 @@ return new class extends CreateTableMigration
         $table->unsignedBigInteger(Contract::COUNTERPARTY_ID);
         $table->unsignedBigInteger(Contract::ORGANIZATION_ID);
         $table->date(Contract::START_AT);
-        $table->date(Contract::FINISH_AT);
+        $table->date(Contract::FINISH_AT)->nullable();
         $table->timestamps();
         $table->softDeletes();
 

@@ -36,11 +36,11 @@ use Illuminate\Support\Facades\Auth;
 /**
  * @property-read int $id Уникальный идентификатор.
  * @property-read string $name Название договора.
- * @property-read mixed $number Порядковый номер.
+ * @property-read string $number Порядковый номер.
  * @property-read int $counterparty_id Уникальный идентификатор.
  * @property-read int $organization_id Уникальный идентификатор.
- * @property-read mixed $start_at Дата начала.
- * @property-read mixed $finish_at Дата завершения.
+ * @property-read Carbon $start_at Дата начала.
+ * @property-read Carbon|null $finish_at Дата завершения.
  * @property-read bool $is_live_now Флаг действия договора в текущий момент. TODO write unit test
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $updated_at Дата и время обновления.
@@ -79,6 +79,10 @@ class Contract extends OrganizationModel
     {
         return Attribute::get(function () {
             $now = Carbon::now();
+            if (is_null($this->finish_at)) {
+                return true;
+            }
+
             return $now->gte($this->start_at) && $this->finish_at->gte($now->toDateString());
         });
     }

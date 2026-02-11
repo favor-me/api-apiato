@@ -14,7 +14,6 @@
  *
  * @apiGroup AccountingContract
  * @apiName createAccountingContract
-
  * @api {post} /v1/accounting/contracts Создать
  * @apiDescription Создание.
  *
@@ -24,7 +23,7 @@
  * @apiBody {String} name Название договора.
  * @apiBody {String} counterparty_id Уникальный идентификатор контрагента.
  * @apiBody {String} start_at Дата начала.
- * @apiBody {String} finish_at Дата завершения.
+ * @apiBody {String|Null} [finish_at] Дата завершения. (Если установить null договор считается бессрочным).
  *
  * @apiUse ContractSuccessSingleResponse
  */

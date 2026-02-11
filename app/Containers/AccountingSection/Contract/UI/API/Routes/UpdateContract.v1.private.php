@@ -14,7 +14,6 @@
  *
  * @apiGroup AccountingContract
  * @apiName updateAccountingContract
-
  * @api {post} /v1/accounting/contracts/:id Изменить
  * @apiDescription Изменить.
  *
@@ -26,7 +25,7 @@
  * @apiBody {String} [name] Название договора.
  * @apiBody {String} [counterparty_id] Уникальный идентификатор контрагента.
  * @apiBody {String} [start_at] Дата начала.
- * @apiBody {String} [finish_at] Дата завершения.
+ * @apiBody {String|Null} [finish_at] Дата завершения. (Если установить null договор считается бессрочным).
  *
  * @apiUse ContractSuccessSingleResponse
  */

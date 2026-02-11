@@ -73,8 +73,7 @@ class CreateContractRequest extends ContractApiRequest implements GettableDto
 
     public function getContractFinishAtValidationRules(): ValidationRules
     {
-        $rules = parent::getContractStartAtValidationRules()
-            ->addRequired();
+        $rules = parent::getContractStartAtValidationRules();
 
         $startAt = $this->get(Contract::START_AT);
         if (!is_null($startAt) && Carbon::isSystemDateFormat($startAt)) {
