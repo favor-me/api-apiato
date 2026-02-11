@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * FavorMe system
+ *
+ * This file is part of the FavorMe system package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
+ */
+
+namespace App\Containers\OrganizationSection\Shift\Actions;
+
+use App\Containers\OrganizationSection\Shift\Models\Shift;
+use App\Containers\OrganizationSection\Shift\Dto\CreateShiftDto;
+use App\Containers\OrganizationSection\Shift\Tasks\CreateShiftTask;
+use App\Ship\Parents\Actions\Action;
+use App\Ship\Exceptions\CreateResourceFailedException;
+
+class CreateShiftAction extends Action
+{
+    /**
+     * @param CreateShiftDto $dto
+     * @return Shift
+     * @throws CreateResourceFailedException
+     */
+    public function run(CreateShiftDto $dto): Shift
+    {
+        return app(CreateShiftTask::class)->run($dto);
+    }
+}
