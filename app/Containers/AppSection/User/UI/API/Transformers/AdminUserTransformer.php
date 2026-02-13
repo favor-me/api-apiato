@@ -17,7 +17,7 @@ namespace App\Containers\AppSection\User\UI\API\Transformers;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 
-class AdminUserTransformer extends UserTransformer
+final class AdminUserTransformer extends UserTransformer
 {
     public function transform(UserModel $user): array
     {
@@ -26,7 +26,7 @@ class AdminUserTransformer extends UserTransformer
                 User::IS_ADMIN => $user->is_admin,
                 $this->realKey(ID) => $user->id,
                 $this->realKey(User::ORGANIZATION_ID) => $user->organization_id,
-                $this->realKey(User::ORGANIZATION_BRANCH_ID) => $user->organization_branch_id,
+                $this->realKey(User::ORGANIZATION_BRANCH_ID) => $user->organization_branch_id
             ];
     }
 }
