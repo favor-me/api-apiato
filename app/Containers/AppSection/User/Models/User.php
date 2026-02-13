@@ -25,6 +25,8 @@ use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
+use App\Containers\OrganizationSection\Shift\Foundation\Shift;
+use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Database\Casts\JSON;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\UserModel;
@@ -32,6 +34,7 @@ use App\Ship\Traits\Model\IsNumbered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -67,7 +70,8 @@ use JBZoo\Data\JSON as JsonData;
  * @property-read Collection $roles
  * @property-read Collection $contacts
  * @property-read Collection $devices Список устройств.
- * @property-read Collection $actualDevices Список актуалных устройств.
+ * @property-read Collection $actualDevices Список актуальных устройств.
+ * @property-read ShiftModel|null $todayShift Модель текущей смены.
  * @property-read Collection $telegramBots Список телеграм ботов.
  *
  * @method static UserFactory factory(...$parameters)
@@ -130,6 +134,17 @@ class User extends UserModel implements HasResourceKey, CanResetPassword
     public function organizationBranch(): BelongsTo
     {
         return $this->belongsTo(OrganizationBranchModel::class, BaseUser::ORGANIZATION_BRANCH_ID, ID);
+    }
+
+    public function todayShift(): HasOne
+    {
+        $now = Carbon::now();
+        return $this->hasOne(ShiftModel::class, CREATED_BY, ID)
+            ->whereRaw(implode(' ', [
+                '\'' . $now->toDateTimeString() . '\' >= cast(' . Shift::START_AT . ' as datetime)',
+                'and',
+                '\'' . $now->toDateTimeString() . '\' <= cast(' . Shift::FINISH_AT . ' as datetime)'
+            ]));
     }
 
     public function getDefaultLogin(): string

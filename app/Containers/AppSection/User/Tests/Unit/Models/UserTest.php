@@ -14,16 +14,18 @@
 
 namespace App\Containers\AppSection\User\Tests\Unit\Models;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
-use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
-use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
-use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice;
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
-use App\Ship\Database\Eloquent\Collection;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
+use App\Containers\OrganizationSection\Shift\Foundation\Shift;
+use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
+use App\Ship\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
@@ -231,5 +233,33 @@ final class UserTest extends UnitTestCase
 
         $this->assertFalse($userC->isRealOrganizationOwner(567));
         $this->assertFalse($userC->isRealOrganizationOwner($organizationB->id));
+    }
+
+    public function testHasOneTodayShift(): void
+    {
+        $userB = UserModel::factory()->create();
+        $userA = UserModel::factory()->create();
+        $userC = UserModel::factory()->create();
+
+        ShiftModel::factory()
+            ->create([
+                CREATED_BY => $userB->id
+            ]);
+
+        $startAt = Carbon::now()->subHours(2);
+        $finishAt = Carbon::now()->addHours(2);
+
+        $userCShift = ShiftModel::factory()
+            ->create([
+                Shift::START_AT => $startAt,
+                Shift::FINISH_AT => $finishAt,
+                CREATED_BY => $userC->id
+            ]);
+
+        $this->assertNull($userA->todayShift);
+        $this->assertNull($userB->todayShift);
+
+        $this->assertInstanceOf(ShiftModel::class, $userC->todayShift);
+        $this->assertSame($userCShift->id, $userC->todayShift->id);
     }
 }

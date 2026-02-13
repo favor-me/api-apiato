@@ -18,8 +18,9 @@ use App\Containers\AppSection\Authorization\UI\API\Transformers\RoleTransformer;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\UserDevice\UI\API\Transformers\UserDeviceTransformer;
-use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
-use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformer;
+use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformerManager;
+use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformerManager;
+use App\Containers\OrganizationSection\Shift\UI\API\Transformers\ShiftTransformerManager;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -31,7 +32,8 @@ class UserTransformer extends Transformer
         'roles',
         'devices',
         'organization',
-        'organizationBranch'
+        'organizationBranch',
+        User::TODAY_SHIFT
     ];
 
     public function transform(UserModel $user): array
@@ -39,20 +41,20 @@ class UserTransformer extends Transformer
         return [
             OBJECT => $user->getResourceKey(),
             ID => $user->getHashedKey(),
-            'number' => $user->getNumber(),
-            'login' => $user->login,
-            'name' => $user->name,
-            'patronymic' => $user->patronymic,
-            'surname' => $user->surname,
-            'gender' => $user->gender,
-            'birth' => $this->nullOrTimestamp($user->birth),
-            'avatar' => $user->avatar,
-            'email' => $user->email,
-            'phone_number' => $user->phone_number,
+            UserModel::NUMBER => $user->getNumber(),
+            User::LOGIN => $user->login,
+            User::NAME => $user->name,
+            User::PATRONYMIC => $user->patronymic,
+            User::SURNAME => $user->surname,
+            User::GENDER => $user->gender,
+            User::BIRTH => $this->nullOrTimestamp($user->birth),
+            User::AVATAR => $user->avatar,
+            User::EMAIL => $user->email,
+            User::PHONE_NUMBER => $user->phone_number,
             User::IS_ORGANIZATION_OWNER => $user->is_organization_owner,
             PARAMS => $user->params,
-            'email_verified_at' => $this->nullOrTimestamp($user->email_verified_at),
-            'phone_number_verified_at' => $user->phone_number_verified_at,
+            User::EMAIL_VERIFIED_AT => $this->nullOrTimestamp($user->email_verified_at),
+            User::PHONE_NUMBER_VERIFIED_AT => $user->phone_number_verified_at,
             User::ORGANIZATION_ID => $user->getHashedKey(User::ORGANIZATION_ID),
             User::ORGANIZATION_BRANCH_ID => $user->getHashedKey(User::ORGANIZATION_BRANCH_ID),
             CREATED_AT => $user->created_at->getTimestamp(),
@@ -68,16 +70,30 @@ class UserTransformer extends Transformer
 
     protected function includeOrganization(UserModel $user): Item|Primitive
     {
-        return $this->primitiveNullOrItem($user->organization, new OrganizationTransformer());
+        return $this->primitiveNullOrItem(
+            $user->organization,
+            (new OrganizationTransformerManager())->getDefaultOrAdmin()
+        );
     }
 
     protected function includeOrganizationBranch(UserModel $user): Item|Primitive
     {
-        return $this->primitiveNullOrItem($user->organizationBranch, new OrganizationBranchTransformer());
+        return $this->primitiveNullOrItem(
+            $user->organizationBranch,
+            (new OrganizationBranchTransformerManager())->getDefaultOrAdmin()
+        );
     }
 
     protected function includeDevices(UserModel $user): Collection
     {
         return $this->collection($user->devices(), new UserDeviceTransformer());
+    }
+
+    protected function includeTodayShift(UserModel $user): Item|Primitive
+    {
+        return $this->primitiveNullOrItem(
+            $user->todayShift,
+            (new ShiftTransformerManager())->getDefaultOrAdmin()
+        );
     }
 }
