@@ -28,7 +28,11 @@ HTTP/1.1 200 OK
         "updated_at": null
     },
     "meta": {
-        "include": []
+        "include": [
+            "creator",
+            "organization",
+            "organization_branch"
+        ]
     }
 }
  */

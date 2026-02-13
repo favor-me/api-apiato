@@ -15,11 +15,15 @@
 
 namespace App\Containers\OrganizationSection\Shift\Models;
 
+use App\Containers\AppSection\User\Models\User;
+use App\Containers\CommunitySection\Organization\Models\Organization;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
 use App\Containers\OrganizationSection\Shift\Data\Factories\ShiftFactory;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift as BaseShift;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Parents\Models\Model;
 use App\Ship\Traits\Model\IsNumbered;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -31,6 +35,10 @@ use Illuminate\Support\Carbon;
  * @property-read int $created_by Уникальный идентификатор пользователя чья смена.
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $updated_at Дата и время обновления.
+ *
+ * @property-read User $creator Связанная модель пользователя чья смена.
+ * @property-read Organization $organization Связанная модель организации.
+ * @property-read OrganizationBranch|null $organizationBranch Связанная модель отделения организации.
  *
  * @method static ShiftFactory factory(...$parameters)
  */
@@ -57,4 +65,19 @@ class Shift extends Model
         BaseShift::START_AT => 'datetime',
         BaseShift::FINISH_AT => 'datetime'
     ];
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, CREATED_BY, ID);
+    }
+
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, BaseShift::ORGANIZATION_ID, ID);
+    }
+
+    public function organizationBranch(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationBranch::class, BaseShift::ORGANIZATION_BRANCH_ID, ID);
+    }
 }

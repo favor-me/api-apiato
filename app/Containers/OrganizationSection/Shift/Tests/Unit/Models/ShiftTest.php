@@ -15,9 +15,13 @@
 
 namespace App\Containers\OrganizationSection\Shift\Tests\Unit\Models;
 
-use App\Containers\OrganizationSection\Shift\Tests\UnitTestCase;
+use App\Containers\AppSection\User\Models\User;
+use App\Containers\CommunitySection\Organization\Models\Organization;
+use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
+use App\Containers\OrganizationSection\Shift\Tests\UnitTestCase;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 final class ShiftTest extends UnitTestCase
 {
@@ -58,5 +62,26 @@ final class ShiftTest extends UnitTestCase
             Shift::FINISH_AT,
             CREATED_BY
         ], $this->model->getFillable());
+    }
+
+    public function testBelongsToCreator(): void
+    {
+        $this->assertInstanceOf(BelongsTo::class, $this->model->creator());
+        $this->assertInstanceOf(User::class, $this->model->creator()->getModel());
+        $this->assertInstanceOf(User::class, $this->model->creator);
+    }
+
+    public function testBelongsToOrganization(): void
+    {
+        $this->assertInstanceOf(BelongsTo::class, $this->model->organization());
+        $this->assertInstanceOf(Organization::class, $this->model->organization()->getModel());
+        $this->assertInstanceOf(Organization::class, $this->model->organization);
+    }
+
+    public function testBelongsToOrganizationBranch(): void
+    {
+        $this->assertInstanceOf(BelongsTo::class, $this->model->organizationBranch());
+        $this->assertInstanceOf(OrganizationBranch::class, $this->model->organizationBranch()->getModel());
+        $this->assertInstanceOf(OrganizationBranch::class, $this->model->organizationBranch);
     }
 }

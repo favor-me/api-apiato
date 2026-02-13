@@ -15,12 +15,22 @@
 
 namespace App\Containers\OrganizationSection\Shift\UI\API\Transformers;
 
+use App\Containers\AppSection\User\UI\API\Transformers\UserTransformerManager;
+use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformerManager;
+use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformerManager;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Parents\Transformers\Transformer;
+use League\Fractal\Resource\Item;
 
 class ShiftTransformer extends Transformer
 {
+    protected array $availableIncludes = [
+        Shift::CREATOR,
+        Shift::ORGANIZATION,
+        Shift::ORGANIZATION_BRANCH
+    ];
+
     public function transform(ShiftModel $shift): array
     {
         return [
@@ -34,5 +44,23 @@ class ShiftTransformer extends Transformer
             CREATED_AT => $this->time($shift->created_at),
             UPDATED_AT => $this->time($shift->updated_at)
         ];
+    }
+
+    protected function includeCreator(ShiftModel $shift): Item
+    {
+        return $this->item($shift->creator, (new UserTransformerManager())->getDefaultOrAdmin());
+    }
+
+    protected function includeOrganization(ShiftModel $shift): Item
+    {
+        return $this->item($shift->organization, (new OrganizationTransformerManager())->getDefaultOrAdmin());
+    }
+
+    protected function includeOrganizationBranch(ShiftModel $shift): Item
+    {
+        return $this->nullOrItem(
+            $shift->organizationBranch,
+            (new OrganizationBranchTransformerManager())->getDefaultOrAdmin()
+        );
     }
 }
