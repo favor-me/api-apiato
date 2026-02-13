@@ -15,7 +15,9 @@
 
 namespace App\Containers\OrganizationSection\Shift\Data\Factories;
 
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Database\Eloquent\Collection;
@@ -35,8 +37,17 @@ final class ShiftFactory extends Factory
 
     public function definition(): array
     {
-        /** @var User $user */
+        /** @var UserModel $user */
         $user = Auth::user();
+
+        if (is_null($user)) {
+            $organization = Organization::factory()->create();
+
+            $user = UserModel::factory()
+                ->create([
+                    User::ORGANIZATION_ID => $organization->id
+                ]);
+        }
 
         return [
             CREATED_BY => $user->id,
