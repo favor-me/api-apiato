@@ -20,14 +20,15 @@ use App\Containers\OrganizationSection\Shift\Facades\Container;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Containers\OrganizationSection\Shift\Tests\Functional\ApiTestCase;
+use App\Ship\Parents\Transformers\Transformer;
+use App\Ship\Support\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class UpdateShiftTest extends ApiTestCase
 {
     protected array $access = [
         ROLES => [
-            RoleModel::ORGANIZATION_OWNER,
-            RoleModel::ORGANIZATION_WORKER
+            RoleModel::ORGANIZATION_OWNER
         ]
     ];
 
@@ -60,7 +61,7 @@ final class UpdateShiftTest extends ApiTestCase
         $this->getTestingOrganizationOwnerUser();
 
         $data = [
-            // Write here
+            Shift::FINISH_AT => 'now'
         ];
 
         $this
@@ -81,12 +82,16 @@ final class UpdateShiftTest extends ApiTestCase
 
     public function testSuccess(): void
     {
+        $startAt = Carbon::now();
+        $finishAt = Carbon::now()->addHours(8);
+
         $this->getTestingOrganizationOwnerUser();
 
         $model = ShiftModel::factory()->create();
 
         $data = [
-            // Write here
+            Shift::START_AT => $startAt->format(DATE_TIME_FORMAT),
+            Shift::FINISH_AT => $finishAt->format(DATE_TIME_FORMAT)
         ];
 
         $this
@@ -99,7 +104,26 @@ final class UpdateShiftTest extends ApiTestCase
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
                     ->where('data.' . ID, $model->getHashedKey())
-                    //->where('data.' . Shift::, $data[Shift::])
+                    ->where(
+                        'data.' . Shift::START_AT . '.date_for_human',
+                        $startAt->format(Transformer::HUMAN_DATE_FORMAT)
+                    )
+                    ->where(
+                        'data.' . Shift::START_AT . '.time_short',
+                        $startAt->format(TIME_FORMAT_SHORT)
+                    )
+                    ->where(
+                        'data.' . Shift::FINISH_AT . '.date_for_human',
+                        $finishAt->format(Transformer::HUMAN_DATE_FORMAT)
+                    )
+                    ->where(
+                        'data.' . Shift::FINISH_AT . '.time_short',
+                        $finishAt->format(TIME_FORMAT_SHORT)
+                    )
+                    ->where(
+                        'data.' . Shift::ORGANIZATION_BRANCH_ID,
+                        $this->testingUser->getHashedKey(Shift::ORGANIZATION_BRANCH_ID)
+                    )
                     ->etc()
             );
     }

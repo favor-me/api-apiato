@@ -58,17 +58,7 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
      */
     public function getDto(): CreateShiftDto
     {
-        $data = $this->validated() +
-            [
-                CREATED_BY => $this->created_by,
-                Shift::ORGANIZATION_ID => $this->organization_id,
-                Shift::ORGANIZATION_BRANCH_ID => $this->organization_branch_id
-            ];
-
-        if ($this->get(Shift::EXCLUDE_ORGANIZATION_BRANCH)) {
-            unset($data[Shift::ORGANIZATION_BRANCH_ID]);
-        }
-
+        $data = $this->validated() + $this->commonDtoData();
         return $this->newDto($data);
     }
 
@@ -80,5 +70,20 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
     public function newDto(array $data = []): CreateShiftDto
     {
         return new CreateShiftDto($data);
+    }
+
+    protected function commonDtoData(): array
+    {
+        $data = [
+            CREATED_BY => $this->created_by,
+            Shift::ORGANIZATION_ID => $this->organization_id,
+            Shift::ORGANIZATION_BRANCH_ID => $this->organization_branch_id
+        ];
+
+        if ($this->get(Shift::EXCLUDE_ORGANIZATION_BRANCH)) {
+            unset($data[Shift::ORGANIZATION_BRANCH_ID]);
+        }
+
+        return $data;
     }
 }

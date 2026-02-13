@@ -18,7 +18,7 @@
  * @apiDescription Изменить.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner` (Пока не используем)
  *
  * @apiParam {String} id Уникальный идентификатор
  *

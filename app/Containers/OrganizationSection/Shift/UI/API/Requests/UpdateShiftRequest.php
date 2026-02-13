@@ -15,6 +15,7 @@
 
 namespace App\Containers\OrganizationSection\Shift\UI\API\Requests;
 
+use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\OrganizationSection\Shift\Dto\UpdateShiftDto;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Exceptions\ValidationFailedException;
@@ -27,6 +28,12 @@ use Illuminate\Auth\Access\AuthorizationException;
 class UpdateShiftRequest extends CreateShiftRequest
 {
     use HasInputId;
+
+    protected array $access = [
+        ROLES => [
+            RoleModel::ORGANIZATION_OWNER
+        ]
+    ];
 
     protected array $urlParameters = [
         ID
