@@ -18,17 +18,12 @@ use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 return [
 
     'rules' => [
-        Shift::ORGANIZATION_ID => [
-            // write more
-        ],
         Shift::START_AT => [
-            // write more
+            'date_format:' . DATE_TIME_FORMAT
         ],
         Shift::FINISH_AT => [
-            // write more
-        ],
-        'created_by' => [
-            // write more
+            'date_format:' . DATE_TIME_FORMAT,
+            'after:' . Shift::START_AT
         ]
     ]
 

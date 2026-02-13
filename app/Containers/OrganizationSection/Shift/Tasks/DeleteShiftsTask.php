@@ -15,9 +15,24 @@
 
 namespace App\Containers\OrganizationSection\Shift\Tasks;
 
-use App\Ship\Traits\Task\DeleteRun;
+use App\Ship\Exceptions\NotFoundException;
+use Exception;
 
 class DeleteShiftsTask extends ShiftTask
 {
-    use DeleteRun;
+    /**
+     * @param array $ids
+     * @return int
+     * @throws NotFoundException
+     */
+    public function run(array $ids): int
+    {
+        try {
+            return $this->repository->deleteWhere([
+                [ID, 'in', $ids]
+            ]);
+        } catch (Exception) {
+            throw new NotFoundException();
+        }
+    }
 }

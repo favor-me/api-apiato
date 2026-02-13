@@ -15,7 +15,9 @@
 
 namespace App\Containers\OrganizationSection\Shift\Tasks;
 
+use App\Ship\Criterias\ThisEqualThatCriteria;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllShiftsTask extends ShiftTask
@@ -28,5 +30,19 @@ class GetAllShiftsTask extends ShiftTask
     public function run(mixed $limit = null): LengthAwarePaginator
     {
         return $this->repository->paginate($limit);
+    }
+
+    /**
+     * @return $this
+     * @throws RepositoryException
+     */
+    public function forAuthUser(): self
+    {
+        $this->repository
+            ->pushCriteria(
+                new ThisEqualThatCriteria(CREATED_BY, Auth::user()->id)
+            );
+
+        return $this;
     }
 }

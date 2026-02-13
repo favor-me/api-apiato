@@ -15,29 +15,36 @@
 
 namespace App\Containers\OrganizationSection\Shift\Actions;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\OrganizationSection\Shift\Tasks\GetAllShiftsTask;
 use App\Ship\Parents\Actions\Action;
-use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAllShiftsAction extends Action
 {
+    protected bool $forAuthUser = false;
+
     /**
-     * @param bool $onlyTrashed
      * @param mixed|null $limit
      * @return LengthAwarePaginator
      * @throws CoreInternalErrorException
      * @throws RepositoryException
      */
-    public function run(bool $onlyTrashed = false, mixed $limit = null): LengthAwarePaginator
+    public function run(mixed $limit = null): LengthAwarePaginator
     {
         $task = app(GetAllShiftsTask::class);
 
-        if ($onlyTrashed) {
-            $task->onlyTrashed();
+        if ($this->forAuthUser) {
+            $task->forAuthUser();
         }
 
         return $task->addRequestCriteria()->run($limit);
+    }
+
+    public function forAuthUser(): self
+    {
+        $this->forAuthUser = true;
+        return $this;
     }
 }

@@ -17,4 +17,9 @@ namespace App\Containers\OrganizationSection\Shift\Tests;
 
 abstract class UnitTestCase extends ContainerTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->getTestingOrganizationBranchUser();
+    }
 }

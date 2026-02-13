@@ -14,14 +14,13 @@
  *
  * @apiGroup OrganizationShift
  * @apiName trashOrDeleteOrganizationShifts
- * @api {delete} /v1/organization/shifts Архивировать|Удалить
- * @apiDescription Архивировать или удалить.
+ * @api {delete} /v1/organization/shifts Удалить
+ * @apiDescription Удалить.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
  * @apiBody {Array} ids Список id
- * @apiBody {String="1"} [force-delete] Произвести жёсткое удаление (удаляется запись из базы).
  *
  * @apiSuccessExample {json} Успешный ответ:
 HTTP/1.1 200 OK
@@ -29,14 +28,8 @@ HTTP/1.1 200 OK
 
 use App\Containers\OrganizationSection\Shift\Facades\Container;
 use App\Containers\OrganizationSection\Shift\UI\API\Controllers\DeleteShiftsController;
-use App\Containers\OrganizationSection\Shift\UI\API\Controllers\TrashShiftsController;
-use App\Ship\Requests\ApiRequest;
 use Illuminate\Support\Facades\Route;
 
-Route::delete(Container::getApiUri(), function (ApiRequest $request) {
-    $callback = $request->isForceDelete() ?
-        DeleteShiftsController::class : TrashShiftsController::class;
-    return app()->call($callback);
-})
-    ->name('api_organization_shift_trash_or_delete_shifts')
+Route::delete(Container::getApiUri(), DeleteShiftsController::class)
+    ->name('api_organization_shift_trash_shifts')
     ->middleware(['auth:api']);

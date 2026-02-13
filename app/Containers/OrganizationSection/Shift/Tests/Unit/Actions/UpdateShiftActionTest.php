@@ -17,9 +17,11 @@ namespace App\Containers\OrganizationSection\Shift\Tests\Unit\Actions;
 
 use App\Containers\OrganizationSection\Shift\Actions\UpdateShiftAction;
 use App\Containers\OrganizationSection\Shift\Dto\UpdateShiftDto;
+use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Containers\OrganizationSection\Shift\Tests\UnitTestCase;
 use App\Ship\Exceptions\UpdateResourceFailedException;
+use Illuminate\Support\Carbon;
 
 final class UpdateShiftActionTest extends UnitTestCase
 {
@@ -40,16 +42,16 @@ final class UpdateShiftActionTest extends UnitTestCase
         $model = ShiftModel::factory()->create();
         $this->assertInstanceOf(ShiftModel::class, $model);
 
-        $data = ShiftModel::factory()
-            ->make([
-                ID => $model->id,
-                //  write more.
-            ]);
+        $finishAt = Carbon::now()->addHours(4);
 
-        $dto = new UpdateShiftDto($data->toArray());
+        $dto = new UpdateShiftDto([
+            ID => $model->id,
+            Shift::FINISH_AT => $finishAt->toDateTimeString()
+        ]);
 
         $result = app(UpdateShiftAction::class)->run($dto);
 
         $this->assertInstanceOf(ShiftModel::class, $result);
+        $this->assertSame($finishAt->toDateTimeString(), $result->finish_at->toDateTimeString());
     }
 }

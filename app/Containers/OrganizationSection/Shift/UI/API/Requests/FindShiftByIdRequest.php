@@ -16,9 +16,11 @@
 namespace App\Containers\OrganizationSection\Shift\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Requests\ShiftApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Traits\Request\HasInputId;
+use Illuminate\Validation\Rules\Exists;
 
 class FindShiftByIdRequest extends ShiftApiRequest
 {
@@ -29,10 +31,6 @@ class FindShiftByIdRequest extends ShiftApiRequest
             RoleModel::ORGANIZATION_OWNER,
             RoleModel::ORGANIZATION_WORKER
         ]
-    ];
-
-    protected array $decode = [
-        ID
     ];
 
     protected array $urlParameters = [
@@ -50,5 +48,17 @@ class FindShiftByIdRequest extends ShiftApiRequest
     {
         return parent::getShiftIdValidationRules()
             ->addRequired();
+    }
+
+    public function getShiftIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getShiftIdExistsValidationRule($column)
+            ->where(Shift::ORGANIZATION_ID, $this->organization_id);
+    }
+
+    protected function afterInitialize(): void
+    {
+        parent::afterInitialize();
+        $this->mergeDecode(ID);
     }
 }

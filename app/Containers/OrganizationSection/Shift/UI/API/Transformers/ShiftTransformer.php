@@ -27,11 +27,12 @@ class ShiftTransformer extends Transformer
             OBJECT => $shift->getResourceKey(),
             ID => $shift->getHashedKey(),
             Shift::ORGANIZATION_ID => $shift->getHashedKey(Shift::ORGANIZATION_ID),
-            Shift::START_AT => $shift->start_at,
-            Shift::FINISH_AT => $shift->finish_at,
+            Shift::ORGANIZATION_BRANCH_ID => $shift->getHashedKey(Shift::ORGANIZATION_BRANCH_ID),
+            Shift::START_AT => $this->time($shift->start_at),
+            Shift::FINISH_AT => $this->time($shift->finish_at),
             CREATED_BY => $shift->getHashedKey(CREATED_BY),
-            CREATED_AT => $this->nullOrTimestamp($shift->created_at),
-            UPDATED_AT => $this->nullOrTimestamp($shift->updated_at)
+            CREATED_AT => $this->time($shift->created_at),
+            UPDATED_AT => $this->time($shift->updated_at)
         ];
     }
 }

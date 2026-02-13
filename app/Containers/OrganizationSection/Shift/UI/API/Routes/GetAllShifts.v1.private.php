@@ -20,8 +20,6 @@
  * @apiVersion 1.0.0
  * @apiPermission Аутентифицированный пользователь
  *
- * @apiParam {String="1,0"} [only-trashed] Вкл.\Откл.показ корзины.
- *
  * @apiSuccessExample {json} Успешный ответ:
 HTTP/1.1 200 OK
  */

@@ -19,8 +19,9 @@ use App\Ship\Dto\Dto;
 
 class CreateShiftDto extends Dto
 {
-    public ?string $created_by;
+    public ?int $created_by;
     public ?string $finish_at;
-    public ?string $organization_id;
+    public ?int $organization_id;
+    public ?int $organization_branch_id;
     public ?string $start_at;
 }

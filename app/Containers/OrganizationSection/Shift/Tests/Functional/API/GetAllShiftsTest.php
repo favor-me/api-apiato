@@ -15,15 +15,16 @@
 
 namespace App\Containers\OrganizationSection\Shift\Tests\Functional\API;
 
+use AllowDynamicProperties;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\OrganizationSection\Shift\Facades\Container;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Containers\OrganizationSection\Shift\Tests\Functional\ApiTestCase;
-use App\Ship\Requests\ApiRequest;
-use App\Ship\Parents\Requests\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 
+#[AllowDynamicProperties]
 final class GetAllShiftsTest extends ApiTestCase
 {
     protected array $access = [
@@ -61,121 +62,40 @@ final class GetAllShiftsTest extends ApiTestCase
             );
     }
 
-    public function testOnlyTrashed(): void
+    public function testSuccessWorker(): void
     {
-        $this->getTestingOrganizationOwnerUser(null, [
-            ROLES => RoleModel::ORGANIZATION_OWNER
-        ]);
+        $this->testingUser = null;
 
-        ShiftModel::factory()
-            ->count(3)
-            ->create();
-
-        $trashedModels = ShiftModel::factory()
-            ->trashed()
-            ->create();
-
-        $this
-            ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
-            ->makeCall();
-
-        $this->response
-            ->assertOk()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', 1)
-                    ->where('data.0.' . ID, $trashedModels->getHashedKey())
-                    ->etc()
-            );
-    }
-
-    public function testCanReadOnlyTrashedList(): void
-    {
-        $this->getTestingOrganizationOwnerUser(null, [
-            ROLES => RoleModel::ORGANIZATION_OWNER
-        ]);
-
-        $trashedModels = ShiftModel::factory()
-            ->count(3)
-            ->trashed()
-            ->create();
-
-        ShiftModel::factory()
-            ->count(2)
-            ->create();
-
-        $this
-            ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
-            ->makeCall();
-
-        $this->response
-            ->assertOk()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', $trashedModels->count())
-                    ->etc()
-            );
-    }
-
-    public function testCantReadOnlyTrashedList(): void
-    {
         $this->getTestingOrganizationUser(null, [
-            ROLES => RoleModel::ORGANIZATION_WORKER
+            ROLES => [
+                RoleModel::ORGANIZATION_WORKER
+            ]
         ]);
 
-        $baseCount = ShiftModel::count();
+        $user = UserModel::factory()
+            ->create([
+                User::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
 
         ShiftModel::factory()
-            ->count(5)
-            ->trashed()
-            ->create();
-
-        $models = ShiftModel::factory()
-            ->count(6)
-            ->create();
-
-        $this
-            ->endpoint($this->endpoint . '?' . Request::ONLY_TRASHED . '=1')
-            ->makeCall();
-
-        $this->response
-            ->assertOk()
-            ->assertJson(
-                fn(AssertableJson $json): AssertableJson => $json
-                    ->has('data', $baseCount + $models->count())
-                    ->etc()
-            );
-    }
-
-    public function testToList(): void
-    {
-        $this->getTestingOrganizationUser();
-
-        $defaultCount = ShiftModel::count();
-
-        $models = ShiftModel::factory()
             ->count(3)
-            ->create();
+            ->create([
+                CREATED_BY => $user->id
+            ]);
 
-        $this
-            ->endpoint($this->endpoint . '?to=' . ApiRequest::TO_LIST_VALUE)
-            ->makeCall();
+        $workerShifts = ShiftModel::factory()
+            ->count(2)
+            ->create([
+                CREATED_BY => $this->testingUser->id
+            ]);
+
+        $this->makeCall();
 
         $this->response
             ->assertOk()
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
-                    ->where('meta.pagination.total', $defaultCount + $models->count())
-                    ->where('data', function (Collection $statuses) {
-                        $statuses->each(function ($status) {
-                            $this->assertSame([
-                                'value',
-                                'title'
-                            ], array_keys($status));
-                        });
-
-                        return true;
-                    })
+                    ->has('data', $workerShifts->count())
                     ->etc()
             );
     }

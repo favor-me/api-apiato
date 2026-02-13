@@ -17,6 +17,7 @@ namespace App\Containers\OrganizationSection\Shift\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\OrganizationSection\Shift\Requests\ShiftApiRequest;
+use Illuminate\Support\Facades\Auth;
 
 class GetAllShiftsRequest extends ShiftApiRequest
 {
@@ -27,12 +28,8 @@ class GetAllShiftsRequest extends ShiftApiRequest
         ]
     ];
 
-    public function isOnlyTrashed(): bool
+    public function ifForWorker(): bool
     {
-        if (!$this->user()->hasRole(RoleModel::ORGANIZATION_OWNER)) {
-            return false;
-        }
-
-        return parent::isOnlyTrashed();
+        return !Auth::user()->hasRole(RoleModel::ORGANIZATION_OWNER);
     }
 }

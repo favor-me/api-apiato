@@ -15,13 +15,17 @@
 
 namespace App\Containers\OrganizationSection\Shift\Tests\Functional\API;
 
+use AllowDynamicProperties;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\OrganizationSection\Shift\Facades\Container;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Containers\OrganizationSection\Shift\Tests\Functional\ApiTestCase;
+use App\Ship\Parents\Transformers\Transformer;
+use App\Ship\Support\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
 
+#[AllowDynamicProperties]
 final class CreateShiftTest extends ApiTestCase
 {
     protected array $access = [
@@ -39,6 +43,8 @@ final class CreateShiftTest extends ApiTestCase
 
     public function testWithoutAccess(): void
     {
+        $this->testingUser = null;
+
         $this->getTestingUser(null, [
             ROLES => '',
             PERMISSIONS => ''
@@ -51,8 +57,12 @@ final class CreateShiftTest extends ApiTestCase
 
     public function testSuccess(): void
     {
+        $startAt = Carbon::now();
+        $finishAt = Carbon::now()->addHours(8);
+
         $data = [
-            // Write data
+            Shift::START_AT => $startAt->format(DATE_TIME_FORMAT),
+            Shift::FINISH_AT => $finishAt->format(DATE_TIME_FORMAT)
         ];
 
         $this->makeCall($data);
@@ -63,7 +73,53 @@ final class CreateShiftTest extends ApiTestCase
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
                     ->where('data.' . OBJECT, ShiftModel::RESOURCE_KEY)
-                    //->where('data.' . Shift::, $data[Shift::])
+                    ->where('data.' . CREATED_BY, $this->testingUser->getHashedKey())
+                    ->where(
+                        'data.' . Shift::START_AT . '.date_for_human',
+                        $startAt->format(Transformer::HUMAN_DATE_FORMAT)
+                    )
+                    ->where(
+                        'data.' . Shift::START_AT . '.time_short',
+                        $startAt->format(TIME_FORMAT_SHORT)
+                    )
+                    ->where(
+                        'data.' . Shift::FINISH_AT . '.date_for_human',
+                        $finishAt->format(Transformer::HUMAN_DATE_FORMAT)
+                    )
+                    ->where(
+                        'data.' . Shift::FINISH_AT . '.time_short',
+                        $finishAt->format(TIME_FORMAT_SHORT)
+                    )
+                    ->where(
+                        'data.' . Shift::ORGANIZATION_BRANCH_ID,
+                        $this->testingUser->getHashedKey(Shift::ORGANIZATION_BRANCH_ID)
+                    )
+                    ->where(
+                        'data.' . Shift::ORGANIZATION_ID,
+                        $this->testingUser->getHashedKey(Shift::ORGANIZATION_ID)
+                    )
+                    ->etc()
+            );
+    }
+
+    public function testSuccessWithNullOrganizationBranchId(): void
+    {
+        $startAt = Carbon::now();
+        $finishAt = Carbon::now()->addHours(8);
+
+        $data = [
+            Shift::START_AT => $startAt->format(DATE_TIME_FORMAT),
+            Shift::FINISH_AT => $finishAt->format(DATE_TIME_FORMAT),
+            Shift::EXCLUDE_ORGANIZATION_BRANCH => 1
+        ];
+
+        $this->makeCall($data);
+
+        $this->response
+            ->assertCreated()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->where('data.' . Shift::ORGANIZATION_BRANCH_ID, null)
                     ->etc()
             );
     }

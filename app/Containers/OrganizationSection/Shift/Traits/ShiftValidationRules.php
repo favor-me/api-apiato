@@ -31,11 +31,6 @@ trait ShiftValidationRules
         ]);
     }
 
-    public function getShiftOrganizationIdValidationRules(): ValidationRules
-    {
-        return validation_rules(Container::getConfig('rules.' . Shift::ORGANIZATION_ID));
-    }
-
     public function getShiftStartAtValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . Shift::START_AT));

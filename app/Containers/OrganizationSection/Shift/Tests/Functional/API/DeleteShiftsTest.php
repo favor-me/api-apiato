@@ -16,7 +16,10 @@
 namespace App\Containers\OrganizationSection\Shift\Tests\Functional\API;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\OrganizationSection\Shift\Facades\Container;
+use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Containers\OrganizationSection\Shift\Tests\Functional\ApiTestCase;
 use App\Ship\Parents\Requests\Request;
@@ -32,32 +35,6 @@ final class DeleteShiftsTest extends ApiTestCase
     {
         parent::setUp();
         $this->endpoint = 'delete@v1/' . Container::getApiUri() . '?' . Request::FORCE_DELETE . '=1';
-    }
-
-    public function testWithNotTrashed(): void
-    {
-        $this->getTestingOrganizationOwnerUser();
-
-        $model = ShiftModel::factory()->create();
-
-        $this->makeCall([
-            IDS => [
-                $model->getHashedKey()
-            ]
-        ]);
-
-        $this->assertGivenDataIsInvalid();
-
-        $this->response->assertJson(
-            fn(AssertableJson $json): AssertableJson => $json
-                ->has('errors')
-                ->where('errors', [
-                    IDS . '.0' => [
-                        __('validation.custom.ids.*.exists')
-                    ]
-                ])
-                ->etc()
-        );
     }
 
     public function testFailedWithNoExistsIds(): void
@@ -88,10 +65,17 @@ final class DeleteShiftsTest extends ApiTestCase
     {
         $this->getTestingOrganizationOwnerUser();
 
+        $organizationUser = UserModel::factory()
+            ->create([
+                User::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
+
         $models = ShiftModel::factory()
             ->count(2)
-            ->trashed()
-            ->create();
+            ->create([
+                CREATED_BY => $organizationUser->id,
+                Shift::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
 
         $this->makeCall([
             IDS => $models

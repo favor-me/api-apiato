@@ -12,6 +12,8 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
+ * @codingStandardsIgnoreStart
+ *
  * @apiGroup OrganizationShift
  * @apiName createOrganizationShift
  * @api {post} /v1/organization/shifts Создать
@@ -20,10 +22,9 @@
  * @apiVersion 1.0.0
  * @apiPermission Аутентифицированный пользователь
  *
- * @apiBody {String} [organization_id] Уникальный идентификатор организации.
- * @apiBody {String} [start_at] Дата начала.
- * @apiBody {String} [finish_at] Дата завершения.
- * @apiBody {String} [created_by]
+ * @apiBody {String} start_at Дата начала.
+ * @apiBody {String} finish_at Дата завершения.
+ * @apiBody {Boolean=false,true} [exclude_organization_branch] Если передать `true` отделение не будет связано со сменой.
  *
  * @apiUse ShiftSuccessSingleResponse
  */

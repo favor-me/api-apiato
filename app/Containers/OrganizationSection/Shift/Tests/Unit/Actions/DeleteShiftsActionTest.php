@@ -27,22 +27,6 @@ final class DeleteShiftsActionTest extends UnitTestCase
 
         $result = app(DeleteShiftsAction::class)->run([$model->id]);
 
-        $this->assertSame(ZERO, $result);
-    }
-
-    public function testTrashed(): void
-    {
-        $models = ShiftModel::factory()
-            ->count(2)
-            ->trashed()
-            ->create();
-
-        $ids = $models
-            ->pluck(ID)
-            ->toArray();
-
-        $result = app(DeleteShiftsAction::class)->run($ids);
-
-        $this->assertSame($models->count(), $result);
+        $this->assertSame(1, $result);
     }
 }

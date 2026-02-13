@@ -20,6 +20,7 @@ HTTP/1.1 200 OK
         "object": "Shift",
         "id": null,
         "organization_id": null,
+        "organization_branch_id": null,
         "start_at": null,
         "finish_at": null,
         "created_by": null,

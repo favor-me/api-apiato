@@ -53,9 +53,10 @@ final class ShiftTest extends UnitTestCase
     {
         $this->assertSame([
             Shift::ORGANIZATION_ID,
+            Shift::ORGANIZATION_BRANCH_ID,
             Shift::START_AT,
             Shift::FINISH_AT,
-            'created_by'
+            CREATED_BY
         ], $this->model->getFillable());
     }
 }

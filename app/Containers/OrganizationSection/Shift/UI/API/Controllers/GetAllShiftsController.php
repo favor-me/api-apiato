@@ -36,6 +36,10 @@ class GetAllShiftsController extends ApiController
         GetAllShiftsRequest $request,
         GetAllShiftsAction $action
     ): JsonResponse {
+        if ($request->ifForWorker()) {
+            $action->forAuthUser();
+        }
+
         $models = $action->run($request->isOnlyTrashed());
 
         return Response::create(

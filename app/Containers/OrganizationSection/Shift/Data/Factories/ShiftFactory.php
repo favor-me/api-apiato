@@ -15,12 +15,15 @@
 
 namespace App\Containers\OrganizationSection\Shift\Data\Factories;
 
-use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift;
+use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
-use App\Ship\Traits\Factory\HasTrashedState;
+use Closure;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @method Collection|ShiftModel create($attributes = [], ?Model $parent = null)
@@ -28,17 +31,19 @@ use Illuminate\Database\Eloquent\Model;
  */
 final class ShiftFactory extends Factory
 {
-    use HasTrashedState;
-
     protected $model = ShiftModel::class;
 
     public function definition(): array
     {
+        /** @var User $user */
+        $user = Auth::user();
+
         return [
-            'created_by' => null,
-            Shift::FINISH_AT => null,
-            Shift::ORGANIZATION_ID => null,
-            Shift::START_AT => null
+            CREATED_BY => $user->id,
+            Shift::FINISH_AT => Carbon::now(),
+            Shift::ORGANIZATION_ID => $user->organization_id,
+            Shift::ORGANIZATION_BRANCH_ID => $user->organization_branch_id,
+            Shift::START_AT => Carbon::now()->addHours(8)
         ];
     }
 }

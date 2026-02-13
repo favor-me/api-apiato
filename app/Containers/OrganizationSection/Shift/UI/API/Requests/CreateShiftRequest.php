@@ -35,11 +35,21 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
     public function rules(): array
     {
         return [
-            Shift::ORGANIZATION_ID => $this->getShiftOrganizationIdValidationRules(),
             Shift::START_AT => $this->getShiftStartAtValidationRules(),
-            Shift::FINISH_AT => $this->getShiftFinishAtValidationRules(),
-            'created_by' => $this->getShiftCreatedByValidationRules(),
+            Shift::FINISH_AT => $this->getShiftFinishAtValidationRules()
         ];
+    }
+
+    public function getShiftStartAtValidationRules(): ValidationRules
+    {
+        return parent::getShiftStartAtValidationRules()
+            ->addRequired();
+    }
+
+    public function getShiftFinishAtValidationRules(): ValidationRules
+    {
+        return parent::getShiftFinishAtValidationRules()
+            ->addRequired();
     }
 
     /**
@@ -48,7 +58,18 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
      */
     public function getDto(): CreateShiftDto
     {
-        return $this->newDto($this->validated());
+        $data = $this->validated() +
+            [
+                CREATED_BY => $this->created_by,
+                Shift::ORGANIZATION_ID => $this->organization_id,
+                Shift::ORGANIZATION_BRANCH_ID => $this->organization_branch_id
+            ];
+
+        if ($this->get(Shift::EXCLUDE_ORGANIZATION_BRANCH)) {
+            unset($data[Shift::ORGANIZATION_BRANCH_ID]);
+        }
+
+        return $this->newDto($data);
     }
 
     /**

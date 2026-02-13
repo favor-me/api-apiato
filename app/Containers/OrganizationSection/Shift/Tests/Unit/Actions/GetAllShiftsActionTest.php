@@ -33,20 +33,4 @@ final class GetAllShiftsActionTest extends UnitTestCase
         $this->assertInstanceOf(LengthAwarePaginator::class, $result);
         $this->assertSame($models->count(), $result->count());
     }
-
-    public function testOnlyTrashed(): void
-    {
-        ShiftModel::factory()
-            ->count(4)
-            ->create();
-
-        ShiftModel::factory()
-            ->trashed()
-            ->create();
-
-        $result = app(GetAllShiftsAction::class)->run(true);
-
-        $this->assertInstanceOf(LengthAwarePaginator::class, $result);
-        $this->assertSame(1, $result->total());
-    }
 }
