@@ -16,6 +16,7 @@ use App\Ship\Collections\ValidationRules;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Enumerable;
+use App\Ship\Middlewares\Http\AcceptTimeZone;
 
 if (!function_exists('is_hash_id_mode')) {
 
@@ -31,6 +32,15 @@ if (!function_exists('hash_encode')) {
     function hash_encode($value): string
     {
         return is_hash_id_mode() ? Hashids::encode($value) : $value;
+    }
+
+}
+
+if (!function_exists('timezone')) {
+
+    function timezone(): string
+    {
+        return request()->header(AcceptTimeZone::HEADER);
     }
 
 }
