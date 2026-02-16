@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\App;
 
 class LocalizationMiddleware extends Middleware
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         $language = $this->getLanguage($request);
 

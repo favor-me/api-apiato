@@ -15,12 +15,16 @@
 namespace App\Ship\Parents\Exceptions;
 
 use Apiato\Core\Abstracts\Exceptions\Exception as AbstractException;
+use Throwable;
 
-/**
- * Class Exception
- *
- * @package App\Ship\Parents\Exceptions
- */
 abstract class Exception extends AbstractException
 {
+    public function __construct(?string $message = null, ?int $code = null, ?Throwable $previous = null)
+    {
+        if (app('translator')->has($this->message)) {
+            $this->message = trans($this->message);
+        }
+
+        parent::__construct($message, $code, $previous);
+    }
 }

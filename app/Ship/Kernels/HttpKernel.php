@@ -25,6 +25,7 @@ use App\Ship\Middlewares\Http\ProcessETagHeadersMiddleware;
 use App\Ship\Middlewares\Http\ProfilerMiddleware;
 use App\Ship\Middlewares\Http\OwnSearchQuery;
 use App\Ship\Middlewares\Http\RequestCriteriaDefaultSearchJoinIsAnd;
+use App\Ship\Middlewares\Http\TimeZone;
 use App\Ship\Middlewares\Http\TrimStrings;
 use App\Ship\Middlewares\Http\TrustProxies;
 use App\Ship\Middlewares\Http\ValidateJsonContent;
@@ -68,7 +69,8 @@ class HttpKernel extends LaravelHttpKernel
         ValidatePostSize::class,
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,
-        LocalizationMiddleware::class
+        LocalizationMiddleware::class,
+        TimeZone::class
     ];
 
     /**

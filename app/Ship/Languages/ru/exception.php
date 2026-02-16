@@ -12,7 +12,9 @@
  * @link https://youbm.ru
  */
 
-use App\Ship\Middlewares\Http\AcceptTimeZone;
+use App\Ship\Middlewares\Http\TimeZone;
+
+// @codingStandardsIgnoreStart
 
 return [
     'empty_update_data' => 'Данные для обновления не найдены.',
@@ -32,5 +34,5 @@ return [
     'unable_to_remove_superuser' => 'Не возможно удалить супер-админа.',
     'unauthorized_action' => 'Это действие несанкционированно.',
     'update_data_empty' => 'Данные для обновления не обнаружены.',
-    'missing_time_zone_header' => 'Ваш запрос должен содержать заголовок ' . AcceptTimeZone::HEADER . ' с UTC'
+    'missing_time_zone_header' => 'Ваш запрос должен содержать заголовок ' . TimeZone::HEADER . ' с корректным UTC значением.'
 ];
