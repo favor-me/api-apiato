@@ -14,7 +14,6 @@
 
 namespace App\Ship\Kernels;
 
-use App\Ship\Middlewares\Http\AcceptTimeZone;
 use App\Ship\Middlewares\Http\Authenticate;
 use App\Ship\Middlewares\Http\CanBeAuthenticated;
 use App\Ship\Middlewares\Http\EncryptCookies;
@@ -93,7 +92,7 @@ class HttpKernel extends LaravelHttpKernel
             SubstituteBindings::class,
             ValidateJsonContent::class,
             ProcessETagHeadersMiddleware::class,
-            ProfilerMiddleware::class,
+            ProfilerMiddleware::class
         ],
     ];
 
@@ -120,7 +119,6 @@ class HttpKernel extends LaravelHttpKernel
         'search.own_query' => OwnSearchQuery::class,
         'search.default_search_join_is_and' => RequestCriteriaDefaultSearchJoinIsAnd::class,
         'search.insert_created_by' => InsertCreatedByForSearchQuery::class,
-        AcceptTimeZone::KEY => AcceptTimeZone::class,
         CanBeAuthenticated::KEY => CanBeAuthenticated::class
     ];
 
