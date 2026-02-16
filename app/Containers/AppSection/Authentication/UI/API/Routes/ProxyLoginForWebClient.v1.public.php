@@ -32,9 +32,7 @@
  */
 
 use App\Containers\AppSection\Authentication\UI\API\Controllers\ProxyLoginForWebClientController;
-use App\Ship\Middlewares\Http\AcceptTimeZone;
 use Illuminate\Support\Facades\Route;
 
 Route::post('clients/web/login', ProxyLoginForWebClientController::class)
-    ->middleware(AcceptTimeZone::KEY)
     ->name('api_authentication_client_web_login_proxy');
