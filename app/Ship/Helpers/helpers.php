@@ -16,7 +16,7 @@ use App\Ship\Collections\ValidationRules;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Enumerable;
-use App\Ship\Middlewares\Http\AcceptTimeZone;
+use App\Ship\Middlewares\Http\TimeZone;
 
 if (!function_exists('is_hash_id_mode')) {
 
@@ -36,11 +36,11 @@ if (!function_exists('hash_encode')) {
 
 }
 
-if (!function_exists('timezone')) {
+if (!function_exists('client_timezone')) {
 
-    function timezone(): string
+    function client_timezone(): ?string
     {
-        return request()->header(AcceptTimeZone::HEADER);
+        return request()->header(TimeZone::HEADER);
     }
 
 }
@@ -63,7 +63,7 @@ if (!function_exists('hash_decode')) {
 
 if (!function_exists('validation_rules')) {
 
-    function validation_rules(array $rules): ValidationRules
+    function validation_rules(array $rules = []): ValidationRules
     {
         return new ValidationRules($rules);
     }
