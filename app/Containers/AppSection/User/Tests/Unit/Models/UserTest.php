@@ -235,7 +235,7 @@ final class UserTest extends UnitTestCase
         $this->assertFalse($userC->isRealOrganizationOwner($organizationB->id));
     }
 
-    public function testHasOneTodayShift(): void
+    public function testHasOneNowShift(): void
     {
         $userB = UserModel::factory()->create();
         $userA = UserModel::factory()->create();
@@ -256,10 +256,10 @@ final class UserTest extends UnitTestCase
                 CREATED_BY => $userC->id
             ]);
 
-        $this->assertNull($userA->todayShift);
-        $this->assertNull($userB->todayShift);
+        $this->assertNull($userA->nowShift);
+        $this->assertNull($userB->nowShift);
 
-        $this->assertInstanceOf(ShiftModel::class, $userC->todayShift);
-        $this->assertSame($userCShift->id, $userC->todayShift->id);
+        $this->assertInstanceOf(ShiftModel::class, $userC->nowShift);
+        $this->assertSame($userCShift->id, $userC->nowShift->id);
     }
 }

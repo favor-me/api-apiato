@@ -71,7 +71,7 @@ use JBZoo\Data\JSON as JsonData;
  * @property-read Collection $contacts
  * @property-read Collection $devices Список устройств.
  * @property-read Collection $actualDevices Список актуальных устройств.
- * @property-read ShiftModel|null $todayShift Модель текущей смены.
+ * @property-read ShiftModel|null $nowShift Модель текущей смены.
  * @property-read Collection $telegramBots Список телеграм ботов.
  *
  * @method static UserFactory factory(...$parameters)
@@ -87,8 +87,8 @@ class User extends UserModel implements HasResourceKey, CanResetPassword
     use AuthenticationTrait;
     use IsNumbered;
 
-    public const TABLE = 'users';
-    public const WEEK_LAST_ACTIVE_DEVICES = 2;
+    public const string TABLE = 'users';
+    public const int WEEK_LAST_ACTIVE_DEVICES = 2;
 
     protected $table = self::TABLE;
 
@@ -136,9 +136,9 @@ class User extends UserModel implements HasResourceKey, CanResetPassword
         return $this->belongsTo(OrganizationBranchModel::class, BaseUser::ORGANIZATION_BRANCH_ID, ID);
     }
 
-    public function todayShift(): HasOne
+    public function nowShift(): HasOne
     {
-        $now = Carbon::now();
+        $now = Carbon::now(client_timezone());
         return $this->hasOne(ShiftModel::class, CREATED_BY, ID)
             ->whereRaw(implode(' ', [
                 '\'' . $now->toDateTimeString() . '\' >= cast(' . Shift::START_AT . ' as datetime)',
@@ -175,7 +175,8 @@ class User extends UserModel implements HasResourceKey, CanResetPassword
 
     public function actualDevices(): HasMany
     {
-        $fromDate = Carbon::now()->subWeeks(self::WEEK_LAST_ACTIVE_DEVICES);
+        $fromDate = Carbon::now(client_timezone())
+            ->subWeeks(self::WEEK_LAST_ACTIVE_DEVICES);
 
         return $this
             ->hasMany(UserDevice::class, BaseUser::ID, ID)

@@ -92,7 +92,7 @@ class UserTransformer extends Transformer
     protected function includeTodayShift(UserModel $user): Item|Primitive
     {
         return $this->primitiveNullOrItem(
-            $user->todayShift,
+            $user->nowShift,
             (new ShiftTransformerManager())->getDefaultOrAdmin()
         );
     }
