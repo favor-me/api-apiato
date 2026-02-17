@@ -51,10 +51,10 @@ final class ShiftFactory extends Factory
 
         return [
             CREATED_BY => $user->id,
-            Shift::FINISH_AT => Carbon::now(),
+            Shift::FINISH_AT => Carbon::now()->addHours(8),
             Shift::ORGANIZATION_ID => $user->organization_id,
             Shift::ORGANIZATION_BRANCH_ID => $user->organization_branch_id,
-            Shift::START_AT => Carbon::now()->addHours(8)
+            Shift::START_AT => Carbon::now()
         ];
     }
 }
