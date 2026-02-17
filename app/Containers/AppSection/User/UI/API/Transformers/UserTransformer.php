@@ -33,7 +33,7 @@ class UserTransformer extends Transformer
         'devices',
         'organization',
         'organizationBranch',
-        User::TODAY_SHIFT
+        User::NOW_SHIFT
     ];
 
     public function transform(UserModel $user): array
@@ -89,7 +89,7 @@ class UserTransformer extends Transformer
         return $this->collection($user->devices(), new UserDeviceTransformer());
     }
 
-    protected function includeTodayShift(UserModel $user): Item|Primitive
+    protected function includeNowShift(UserModel $user): Item|Primitive
     {
         return $this->primitiveNullOrItem(
             $user->nowShift,
