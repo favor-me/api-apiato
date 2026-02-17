@@ -36,12 +36,12 @@ return new class extends Migration {
             $table->index(Order::STATUS_ID, $this->getFieldIndexName(Order::STATUS_ID));
 
             $table
-                ->datetime(Order::COMPLETED_AT)
+                ->timestamp(Order::COMPLETED_AT)
                 ->nullable()
                 ->after(UPDATED_BY);
 
             $table
-                ->datetime(Order::CANCELED_AT)
+                ->timestamp(Order::CANCELED_AT)
                 ->nullable()
                 ->after(Order::COMPLETED_AT);
         });
