@@ -138,7 +138,7 @@ class User extends UserModel implements HasResourceKey, CanResetPassword
 
     public function nowShift(): HasOne
     {
-        $now = Carbon::now(client_timezone());
+        $now = Carbon::now();
         return $this->hasOne(ShiftModel::class, CREATED_BY, ID)
             ->whereRaw(implode(' ', [
                 '\'' . $now->toDateTimeString() . '\' >= cast(' . Shift::START_AT . ' as datetime)',
