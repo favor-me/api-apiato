@@ -16,19 +16,10 @@
 namespace App\Containers\OrganizationSection\Shift\Exceptions;
 
 use App\Ship\Parents\Exceptions\Exception;
-use Exception as BaseException;
 use Symfony\Component\HttpFoundation\Response;
 
 class NowShiftExistsException extends Exception
 {
     protected $code = Response::HTTP_BAD_REQUEST;
-
-    public function __construct(?string $message = null, ?int $code = null, ?BaseException $previous = null)
-    {
-        if (is_null($message)) {
-            $this->message = __('ship::exception.invalid_system_date_format');
-        }
-
-        parent::__construct($message, $code, $previous);
-    }
+    protected $message = 'organizationSection@shift::container.now_shift_exists';
 }

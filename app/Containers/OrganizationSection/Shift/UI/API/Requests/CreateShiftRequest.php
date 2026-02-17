@@ -17,6 +17,7 @@ namespace App\Containers\OrganizationSection\Shift\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\OrganizationSection\Shift\Dto\CreateShiftDto;
+use App\Containers\OrganizationSection\Shift\Exceptions\NowShiftExistsException;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Requests\ShiftApiRequest;
 use App\Ship\Collections\ValidationRules;
@@ -70,6 +71,19 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
     public function newDto(array $data = []): CreateShiftDto
     {
         return new CreateShiftDto($data);
+    }
+
+    /**
+     * @return void
+     * @throws NowShiftExistsException
+     */
+    protected function prepareForValidation(): void
+    {
+        parent::prepareForValidation();
+
+        if ($this->user()->nowShift) {
+            throw new NowShiftExistsException();
+        }
     }
 
     protected function commonDtoData(): array
