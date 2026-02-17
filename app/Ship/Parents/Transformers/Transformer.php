@@ -24,6 +24,9 @@ use League\Fractal\Resource\Primitive;
 
 abstract class Transformer extends AbstractTransformer
 {
+    /**
+     * @deprecated Please use global DATE_FORMAT
+     */
     public const string HUMAN_DATE_FORMAT = 'd.m.Y';
 
     protected string $realKeyPrefix = 'real_';

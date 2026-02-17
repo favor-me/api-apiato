@@ -18,13 +18,21 @@ namespace App\Ship\Traits\Model;
 use App\Ship\Eloquent\Casts\DateTimeAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
+/**
+ * @SuppressWarnings(PHPMD.LongVariable)
+ */
 trait FinishAtAttribute
 {
     public function finishAt(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => DateTimeAttribute::setFromCustomFormat($value),
+            set: fn ($value) => DateTimeAttribute::setFromCustomFormat($value, $this->getFinishAtAttributeFormat()),
             get: fn ($value) => DateTimeAttribute::get($value)
         );
+    }
+
+    protected function getFinishAtAttributeFormat(): string
+    {
+        return DATE_TIME_FORMAT;
     }
 }

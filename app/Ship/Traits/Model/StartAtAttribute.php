@@ -18,13 +18,21 @@ namespace App\Ship\Traits\Model;
 use App\Ship\Eloquent\Casts\DateTimeAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
+/**
+ * @SuppressWarnings(PHPMD.LongVariable)
+ */
 trait StartAtAttribute
 {
     public function startAt(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => DateTimeAttribute::setFromCustomFormat($value),
+            set: fn ($value) => DateTimeAttribute::setFromCustomFormat($value, $this->getStartAtAttributeFormat()),
             get: fn ($value) => DateTimeAttribute::get($value)
         );
+    }
+
+    protected function getStartAtAttributeFormat(): string
+    {
+        return DATE_TIME_FORMAT;
     }
 }

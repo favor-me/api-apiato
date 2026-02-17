@@ -19,14 +19,10 @@ use Illuminate\Support\Carbon;
 
 class DateTimeAttribute
 {
-    public static function setFromCustomFormat(mixed $value): mixed
+    public static function setFromCustomFormat(mixed $value, string $format): mixed
     {
         if (client_timezone() && !$value instanceof Carbon) {
-            return Carbon::createFromFormat(
-                DATE_TIME_FORMAT,
-                $value,
-                client_timezone()
-            )->utc();
+            return Carbon::createFromFormat($format, $value, client_timezone())->utc();
         }
 
         return $value;
