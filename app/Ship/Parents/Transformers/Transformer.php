@@ -87,6 +87,8 @@ abstract class Transformer extends AbstractTransformer
     public function time(?Carbon $carbon): ?array
     {
         if ($carbon instanceof Carbon) {
+            //$carbon->setTimezone('Europe/Saratov');
+
             return [
                 'timestamp' => $carbon->getTimestamp(),
                 'diff_for_humans' => $carbon->diffForHumans(),
@@ -97,6 +99,7 @@ abstract class Transformer extends AbstractTransformer
                 'time' => $carbon->format(TIME_FORMAT),
                 'timezone' => $carbon->getTimezone()->getName(),
                 'timezone_type' => $carbon->getTimezone()->getType(),
+                'timezone_utc' => $carbon->getTimezone()->toOffsetTimeZone()->getName(),
                 'time_short' => $carbon->format(TIME_FORMAT_SHORT),
                 'is_future' => $carbon->isFuture()
             ];

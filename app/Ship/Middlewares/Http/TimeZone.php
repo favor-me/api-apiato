@@ -17,53 +17,13 @@ namespace App\Ship\Middlewares\Http;
 
 use App\Ship\Exceptions\MissingTimeZoneHeaderException;
 use App\Ship\Parents\Middlewares\Middleware;
-use Illuminate\Http\Request;
 use Closure;
+use DateTimeZone;
+use Illuminate\Http\Request;
 
 final class TimeZone extends Middleware
 {
     public const string HEADER = 'Accept-Time-Zone';
-
-    protected array $allowed = [
-        '−12:00',
-        '−11:00',
-        '−10:00',
-        '−09:30',
-        '−09:00',
-        '−08:00',
-        '−07:00',
-        '−06:00',
-        '−05:00',
-        '−04:00',
-        '−03:30',
-        '−03:00',
-        '−02:30',
-        '−02:00',
-        '−01:00',
-        '00:00',
-        '+01:00',
-        '+02:00',
-        '+03:00',
-        '+04:00',
-        '+04:30',
-        '+05:00',
-        '+05:30',
-        '+05:45',
-        '+06:00',
-        '+07:00',
-        '+08:00',
-        '+08:45',
-        '+09:00',
-        '+09:30',
-        '+10:00',
-        '+10:30',
-        '+11:00',
-        '+12:00',
-        '+12:45',
-        '+13:00',
-        '+13:45',
-        '+14:00'
-    ];
 
     /**
      * @param Request $request
@@ -87,7 +47,7 @@ final class TimeZone extends Middleware
      */
     protected function checkHeader(Request $request): void
     {
-        if (!in_array($request->header(self::HEADER), $this->allowed)) {
+        if (!in_array($request->header(self::HEADER), DateTimeZone::listIdentifiers())) {
             throw new MissingTimeZoneHeaderException();
         }
     }

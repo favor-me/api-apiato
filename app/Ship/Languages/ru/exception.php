@@ -34,5 +34,5 @@ return [
     'unable_to_remove_superuser' => 'Не возможно удалить супер-админа.',
     'unauthorized_action' => 'Это действие несанкционированно.',
     'update_data_empty' => 'Данные для обновления не обнаружены.',
-    'missing_time_zone_header' => 'Ваш запрос должен содержать заголовок ' . TimeZone::HEADER . ' с корректным UTC значением.'
+    'missing_time_zone_header' => 'Ваш запрос должен содержать заголовок ' . TimeZone::HEADER . ' с корректным значением временной зоны. Например: Europe/Moscow',
 ];
