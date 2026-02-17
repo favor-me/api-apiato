@@ -20,8 +20,7 @@ use App\Containers\AppSection\User\Traits\HasUserValidationRules;
 use App\Containers\AppSection\User\Traits\IsOrganizationUser;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationBranch\Traits\OrganizationBranchValidationRules;
-use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\AdminOrganizationBranchTransformer;
-use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformer;
+use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformerManager;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
@@ -41,7 +40,7 @@ abstract class OrganizationBranchApiRequest extends ApiRequest implements Gettab
 
     public function getTransformer(): Transformer
     {
-        return $this->isAdminUser() ? new AdminOrganizationBranchTransformer() : new OrganizationBranchTransformer();
+        return (new OrganizationBranchTransformerManager())->getDefaultOrAdmin();
     }
 
     protected function prepareForValidation(): void

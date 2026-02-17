@@ -22,14 +22,11 @@ class AdminOrganizationBranchTransformer extends OrganizationBranchTransformer
 {
     public function transform(OrganizationBranchModel $organizationBranch): array
     {
-        $organizationId = OrganizationBranch::ORGANIZATION_ID;
-        $responsibleBy = OrganizationBranch::RESPONSIBLE_BY;
-
         return parent::transform($organizationBranch) +
             [
-                $this->realKey(ID) => $organizationBranch->getHashedKey(ID),
-                $this->realKey($organizationId) => $organizationBranch->getHashedKey($organizationId),
-                $this->realKey($responsibleBy) => $organizationBranch->getHashedKey($responsibleBy)
+                $this->realKey(ID) => $organizationBranch->id,
+                $this->realKey(OrganizationBranch::ORGANIZATION_ID) => $organizationBranch->organization_id,
+                $this->realKey(OrganizationBranch::RESPONSIBLE_BY) => $organizationBranch->responsible_by
             ];
     }
 }
