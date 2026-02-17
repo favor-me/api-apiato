@@ -24,7 +24,10 @@ use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\OrganizationSection\OwnershipType\Type as OwnershipType;
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Parents\Models\Model;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\DeletedAtAttribute;
 use App\Ship\Traits\Model\IsNumbered;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -52,6 +55,9 @@ class Counterparty extends Model
 {
     use SoftDeletes;
     use IsNumbered;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
+    use DeletedAtAttribute;
 
     public const string TABLE = 'counterparties';
     public const string RESOURCE_KEY = 'Counterparty';
