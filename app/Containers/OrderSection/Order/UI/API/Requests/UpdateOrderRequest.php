@@ -35,6 +35,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 /**
  * @method UpdateOrderDto getDto()
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UpdateOrderRequest extends CreateOrderRequest
 {
@@ -51,6 +52,9 @@ class UpdateOrderRequest extends CreateOrderRequest
         ID
     ];
 
+    /**
+     * @SuppressWarnings(PHPMD.LongVariableName)
+     */
     protected array $cantUpdateWithStatuses = [
         Status::CANCELED,
         Status::COMPLETED
@@ -130,6 +134,12 @@ class UpdateOrderRequest extends CreateOrderRequest
         return new UpdateOrderDto($data);
     }
 
+    public function getShiftIdValidationRules(): ValidationRules
+    {
+        return parent::getShiftIdValidationRules()
+            ->removeRequired();
+    }
+
     /**
      * @return void
      * @throws UpdateResourceFailedException
@@ -196,6 +206,11 @@ class UpdateOrderRequest extends CreateOrderRequest
                 }
             );
         }
+    }
+
+    protected function prepareUserShiftForValidation(): void
+    {
+        // No prepare shift for update.
     }
 
     /**

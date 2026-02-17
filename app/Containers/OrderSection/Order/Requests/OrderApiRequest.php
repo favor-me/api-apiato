@@ -28,6 +28,7 @@ use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Traits\OrderValidationRules;
 use App\Containers\OrderSection\Order\UI\API\Transformers\OrderTransformerManager;
 use App\Containers\OrderSection\Status\Traits\StatusValidationRules;
+use App\Containers\OrganizationSection\Shift\Traits\ShiftValidationRules;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
@@ -40,6 +41,7 @@ abstract class OrderApiRequest extends ApiRequest implements GettableTransformer
     use IsOrganizationUser;
     use ItemValidationRules;
     use OrderValidationRules;
+    use ShiftValidationRules;
     use StatusValidationRules;
     use ContractValidationRules;
     use OrganizationValidationRules;

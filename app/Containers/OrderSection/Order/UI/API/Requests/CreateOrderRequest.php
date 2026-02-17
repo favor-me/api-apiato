@@ -16,6 +16,7 @@
 namespace App\Containers\OrderSection\Order\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Validation\Rules\UserHasNowShiftRule;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\OrderSection\Item\Foundation\Item;
@@ -55,6 +56,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         parent::afterInitialize();
 
         $this->mergeDecode([
+            Order::SHIFT_ID,
             Order::CLIENT_ID,
             Order::CONTRACT_ID,
             Order::ORGANIZATION_BRANCH_ID,
@@ -65,6 +67,7 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
     public function rules(): array
     {
         return [
+            Order::SHIFT_ID => $this->getShiftIdValidationRules(),
             Order::ORGANIZATION_ID => $this->getOrganizationIdValidationRules(),
             Order::ORGANIZATION_BRANCH_ID => $this->getOrganizationBranchIdValidationRules(),
             Order::PAYMENT_TYPE => $this->getOrderPaymentTypeValidationRules(),
@@ -81,6 +84,13 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
             Order::ITEMS . '.*.' . Item::TYPE => $this->getItemTypeValidationRules(),
             Order::ITEMS . '.*.' . Item::UNIT_ID => $this->getOrganizationUnitIdValidationRules()
         ];
+    }
+
+    public function getShiftIdValidationRules(): ValidationRules
+    {
+        return validation_rules([
+            new UserHasNowShiftRule($this->user())
+        ])->addRequired();
     }
 
     public function getOrderTotalValidationRules(): ValidationRules
@@ -217,9 +227,19 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
     {
         parent::prepareForValidation();
 
+        $this->prepareUserShiftForValidation();
         $this->prepareItemsPricesForValidation();
         $this->prepareClientIdForValidation();
         $this->prepareTotalForValidation();
+    }
+
+    protected function prepareUserShiftForValidation(): void
+    {
+        if (!is_null($this->user()->nowShift)) {
+            $this->merge([
+                Order::SHIFT_ID => $this->user()->nowShift->getHashedKey()
+            ]);
+        }
     }
 
     protected function prepareClientIdForValidation(): void
