@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
 
 class DateTimeAttribute
 {
-    public static function set(mixed $value): mixed
+    public static function setFromCustomFormat(mixed $value): mixed
     {
         if (client_timezone() && !$value instanceof Carbon) {
             return Carbon::createFromFormat(
@@ -32,12 +32,12 @@ class DateTimeAttribute
         return $value;
     }
 
-    public static function get(mixed $value): mixed
+    public static function get(mixed $value): Carbon
     {
         if ($value instanceof Carbon) {
             return $value->setTimezone(client_timezone());
         }
 
-        return $value;
+        return Carbon::createFromTimeString($value)->setTimezone(client_timezone());
     }
 }
