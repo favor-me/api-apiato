@@ -25,6 +25,11 @@ use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Database\Eloquent\Models\OrganizationModel;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\DeletedAtAttribute;
+use App\Ship\Traits\Model\FinishAtAttribute;
+use App\Ship\Traits\Model\StartAtAttribute;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,10 +55,18 @@ use Illuminate\Support\Facades\Auth;
  * @property-read Collection $unitPrices Список переопределенных цен для продуктов и услуг.
  *
  * @method static ContractFactory factory(...$parameters)
+ *
+ * @SuppressWarnings(PHPMD.LongVariable)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Contract extends OrganizationModel
 {
     use SoftDeletes;
+    use StartAtAttribute;
+    use FinishAtAttribute;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
+    use DeletedAtAttribute;
 
     public const string TABLE = 'contracts';
     public const string RESOURCE_KEY = 'Contract';
@@ -152,5 +165,15 @@ class Contract extends OrganizationModel
             ->max(BaseContract::NUMBER);
 
         $this->setAttribute(BaseContract::NUMBER, (int)$lastNumber + 1);
+    }
+
+    protected function getStartAtAttributeFormat(): string
+    {
+        return DATE_FORMAT;
+    }
+
+    protected function getFinishAtAttributeFormat(): string
+    {
+        return DATE_FORMAT;
     }
 }
