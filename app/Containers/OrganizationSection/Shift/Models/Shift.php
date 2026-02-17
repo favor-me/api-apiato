@@ -22,7 +22,11 @@ use App\Containers\OrganizationSection\Shift\Data\Factories\ShiftFactory;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift as BaseShift;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Parents\Models\Model;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\FinishAtAttribute;
 use App\Ship\Traits\Model\IsNumbered;
+use App\Ship\Traits\Model\StartAtAttribute;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -46,6 +50,10 @@ class Shift extends Model
 {
     use IsNumbered;
     use HasCreatedBy;
+    use StartAtAttribute;
+    use FinishAtAttribute;
+    use UpdatedAtAttribute;
+    use CreatedAtAttribute;
 
     public const string TABLE = 'shifts';
     public const string RESOURCE_KEY = 'Shift';
