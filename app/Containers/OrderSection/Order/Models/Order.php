@@ -35,9 +35,14 @@ use App\Containers\OrganizationSection\Shift\Models\Shift;
 use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Database\Eloquent\Concerns\HasUpdatedBy;
+use App\Ship\Eloquent\Casts\DateTimeAttribute;
 use App\Ship\Parents\Models\Model;
 use App\Ship\SimpleTypes\Type\Money;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\DeletedAtAttribute;
 use App\Ship\Traits\Model\IsNumbered;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -87,6 +92,9 @@ class Order extends Model
     use HasUpdatedBy;
     use SoftDeletes;
     use IsNumbered;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
+    use DeletedAtAttribute;
 
     public const string TABLE = 'orders';
     public const string RESOURCE_KEY = 'Order';
@@ -233,5 +241,21 @@ class Order extends Model
     {
         $this->setAttribute(BaseOrder::CANCELED_AT, $this->freshTimestamp());
         return $this;
+    }
+
+    public function completedAt(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value,
+            get: fn ($value) => DateTimeAttribute::get($value)
+        );
+    }
+
+    public function canceledAt(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value,
+            get: fn ($value) => DateTimeAttribute::get($value)
+        );
     }
 }
