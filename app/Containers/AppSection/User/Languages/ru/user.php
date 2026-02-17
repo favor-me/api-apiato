@@ -16,6 +16,7 @@ return [
     'login_can_be_used' => 'Логин может быть использован',
     'login_cant_be_used' => 'Логин не может быть использован',
     'not_found' => 'Пользователь не найден.',
+    'not_found_now_shift' => 'Текущая смена пользователя не найдена.',
     'profile_deleted' => 'Ваш профиль был удалён безвозвратно',
     'registration_success_message' => ':name вы успешно зарегестрировались в нашей системе.',
     'url_not_allowed' => 'URL адрес не доступен :url',
