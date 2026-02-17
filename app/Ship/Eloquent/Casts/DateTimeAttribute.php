@@ -32,10 +32,14 @@ class DateTimeAttribute
         return $value;
     }
 
-    public static function get(mixed $value): Carbon
+    public static function get(mixed $value): ?Carbon
     {
         if ($value instanceof Carbon) {
             return $value->setTimezone(client_timezone());
+        }
+
+        if (is_null($value)) {
+            return null;
         }
 
         return Carbon::createFromTimeString($value)->setTimezone(client_timezone());
