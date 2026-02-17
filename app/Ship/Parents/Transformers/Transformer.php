@@ -19,8 +19,8 @@ use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Transformers\MoneyTransformer;
 use Illuminate\Support\Carbon;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\Primitive;
 
 abstract class Transformer extends AbstractTransformer
 {
@@ -76,18 +76,28 @@ abstract class Transformer extends AbstractTransformer
 
     public function nullOrTimestamp(?Carbon $carbon): ?int
     {
-        return $carbon instanceof Carbon ? $carbon->getTimestamp() : null;
+        if ($carbon instanceof Carbon) {
+            $this->setCarbonClientTimeZone($carbon);
+            return $carbon->getTimestamp();
+        }
+
+        return null;
     }
 
     public function nullOrTime(?Carbon $carbon, string $format = TIME_FORMAT_SHORT): ?string
     {
-        return $carbon instanceof Carbon ? $carbon->format($format) : null;
+        if ($carbon instanceof Carbon) {
+            $this->setCarbonClientTimeZone($carbon);
+            return $carbon->format($format);
+        }
+
+        return null;
     }
 
     public function time(?Carbon $carbon): ?array
     {
         if ($carbon instanceof Carbon) {
-            //$carbon->setTimezone('Europe/Saratov');
+            $this->setCarbonClientTimeZone($carbon);
 
             return [
                 'timestamp' => $carbon->getTimestamp(),
@@ -108,9 +118,16 @@ abstract class Transformer extends AbstractTransformer
         return null;
     }
 
+    /**
+     * @param Carbon|null $carbon
+     * @return array|null
+     * @deprecated Please use time
+     */
     public function date(?Carbon $carbon): ?array
     {
         if ($carbon instanceof Carbon) {
+            $this->setCarbonClientTimeZone($carbon);
+
             return [
                 'timestamp' => $carbon->getTimestamp(),
                 'date_for_human' => $carbon->format(self::HUMAN_DATE_FORMAT),
@@ -133,5 +150,10 @@ abstract class Transformer extends AbstractTransformer
     protected function realKey(string $key): string
     {
         return $this->realKeyPrefix . $key;
+    }
+
+    protected function setCarbonClientTimeZone(Carbon &$carbon): void
+    {
+        $carbon->setTimezone(client_timezone());
     }
 }
