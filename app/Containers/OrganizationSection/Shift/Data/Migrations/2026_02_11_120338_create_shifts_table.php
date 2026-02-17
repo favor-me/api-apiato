@@ -29,9 +29,9 @@ return new class extends CreateTableMigration
         $table->id();
         $table->unsignedBigInteger(Shift::ORGANIZATION_ID);
         $table->unsignedBigInteger(Shift::ORGANIZATION_BRANCH_ID)->nullable();
-        $table->dateTime(Shift::START_AT);
-        $table->dateTime(Shift::FINISH_AT);
         $table->unsignedBigInteger(CREATED_BY);
+        $table->timestamp(Shift::START_AT);
+        $table->timestamp(Shift::FINISH_AT);
         $table->timestamps();
 
         return $this;
