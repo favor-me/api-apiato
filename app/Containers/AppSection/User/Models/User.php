@@ -30,7 +30,10 @@ use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Database\Casts\JSON;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\UserModel;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\DeletedAtAttribute;
 use App\Ship\Traits\Model\IsNumbered;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -78,14 +81,19 @@ use JBZoo\Data\JSON as JsonData;
  * @method static User findOrFail($id, $columns = ['*'])
  * @method static int count()
  * @method static Builder where($column, $operator = null, $value = null, $boolean = 'and')
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class User extends UserModel implements HasResourceKey, CanResetPassword
 {
     use Notifiable;
     use SoftDeletes;
+    use IsNumbered;
     use AuthorizationTrait;
     use AuthenticationTrait;
-    use IsNumbered;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
+    use DeletedAtAttribute;
 
     public const string TABLE = 'users';
     public const int WEEK_LAST_ACTIVE_DEVICES = 2;

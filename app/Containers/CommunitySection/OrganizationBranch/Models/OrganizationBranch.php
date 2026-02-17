@@ -20,7 +20,10 @@ use App\Containers\CommunitySection\Organization\Models\Organization as Organiza
 use App\Containers\CommunitySection\OrganizationBranch\Data\Factories\OrganizationBranchFactory;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch as BaseOrganizationBranch;
 use App\Ship\Parents\Models\Model;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\DeletedAtAttribute;
 use App\Ship\Traits\Model\IsNumbered;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -45,9 +48,12 @@ class OrganizationBranch extends Model
 {
     use SoftDeletes;
     use IsNumbered;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
+    use DeletedAtAttribute;
 
-    public const TABLE = 'organization_branches';
-    public const RESOURCE_KEY = 'OrganizationBranch';
+    public const string TABLE = 'organization_branches';
+    public const string RESOURCE_KEY = 'OrganizationBranch';
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;

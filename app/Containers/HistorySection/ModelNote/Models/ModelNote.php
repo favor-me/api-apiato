@@ -24,6 +24,8 @@ use App\Containers\HistorySection\ModelNote\Types\ModelNoteTypeManager;
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Parents\Models\Model;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use JBZoo\Data\JSON;
@@ -45,9 +47,11 @@ use JBZoo\Data\JSON;
 final class ModelNote extends Model implements HasResourceKey
 {
     use HasCreatedBy;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
 
-    public const TABLE = 'model_notes';
-    public const RESOURCE_KEY = 'ModelNote';
+    public const string TABLE = 'model_notes';
+    public const string RESOURCE_KEY = 'ModelNote';
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;

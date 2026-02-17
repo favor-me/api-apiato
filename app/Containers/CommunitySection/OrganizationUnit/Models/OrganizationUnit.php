@@ -31,7 +31,10 @@ use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\Model;
 use App\Ship\SimpleTypes\Type\Money;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\DeletedAtAttribute;
 use App\Ship\Traits\Model\IsNumbered;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -65,9 +68,12 @@ class OrganizationUnit extends Model
 {
     use SoftDeletes;
     use IsNumbered;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
+    use DeletedAtAttribute;
 
-    public const TABLE = 'organization_units';
-    public const RESOURCE_KEY = 'OrganizationUnit';
+    public const string TABLE = 'organization_units';
+    public const string RESOURCE_KEY = 'OrganizationUnit';
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;

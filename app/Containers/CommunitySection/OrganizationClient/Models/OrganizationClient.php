@@ -19,7 +19,10 @@ use App\Containers\CommunitySection\Organization\Traits\BelongsToOrganization;
 use App\Containers\CommunitySection\OrganizationClient\Data\Factories\OrganizationClientFactory;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient as BaseOrganizationClient;
 use App\Ship\Parents\Models\Model;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\DeletedAtAttribute;
 use App\Ship\Traits\Model\IsNumbered;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -44,10 +47,13 @@ class OrganizationClient extends Model
 {
     use IsNumbered;
     use SoftDeletes;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
+    use DeletedAtAttribute;
     use BelongsToOrganization;
 
-    public const TABLE = 'organization_clients';
-    public const RESOURCE_KEY = 'OrganizationClient';
+    public const string TABLE = 'organization_clients';
+    public const string RESOURCE_KEY = 'OrganizationClient';
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;

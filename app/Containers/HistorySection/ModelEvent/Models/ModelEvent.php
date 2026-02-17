@@ -21,6 +21,8 @@ use App\Containers\HistorySection\ModelEvent\Foundation\ModelEvent as BaseModelE
 use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Parents\Models\Model;
+use App\Ship\Traits\Model\CreatedAtAttribute;
+use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use JBZoo\Data\JSON;
@@ -45,9 +47,11 @@ use JBZoo\Data\JSON;
 class ModelEvent extends Model implements HasResourceKey
 {
     use HasCreatedBy;
+    use CreatedAtAttribute;
+    use UpdatedAtAttribute;
 
-    public const TABLE = 'model_events';
-    public const RESOURCE_KEY = 'ModelEvent';
+    public const string TABLE = 'model_events';
+    public const string RESOURCE_KEY = 'ModelEvent';
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;
