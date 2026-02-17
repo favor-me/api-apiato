@@ -35,6 +35,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 /**
  * @method UpdateOrderDto getDto()
+ * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UpdateOrderRequest extends CreateOrderRequest
@@ -52,9 +53,6 @@ class UpdateOrderRequest extends CreateOrderRequest
         ID
     ];
 
-    /**
-     * @SuppressWarnings(PHPMD.LongVariableName)
-     */
     protected array $cantUpdateWithStatuses = [
         Status::CANCELED,
         Status::COMPLETED

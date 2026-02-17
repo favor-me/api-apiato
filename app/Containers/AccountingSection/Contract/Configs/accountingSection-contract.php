@@ -14,7 +14,6 @@
  */
 
 use App\Containers\AccountingSection\Contract\Foundation\Contract;
-use App\Ship\Parents\Transformers\Transformer;
 
 return [
 
@@ -24,11 +23,11 @@ return [
             'max:' . SCHEMA_DEFAULT_STRING_LENGTH
         ],
         Contract::START_AT => [
-            'date_format:' . Transformer::HUMAN_DATE_FORMAT
+            'date_format:' . DATE_FORMAT
         ],
         Contract::FINISH_AT => [
             'nullable',
-            'date_format:' . Transformer::HUMAN_DATE_FORMAT
+            'date_format:' . DATE_FORMAT
         ]
     ]
 
