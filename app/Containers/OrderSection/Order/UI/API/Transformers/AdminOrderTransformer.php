@@ -28,6 +28,7 @@ final class AdminOrderTransformer extends OrderTransformer
                 $this->realKey(Order::ORGANIZATION_ID) => $order->organization_id,
                 $this->realKey(Order::ORGANIZATION_BRANCH_ID) => $order->organization_branch_id,
                 $this->realKey(Order::STATUS_ID) => $order->status_id,
+                $this->realKey(Order::SHIFT_ID) => $order->shift_id,
                 $this->realKey(Order::CLIENT_ID) => $order->client_id,
                 $this->realKey(Order::COUNTERPARTY_ID) => $order->counterparty_id,
                 $this->realKey(Order::CONTRACT_ID) => $order->contract_id,

@@ -31,6 +31,7 @@ use App\Containers\OrderSection\PaymentType\Casts\PaymentType as PaymentTypeCast
 use App\Containers\OrderSection\PaymentType\Manager;
 use App\Containers\OrderSection\PaymentType\Type as PaymentType;
 use App\Containers\OrderSection\Status\Models\Status;
+use App\Containers\OrganizationSection\Shift\Models\Shift;
 use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Database\Eloquent\Concerns\HasUpdatedBy;
@@ -48,6 +49,7 @@ use Illuminate\Support\Facades\Auth;
  * @property-read int $organization_id Уникальный идентификатор организации.
  * @property-read int|null $organization_branch_id Уникальный идентификатор отделения.
  * @property-read int $oid Уникальный идентификатор заказа внутри организации.
+ * @property-read int $shift_id Уникальный идентификатор смены сотрудника.
  * @property-read null|PaymentType $payment_type Тип оплаты.
  * @property-read Money $total Итоговая сумма.
  * @property-read Money $profit Прибыль.
@@ -71,9 +73,13 @@ use Illuminate\Support\Facades\Auth;
  * @property-read null|UserModel $creator Связанная модель пользователя который создал заказ.
  * @property-read null|UserModel $updater Связанная модель пользователя который обновил заказ.
  * @property-read null|Status $status Связанная модель статуса.
+ * @property-read null|Shift $shift Связанная модель смены сотрудника.
  * @property-read ItemEloquentCollection $items Коллекция позиций заказа.
  *
  * @method static OrderFactory factory(...$parameters)
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Order extends Model
 {
@@ -82,8 +88,8 @@ class Order extends Model
     use SoftDeletes;
     use IsNumbered;
 
-    public const TABLE = 'orders';
-    public const RESOURCE_KEY = 'Order';
+    public const string TABLE = 'orders';
+    public const string RESOURCE_KEY = 'Order';
 
     protected $table = self::TABLE;
     protected string $resourceKey = self::RESOURCE_KEY;
@@ -96,6 +102,7 @@ class Order extends Model
         BaseOrder::ORGANIZATION_ID,
         BaseOrder::ORGANIZATION_BRANCH_ID,
         BaseOrder::OID,
+        BaseOrder::SHIFT_ID,
         BaseOrder::PAYMENT_TYPE,
         BaseOrder::TOTAL,
         BaseOrder::PROFIT,
@@ -111,9 +118,9 @@ class Order extends Model
     protected $casts = [
         BaseOrder::TOTAL => MoneyCast::class,
         BaseOrder::PROFIT => MoneyCast::class,
-        BaseOrder::PAYMENT_TYPE => PaymentTypeCast::class,
+        BaseOrder::CANCELED_AT => 'datetime',
         BaseOrder::COMPLETED_AT => 'datetime',
-        BaseOrder::CANCELED_AT => 'datetime'
+        BaseOrder::PAYMENT_TYPE => PaymentTypeCast::class
     ];
 
     public function paymentTypeIs(string $type): bool
@@ -194,6 +201,11 @@ class Order extends Model
     {
         return $this->belongsTo(Counterparty::class, BaseOrder::COUNTERPARTY_ID, ID)
             ->withTrashed();
+    }
+
+    public function shift(): BelongsTo
+    {
+        return $this->belongsTo(Shift::class, BaseOrder::SHIFT_ID, ID);
     }
 
     public function setOrganizationBranchId(): self

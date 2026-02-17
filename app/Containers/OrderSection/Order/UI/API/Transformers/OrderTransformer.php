@@ -16,15 +16,16 @@
 namespace App\Containers\OrderSection\Order\UI\API\Transformers;
 
 use App\Containers\AccountingSection\Contract\UI\API\Transformers\ContractTransformerManager;
-use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
+use App\Containers\AppSection\User\UI\API\Transformers\UserTransformerManager;
 use App\Containers\CommunitySection\Counterparty\UI\API\Transformers\CounterpartyTransformerManager;
-use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformer;
+use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformerManager;
 use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformerManager;
 use App\Containers\CommunitySection\OrganizationClient\UI\API\Transformers\OrganizationClientTransformer;
-use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformer;
+use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformerManager;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Status\UI\API\Transformers\StatusTransformer;
+use App\Containers\OrganizationSection\Shift\UI\API\Transformers\ShiftTransformerManager;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -39,6 +40,7 @@ class OrderTransformer extends Transformer
     ];
 
     protected array $availableIncludes = [
+        Order::SHIFT,
         Order::CLIENT,
         Order::CREATOR,
         Order::UPDATER,
@@ -56,6 +58,7 @@ class OrderTransformer extends Transformer
             Order::ORGANIZATION_ID => $order->getHashedKey(Order::ORGANIZATION_ID),
             Order::ORGANIZATION_BRANCH_ID => $order->getHashedKey(Order::ORGANIZATION_BRANCH_ID),
             Order::OID => $order->oid,
+            Order::SHIFT_ID => $order->getHashedKey(Order::SHIFT_ID),
             Order::STATUS_ID => $order->getHashedKey(Order::STATUS_ID),
             Order::PAYMENT_TYPE => $order->payment_type->toArray(),
             Order::TOTAL => $this->money($order->total),
@@ -100,31 +103,57 @@ class OrderTransformer extends Transformer
 
     protected function includeOrganization(OrderModel $order): Item
     {
-        return $this->item($order->organization, new OrganizationTransformer());
+        return $this->item(
+            $order->organization,
+            (new OrganizationTransformerManager())->getDefaultOrAdmin()
+        );
     }
 
     protected function includeClient(OrderModel $order): Item|Primitive
     {
-        return $this->primitiveNullOrItem($order->client, new OrganizationClientTransformer());
+        return $this->primitiveNullOrItem(
+            $order->client,
+            new OrganizationClientTransformer()
+        );
     }
 
     protected function includeCreator(OrderModel $order): Item|Primitive
     {
-        return $this->primitiveNullOrItem($order->creator, new UserTransformer());
+        return $this->primitiveNullOrItem(
+            $order->creator,
+            (new UserTransformerManager())->getDefaultOrAdmin()
+        );
     }
 
     protected function includeUpdater(OrderModel $order): Item|Primitive
     {
-        return $this->primitiveNullOrItem($order->updater, new UserTransformer());
+        return $this->primitiveNullOrItem(
+            $order->updater,
+            (new UserTransformerManager())->getDefaultOrAdmin()
+        );
     }
 
     protected function includeStatus(OrderModel $order): Item|Primitive
     {
-        return $this->primitiveNullOrItem($order->status, new StatusTransformer());
+        return $this->primitiveNullOrItem(
+            $order->status,
+            new StatusTransformer()
+        );
+    }
+
+    protected function includeShift(OrderModel $order): Item|Primitive
+    {
+        return $this->primitiveNullOrItem(
+            $order->shift,
+            (new ShiftTransformerManager())->getDefaultOrAdmin()
+        );
     }
 
     protected function includeItems(OrderModel $order): Collection|NullResource
     {
-        return $this->collection($order->items, new ItemTransformer());
+        return $this->collection(
+            $order->items,
+            (new ItemTransformerManager())->getDefaultOrAdmin()
+        );
     }
 }

@@ -28,14 +28,18 @@ use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\PaymentType\CashType;
 use App\Containers\OrderSection\Status\Foundation\Status;
 use App\Containers\OrderSection\Status\Models\Status as StatusModel;
+use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
 use App\Ship\Traits\Factory\HasTrashedState;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @method Collection|OrderModel create($attributes = [], ?Model $parent = null)
  * @method Collection|OrderModel make($attributes = [], ?Model $parent = null)
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class OrderFactory extends Factory
 {
@@ -57,6 +61,7 @@ final class OrderFactory extends Factory
             Order::ORGANIZATION_BRANCH_ID => null,
             Order::COUNTERPARTY_ID => null,
             Order::CONTRACT_ID => null,
+            Order::SHIFT_ID => null,
             Order::COMMENT => $this->faker->text(50),
             Order::ORGANIZATION_ID => $organization->id,
             Order::PAYMENT_TYPE => CashType::class,
@@ -87,6 +92,9 @@ final class OrderFactory extends Factory
         });
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
     public function organization(int $id): self
     {
         return $this->state(fn() => [
@@ -133,6 +141,15 @@ final class OrderFactory extends Factory
 
         return $this->state(fn() => [
             Order::STATUS_ID => $status->id
+        ]);
+    }
+
+    public function shift(): self
+    {
+        $shift = ShiftModel::factory()->create();
+
+        return $this->state(fn() => [
+            Order::SHIFT_ID => $shift->id
         ]);
     }
 }

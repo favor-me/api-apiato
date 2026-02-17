@@ -30,11 +30,16 @@ use App\Containers\OrderSection\PaymentType\CashType;
 use App\Containers\OrderSection\PaymentType\Type;
 use App\Containers\OrderSection\Status\Foundation\Status;
 use App\Containers\OrderSection\Status\Models\Status as StatusModel;
+use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 final class OrderTest extends UnitTestCase
 {
     protected ?OrderModel $model;
@@ -71,6 +76,7 @@ final class OrderTest extends UnitTestCase
             Order::ORGANIZATION_ID,
             Order::ORGANIZATION_BRANCH_ID,
             Order::OID,
+            Order::SHIFT_ID,
             Order::PAYMENT_TYPE,
             Order::TOTAL,
             Order::PROFIT,
@@ -340,5 +346,20 @@ final class OrderTest extends UnitTestCase
         $this->assertInstanceOf(BelongsTo::class, $order->organizationBranch());
         $this->assertInstanceOf(OrganizationBranch::class, $order->organizationBranch()->getModel());
         $this->assertInstanceOf(OrganizationBranch::class, $order->organizationBranch);
+    }
+
+    public function testBelongsToShift(): void
+    {
+        $user = $this->getTestingOrganizationUser();
+
+        $order = OrderModel::factory()
+            ->organization($user->organization_id)
+            ->organizationBranch()
+            ->shift()
+            ->create();
+
+        $this->assertInstanceOf(BelongsTo::class, $order->shift());
+        $this->assertInstanceOf(ShiftModel::class, $order->shift()->getModel());
+        $this->assertInstanceOf(ShiftModel::class, $order->shift);
     }
 }
