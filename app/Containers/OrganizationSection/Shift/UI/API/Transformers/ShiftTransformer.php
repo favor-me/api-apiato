@@ -40,6 +40,7 @@ class ShiftTransformer extends Transformer
             Shift::ORGANIZATION_BRANCH_ID => $shift->getHashedKey(Shift::ORGANIZATION_BRANCH_ID),
             Shift::START_AT => $this->time($shift->start_at),
             Shift::FINISH_AT => $this->time($shift->finish_at),
+            self::DATE_DIFF => $shift->start_at->diff($shift->finish_at),
             CREATED_BY => $shift->getHashedKey(CREATED_BY),
             CREATED_AT => $this->time($shift->created_at),
             UPDATED_AT => $this->time($shift->updated_at)

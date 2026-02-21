@@ -28,6 +28,8 @@ abstract class Transformer extends AbstractTransformer
      * @deprecated Please use global DATE_FORMAT
      */
     public const string HUMAN_DATE_FORMAT = 'd.m.Y';
+    public const string DATE_DIFF = 'date_diff';
+
 
     protected string $realKeyPrefix = 'real_';
 
