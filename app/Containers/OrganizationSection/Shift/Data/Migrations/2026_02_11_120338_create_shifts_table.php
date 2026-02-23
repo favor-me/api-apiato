@@ -15,8 +15,8 @@
 
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\CommunitySection\Organization\Models\Organization;
-use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
+use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Database\Migrations\CreateSchemaTable;
 use App\Ship\Database\Migrations\CreateTableMigration;
@@ -29,6 +29,7 @@ return new class extends CreateTableMigration
         $table->id();
         $table->unsignedBigInteger(Shift::ORGANIZATION_ID);
         $table->unsignedBigInteger(Shift::ORGANIZATION_BRANCH_ID)->nullable();
+        $table->unsignedBigInteger(Shift::MONEY)->default(ZERO);
         $table->unsignedBigInteger(CREATED_BY);
         $table->timestamp(Shift::START_AT);
         $table->timestamp(Shift::FINISH_AT);

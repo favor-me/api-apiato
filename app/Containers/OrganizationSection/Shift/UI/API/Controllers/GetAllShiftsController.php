@@ -40,7 +40,7 @@ class GetAllShiftsController extends ApiController
             $action->forAuthUser();
         }
 
-        $models = $action->run($request->isOnlyTrashed());
+        $models = $action->run($request->getLimit());
 
         return Response::create(
             $models,

@@ -54,6 +54,7 @@ final class ShiftFactory extends Factory
             Shift::FINISH_AT => Carbon::now()->addHours(8),
             Shift::ORGANIZATION_ID => $user->organization_id,
             Shift::ORGANIZATION_BRANCH_ID => $user->organization_branch_id,
+            Shift::MONEY => ZERO,
             Shift::START_AT => Carbon::now()
         ];
     }

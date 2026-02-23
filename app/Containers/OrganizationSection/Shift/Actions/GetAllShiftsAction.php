@@ -39,7 +39,11 @@ class GetAllShiftsAction extends Action
             $task->forAuthUser();
         }
 
-        return $task->addRequestCriteria()->run($limit);
+        return $task
+            ->addRequestCriteria(null, [
+                CREATED_BY
+            ])
+            ->run($limit);
     }
 
     public function forAuthUser(): self

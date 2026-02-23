@@ -13,19 +13,8 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-return [
-    'name' => 'Смены',
-    'items' => 'Смена|Смены|Смен',
-    'now_shift_exists' => 'Смена на текущий момент открыта.',
-    'status' => [
-        'open' => [
-            'title' => 'Открыта'
-        ],
-        'completed' => [
-            'title' => 'Завершена'
-        ],
-        'unknown' => [
-            'title' => 'Неизвестно'
-        ]
-    ]
-];
+namespace App\Containers\OrganizationSection\Shift\Statuses;
+
+class UnknownStatus extends Status
+{
+}

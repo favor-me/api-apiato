@@ -20,7 +20,10 @@ use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
+use App\Containers\OrganizationSection\Shift\Statuses\CompletedStatus;
+use App\Containers\OrganizationSection\Shift\Statuses\OpenStatus;
 use App\Containers\OrganizationSection\Shift\Tests\UnitTestCase;
+use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 final class ShiftTest extends UnitTestCase
@@ -60,8 +63,14 @@ final class ShiftTest extends UnitTestCase
             Shift::ORGANIZATION_BRANCH_ID,
             Shift::START_AT,
             Shift::FINISH_AT,
+            Shift::MONEY,
             CREATED_BY
         ], $this->model->getFillable());
+    }
+
+    public function testCasts(): void
+    {
+        $this->assertInstanceOf(Money::class, $this->model->money);
     }
 
     public function testBelongsToCreator(): void
@@ -83,5 +92,33 @@ final class ShiftTest extends UnitTestCase
         $this->assertInstanceOf(BelongsTo::class, $this->model->organizationBranch());
         $this->assertInstanceOf(OrganizationBranch::class, $this->model->organizationBranch()->getModel());
         $this->assertInstanceOf(OrganizationBranch::class, $this->model->organizationBranch);
+    }
+
+    public function testOpenStatus(): void
+    {
+        $startAt = now()->utc()->subHours(3);
+        $finishAt = now()->utc()->addHours(3);
+
+        $shift = ShiftModel::factory()
+            ->make([
+                Shift::START_AT => $startAt,
+                Shift::FINISH_AT => $finishAt
+            ]);
+
+        $this->assertInstanceOf(OpenStatus::class, $shift->status);
+    }
+
+    public function testCompletedStatus(): void
+    {
+        $startAt = now()->utc()->subHours(8);
+        $finishAt = now()->utc()->subHours(1);
+
+        $shift = ShiftModel::factory()
+            ->make([
+                Shift::START_AT => $startAt,
+                Shift::FINISH_AT => $finishAt
+            ]);
+
+        $this->assertInstanceOf(CompletedStatus::class, $shift->status);
     }
 }

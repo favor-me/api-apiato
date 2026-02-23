@@ -20,13 +20,18 @@ use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
 use App\Containers\OrganizationSection\Shift\Data\Factories\ShiftFactory;
 use App\Containers\OrganizationSection\Shift\Foundation\Shift as BaseShift;
+use App\Containers\OrganizationSection\Shift\Statuses\Manager;
+use App\Containers\OrganizationSection\Shift\Statuses\Status;
+use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Parents\Models\Model;
+use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Model\CreatedAtAttribute;
 use App\Ship\Traits\Model\FinishAtAttribute;
 use App\Ship\Traits\Model\IsNumbered;
 use App\Ship\Traits\Model\StartAtAttribute;
 use App\Ship\Traits\Model\UpdatedAtAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -34,9 +39,11 @@ use Illuminate\Support\Carbon;
  * @property-read int $id Уникальный идентификатор.
  * @property-read int $organization_id Уникальный идентификатор организации.
  * @property-read int $organization_branch_id Уникальный идентификатор отделения организации.
+ * @property-read Money $money Заработанные средства смены.
  * @property-read Carbon $start_at Дата и время начала смены.
  * @property-read Carbon $finish_at Дата и время завершения смены.
  * @property-read int $created_by Уникальный идентификатор пользователя чья смена.
+ * @property-read Status $status Текущий статус смены.
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $updated_at Дата и время обновления.
  *
@@ -66,12 +73,14 @@ class Shift extends Model
         BaseShift::ORGANIZATION_BRANCH_ID,
         BaseShift::START_AT,
         BaseShift::FINISH_AT,
+        BaseShift::MONEY,
         CREATED_BY
     ];
 
     protected $casts = [
         BaseShift::START_AT => 'datetime',
-        BaseShift::FINISH_AT => 'datetime'
+        BaseShift::FINISH_AT => 'datetime',
+        BaseShift::MONEY => MoneyCast::class
     ];
 
     public function creator(): BelongsTo
@@ -87,5 +96,10 @@ class Shift extends Model
     public function organizationBranch(): BelongsTo
     {
         return $this->belongsTo(OrganizationBranch::class, BaseShift::ORGANIZATION_BRANCH_ID, ID);
+    }
+
+    public function status(): Attribute
+    {
+        return Attribute::get(fn () => Manager::getInstance()->getShiftStatus($this));
     }
 }

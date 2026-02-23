@@ -13,23 +13,12 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\OrganizationSection\Shift\Data\Repositories;
+namespace App\Containers\OrganizationSection\Shift\Statuses;
 
-use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
-use App\Ship\Parents\Repositories\Repository;
-
-/**
- * @method ShiftModel getModel()
- */
-final class ShiftRepository extends Repository
+class OpenStatus extends Status
 {
-    protected $fieldSearchable = [
-        ID => '=',
-        CREATED_BY => 'in'
-    ];
-
-    public function model(): string
+    public function getColor(): string
     {
-        return ShiftModel::class;
+        return '#81C784';
     }
 }
