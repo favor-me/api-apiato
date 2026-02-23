@@ -23,7 +23,7 @@ use Symfony\Component\Finder\Finder;
  * @method null|Type get(string $key)
  * @method static Manager getInstance()
  */
-class Manager extends AbstractManager
+final class Manager extends AbstractManager
 {
     public const string PREFIX = 'Type';
 
