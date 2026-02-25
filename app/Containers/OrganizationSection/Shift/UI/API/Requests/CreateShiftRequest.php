@@ -80,7 +80,15 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
+        $this->checkNowShift();
+    }
 
+    /**
+     * @return void
+     * @throws NowShiftExistsException
+     */
+    protected function checkNowShift(): void
+    {
         if ($this->user()->nowShift) {
             throw new NowShiftExistsException();
         }

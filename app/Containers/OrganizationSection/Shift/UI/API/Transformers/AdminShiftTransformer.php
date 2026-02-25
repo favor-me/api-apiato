@@ -27,6 +27,7 @@ final class AdminShiftTransformer extends ShiftTransformer
                 $this->realKey(ID) => $shift->id,
                 $this->realKey(Shift::ORGANIZATION_ID) => $shift->organization_id,
                 $this->realKey(Shift::ORGANIZATION_BRANCH_ID) => $shift->organization_branch_id,
+                $this->realKey(Shift::CONFIRMED_BY) => $shift->confirmed_by,
                 $this->realKey(CREATED_BY) => $shift->created_by
             ];
     }

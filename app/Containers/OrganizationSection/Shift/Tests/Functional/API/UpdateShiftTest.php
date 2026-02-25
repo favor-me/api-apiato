@@ -106,7 +106,7 @@ final class UpdateShiftTest extends ApiTestCase
                     ->where('data.' . ID, $model->getHashedKey())
                     ->where(
                         'data.' . Shift::START_AT . '.date_for_human',
-                        $startAt->format(Transformer::HUMAN_DATE_FORMAT)
+                        $startAt->format(DATE_FORMAT)
                     )
                     ->where(
                         'data.' . Shift::START_AT . '.time_short',
@@ -114,7 +114,7 @@ final class UpdateShiftTest extends ApiTestCase
                     )
                     ->where(
                         'data.' . Shift::FINISH_AT . '.date_for_human',
-                        $finishAt->format(Transformer::HUMAN_DATE_FORMAT)
+                        $finishAt->format(DATE_FORMAT)
                     )
                     ->where(
                         'data.' . Shift::FINISH_AT . '.time_short',
@@ -123,6 +123,34 @@ final class UpdateShiftTest extends ApiTestCase
                     ->where(
                         'data.' . Shift::ORGANIZATION_BRANCH_ID,
                         $this->testingUser->getHashedKey(Shift::ORGANIZATION_BRANCH_ID)
+                    )
+                    ->etc()
+            );
+    }
+
+    public function testSuccessConfirm(): void
+    {
+        $this->getTestingOrganizationOwnerUser();
+
+        $model = ShiftModel::factory()->create();
+
+        $this
+            ->injectId($model->id)
+            ->makeCall([
+                CONFIRMED => 1
+            ]);
+
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->where(
+                        'data.' . Shift::CONFIRMED_BY,
+                        $this->testingUser->getHashedKey()
+                    )
+                    ->where(
+                        'data.' . Shift::CONFIRMED_AT . '.date_for_human',
+                        now()->utc()->format(DATE_FORMAT)
                     )
                     ->etc()
             );

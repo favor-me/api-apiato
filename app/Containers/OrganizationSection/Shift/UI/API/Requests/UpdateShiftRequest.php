@@ -17,9 +17,11 @@ namespace App\Containers\OrganizationSection\Shift\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\OrganizationSection\Shift\Dto\UpdateShiftDto;
+use App\Containers\OrganizationSection\Shift\Foundation\Shift;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
+use App\Ship\Validation\Rule;
 use Illuminate\Auth\Access\AuthorizationException;
 
 /**
@@ -46,9 +48,15 @@ class UpdateShiftRequest extends CreateShiftRequest
 
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
+        $rules = array_merge(parent::rules(), [
             ID => $this->getShiftIdValidationRules()
         ]);
+
+        if ($this->user()->is_organization_owner) {
+            $rules[CONFIRMED] = Rule::confirmed();
+        }
+
+        return $rules;
     }
 
     public function getShiftIdValidationRules(): ValidationRules
@@ -60,6 +68,34 @@ class UpdateShiftRequest extends CreateShiftRequest
     public function newDto(array $data = []): UpdateShiftDto
     {
         return new UpdateShiftDto($data);
+    }
+
+    protected function commonDtoData(): array
+    {
+        $data = parent::commonDtoData();
+
+        if ($this->user()->is_organization_owner && $this->get(CONFIRMED)) {
+            $data[Shift::CONFIRMED_BY] = $this->user()->id;
+        }
+
+        return $data;
+    }
+
+    public function getShiftStartAtValidationRules(): ValidationRules
+    {
+        return parent::getShiftStartAtValidationRules()
+            ->removeRequired();
+    }
+
+    public function getShiftFinishAtValidationRules(): ValidationRules
+    {
+        return parent::getShiftFinishAtValidationRules()
+            ->removeRequired();
+    }
+
+    protected function checkNowShift(): void
+    {
+        // No check.
     }
 
     /**

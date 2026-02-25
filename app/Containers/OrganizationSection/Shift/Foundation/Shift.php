@@ -27,7 +27,10 @@ final class Shift extends SectionContainer
     public const string MONEY = 'money';
     public const string CREATOR = 'creator';
     public const string EXCLUDE_ORGANIZATION_BRANCH = 'exclude_organization_branch';
+    public const string CONFIRMED_BY = 'confirmed_by';
     public const string START_AT = 'start_at';
+    public const string CONFIRMED_AT = 'confirmed_at';
+    public const string PAYMENT_AT = 'payment_at';
     public const string STATUS = 'status';
 
     protected string $apiBaseUri = 'organization/shifts';

@@ -18,6 +18,7 @@ const PUBLISHED = 1;
 const UNPUBLISHED = 0;
 const SCHEMA_DEFAULT_STRING_LENGTH = 191;
 const FLASH_ERROR = 'error';
+const CONFIRMED = 'confirmed';
 const FLASH_SUCCESS = 'success';
 const FLASH_WARNING = 'warning';
 const FLASH_INFO = 'info';

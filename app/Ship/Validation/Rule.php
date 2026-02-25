@@ -15,7 +15,14 @@
 namespace App\Ship\Validation;
 
 use Illuminate\Validation\Rule as BaseRule;
+use App\Ship\Collections\ValidationRules;
 
 class Rule extends BaseRule
 {
+    public static function confirmed(): ValidationRules
+    {
+        return validation_rules([
+            'boolean'
+        ]);
+    }
 }

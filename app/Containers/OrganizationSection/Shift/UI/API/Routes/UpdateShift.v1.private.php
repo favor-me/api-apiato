@@ -18,14 +18,13 @@
  * @apiDescription Изменить.
  *
  * @apiVersion 1.0.0
- * @apiPermission Аутентифицированный пользователь с ролью `organization_owner` (Пока не используем)
+ * @apiPermission Аутентифицированный пользователь с ролью `organization_owner`
  *
  * @apiParam {String} id Уникальный идентификатор
  *
- * @apiBody {String} [organization_id] Уникальный идентификатор организации.
  * @apiBody {String} [start_at] Дата начала.
  * @apiBody {String} [finish_at] Дата завершения.
- * @apiBody {String} [created_by]
+ * @apiBody {Int} [confirmed=1,0] Установить подтверждение смены (`created_at` усановится автоматически).
  *
  * @apiUse ShiftSuccessSingleResponse
  */

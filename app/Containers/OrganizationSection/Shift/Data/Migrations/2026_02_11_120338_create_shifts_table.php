@@ -31,8 +31,11 @@ return new class extends CreateTableMigration
         $table->unsignedBigInteger(Shift::ORGANIZATION_BRANCH_ID)->nullable();
         $table->unsignedBigInteger(Shift::MONEY)->default(ZERO);
         $table->unsignedBigInteger(CREATED_BY);
+        $table->unsignedBigInteger(Shift::CONFIRMED_BY)->nullable();
         $table->timestamp(Shift::START_AT);
         $table->timestamp(Shift::FINISH_AT);
+        $table->timestamp(Shift::CONFIRMED_AT)->nullable();
+        $table->timestamp(Shift::PAYMENT_AT)->nullable();
         $table->timestamps();
 
         return $this;
@@ -58,6 +61,12 @@ return new class extends CreateTableMigration
             ->references(ID)
             ->cascadeOnDelete();
 
+        $table
+            ->foreign(Shift::CONFIRMED_BY, $this->getFieldForeignKeyName(Shift::CONFIRMED_BY))
+            ->on(User::TABLE)
+            ->references(ID)
+            ->nullOnDelete();
+
         return $this;
     }
 
@@ -65,6 +74,7 @@ return new class extends CreateTableMigration
     {
         $table->index(Shift::ORGANIZATION_ID, $this->getFieldIndexName(Shift::ORGANIZATION_ID));
         $table->index(Shift::ORGANIZATION_BRANCH_ID, $this->getFieldIndexName(Shift::ORGANIZATION_BRANCH_ID));
+        $table->index(Shift::CONFIRMED_BY, $this->getFieldIndexName(Shift::CONFIRMED_BY));
         $table->index(CREATED_BY, $this->getFieldIndexName(CREATED_BY));
 
         return $this;

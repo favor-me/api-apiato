@@ -55,7 +55,10 @@ final class ShiftFactory extends Factory
             Shift::ORGANIZATION_ID => $user->organization_id,
             Shift::ORGANIZATION_BRANCH_ID => $user->organization_branch_id,
             Shift::MONEY => ZERO,
-            Shift::START_AT => Carbon::now()
+            Shift::START_AT => Carbon::now(),
+            Shift::CONFIRMED_BY => null,
+            Shift::CONFIRMED_AT => null,
+            Shift::PAYMENT_AT => null
         ];
     }
 }

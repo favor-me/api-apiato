@@ -43,7 +43,10 @@ class ShiftTransformer extends Transformer
             Shift::FINISH_AT => $this->time($shift->finish_at),
             Shift::STATUS => $shift->status->toArray(),
             self::DATE_DIFF => $shift->start_at->diff($shift->finish_at),
+            Shift::CONFIRMED_BY => $shift->getHashedKey(Shift::CONFIRMED_BY),
             CREATED_BY => $shift->getHashedKey(CREATED_BY),
+            Shift::CONFIRMED_AT => $this->time($shift->confirmed_at),
+            Shift::PAYMENT_AT => $this->time($shift->payment_at),
             CREATED_AT => $this->time($shift->created_at),
             UPDATED_AT => $this->time($shift->updated_at)
         ];

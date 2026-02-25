@@ -26,6 +26,9 @@ use App\Containers\OrganizationSection\Shift\Tests\UnitTestCase;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 final class ShiftTest extends UnitTestCase
 {
     protected ?ShiftModel $model;
@@ -64,6 +67,9 @@ final class ShiftTest extends UnitTestCase
             Shift::START_AT,
             Shift::FINISH_AT,
             Shift::MONEY,
+            Shift::CONFIRMED_BY,
+            Shift::CONFIRMED_AT,
+            Shift::PAYMENT_AT,
             CREATED_BY
         ], $this->model->getFillable());
     }

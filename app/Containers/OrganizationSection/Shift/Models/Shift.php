@@ -43,7 +43,10 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $start_at Дата и время начала смены.
  * @property-read Carbon $finish_at Дата и время завершения смены.
  * @property-read int $created_by Уникальный идентификатор пользователя чья смена.
+ * @property-read int|null $confirmed_by Уникальный идентификатор пользователя кто подтвердил.
  * @property-read Status $status Текущий статус смены.
+ * @property-read Carbon|null $confirmed_at Дата и время подтверждения.
+ * @property-read Carbon|null $payment_at Дата и время оплаты.
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $updated_at Дата и время обновления.
  *
@@ -74,12 +77,17 @@ class Shift extends Model
         BaseShift::START_AT,
         BaseShift::FINISH_AT,
         BaseShift::MONEY,
+        BaseShift::CONFIRMED_BY,
+        BaseShift::CONFIRMED_AT,
+        BaseShift::PAYMENT_AT,
         CREATED_BY
     ];
 
     protected $casts = [
         BaseShift::START_AT => 'datetime',
         BaseShift::FINISH_AT => 'datetime',
+        BaseShift::CONFIRMED_AT => 'datetime',
+        BaseShift::PAYMENT_AT => 'datetime',
         BaseShift::MONEY => MoneyCast::class
     ];
 
