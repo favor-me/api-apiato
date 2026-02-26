@@ -28,17 +28,17 @@ class ForgotPasswordAction extends Action
 {
     /**
      * @param string|int $phoneNumber
-     * @return string
+     * @return null|string
      * @throws InternalErrorException
      */
-    public function run(string|int $phoneNumber): string
+    public function run(string|int $phoneNumber): ?string
     {
         $phoneNumber = Str::toPhoneNumber($phoneNumber);
 
         $user = $this->findUser($phoneNumber);
 
         if (is_null($user)) {
-            return false;
+            return null;
         }
 
         $token = app(CreatePasswordResetTask::class)->run($user);
