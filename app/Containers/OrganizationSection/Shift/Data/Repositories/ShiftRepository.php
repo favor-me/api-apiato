@@ -45,19 +45,35 @@ final class ShiftRepository extends Repository
      */
     public function update(array $attributes, $id): mixed
     {
+        $this->touchPaymentAt($attributes);
         $this->touchConfirmedAt($attributes);
         return parent::update($attributes, $id);
     }
 
+    protected function touchPaymentAt(array &$attributes): void
+    {
+        if (array_key_exists(Shift::PAYMENT, $attributes) && $attributes[Shift::PAYMENT]) {
+            $attributes[Shift::PAYMENT_AT] = $this->nowDateTimeString();
+            unset($attributes[Shift::PAYMENT]);
+        }
+    }
+
+
     protected function touchConfirmedAt(array &$attributes): void
     {
-        if (array_key_exists(CONFIRMED, $attributes) &&
+        if (
+            array_key_exists(CONFIRMED, $attributes) &&
             array_key_exists(Shift::CONFIRMED_BY, $attributes) &&
             $attributes[CONFIRMED] &&
             !empty(Shift::CONFIRMED_BY)
         ) {
-            $attributes[Shift::CONFIRMED_AT] = now()->utc()->toDateTimeString();
+            $attributes[Shift::CONFIRMED_AT] = $this->nowDateTimeString();
             unset($attributes[CONFIRMED]);
         }
+    }
+
+    private function nowDateTimeString(): string
+    {
+        return now()->utc()->toDateTimeString();
     }
 }

@@ -22,6 +22,7 @@ class CreateShiftDto extends Dto
     public ?int $created_by;
     public ?int $confirmed_by;
     public bool $confirmed = false;
+    public bool $payment = false;
     public ?string $finish_at;
     public ?int $organization_id;
     public ?int $organization_branch_id;

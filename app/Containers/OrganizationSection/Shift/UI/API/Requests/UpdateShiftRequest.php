@@ -53,7 +53,8 @@ class UpdateShiftRequest extends CreateShiftRequest
         ]);
 
         if ($this->user()->is_organization_owner) {
-            $rules[CONFIRMED] = Rule::confirmed();
+            $rules[CONFIRMED] = Rule::boolean();
+            $rules[Shift::PAYMENT] = Rule::boolean();
         }
 
         return $rules;
@@ -74,11 +75,18 @@ class UpdateShiftRequest extends CreateShiftRequest
     {
         $data = parent::commonDtoData();
 
-        if ($this->user()->is_organization_owner && $this->get(CONFIRMED)) {
-            $data[Shift::CONFIRMED_BY] = $this->user()->id;
+        if ($this->user()->is_organization_owner) {
+            $this->organizationOwnerDtoData($data);
         }
 
         return $data;
+    }
+
+    protected function organizationOwnerDtoData(&$data): void
+    {
+        if ($this->get(CONFIRMED)) {
+            $data[Shift::CONFIRMED_BY] = $this->user()->id;
+        }
     }
 
     public function getShiftStartAtValidationRules(): ValidationRules

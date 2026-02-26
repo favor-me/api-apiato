@@ -155,4 +155,28 @@ final class UpdateShiftTest extends ApiTestCase
                     ->etc()
             );
     }
+
+    public function testSuccessPayment(): void
+    {
+        $this->getTestingOrganizationOwnerUser();
+
+        $model = ShiftModel::factory()->create();
+
+        $this
+            ->injectId($model->id)
+            ->makeCall([
+                Shift::PAYMENT => 1
+            ]);
+
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->where(
+                        'data.' . Shift::PAYMENT_AT . '.date_for_human',
+                        now()->utc()->format(DATE_FORMAT)
+                    )
+                    ->etc()
+            );
+    }
 }

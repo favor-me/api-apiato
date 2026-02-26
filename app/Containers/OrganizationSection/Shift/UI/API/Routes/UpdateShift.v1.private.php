@@ -24,7 +24,8 @@
  *
  * @apiBody {String} [start_at] Дата начала.
  * @apiBody {String} [finish_at] Дата завершения.
- * @apiBody {Int} [confirmed=1,0] Установить подтверждение смены (`created_at` усановится автоматически).
+ * @apiBody {Int} [confirmed=1,0] Установить подтверждение смены (`created_at` установится автоматически).
+ * @apiBody {Int} [payment=1,0] Установить дату и время оплаты за смену.
  *
  * @apiUse ShiftSuccessSingleResponse
  */

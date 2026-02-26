@@ -31,6 +31,7 @@ final class Shift extends SectionContainer
     public const string START_AT = 'start_at';
     public const string CONFIRMED_AT = 'confirmed_at';
     public const string PAYMENT_AT = 'payment_at';
+    public const string PAYMENT = 'payment';
     public const string STATUS = 'status';
 
     protected string $apiBaseUri = 'organization/shifts';
