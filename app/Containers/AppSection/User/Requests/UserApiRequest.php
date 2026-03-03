@@ -15,8 +15,7 @@
 namespace App\Containers\AppSection\User\Requests;
 
 use App\Containers\AppSection\User\Traits\HasUserValidationRules;
-use App\Containers\AppSection\User\UI\API\Transformers\AdminUserTransformer;
-use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
+use App\Containers\AppSection\User\UI\API\Transformers\UserTransformerManager;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
@@ -39,7 +38,7 @@ abstract class UserApiRequest extends ApiRequest implements GettableTransformer
 
     public function getTransformer(): Transformer
     {
-        return $this->isAdminUser() ? new AdminUserTransformer() : new UserTransformer();
+        return (new UserTransformerManager())->getDefaultOrAdmin();
     }
 
     protected function getUserRules(): array

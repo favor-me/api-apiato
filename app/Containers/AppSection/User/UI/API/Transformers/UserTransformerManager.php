@@ -33,4 +33,9 @@ final class UserTransformerManager extends TransformerManager
     {
         return new UserPrivateProfileTransformer();
     }
+
+    public function getToList(): ?UserToListTransformer
+    {
+        return new UserToListTransformer();
+    }
 }
