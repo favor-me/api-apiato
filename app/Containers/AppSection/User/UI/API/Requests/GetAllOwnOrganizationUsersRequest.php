@@ -37,9 +37,13 @@ class GetAllOwnOrganizationUsersRequest extends UserApiRequest implements IsList
         return $this->user()->organization_id;
     }
 
-    public function getAuthUserId(): int
+    public function getAuthUserId(): ?int
     {
-        return $this->user()->id;
+        if ($this->get('exclude-auth')) {
+            return $this->user()->id;
+        }
+
+        return null;
     }
 
     protected function getCheckAuthorizeMethods(): array

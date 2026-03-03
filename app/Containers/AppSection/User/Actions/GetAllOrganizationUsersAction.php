@@ -26,6 +26,7 @@ class GetAllOrganizationUsersAction extends Action
 {
     /**
      * @param mixed $organization
+     * @param mixed|null $exclude
      * @return LengthAwarePaginator
      * @throws CoreInternalErrorException
      * @throws RepositoryException
