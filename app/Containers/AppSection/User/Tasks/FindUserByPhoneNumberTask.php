@@ -23,10 +23,10 @@ class FindUserByPhoneNumberTask extends UserTask
 {
     /**
      * @param string $phoneNumber
-     * @return User
+     * @return null|User
      * @throws NotFoundException
      */
-    public function run(mixed $phoneNumber): User
+    public function run(mixed $phoneNumber): ?User
     {
         try {
             return $this->repository
