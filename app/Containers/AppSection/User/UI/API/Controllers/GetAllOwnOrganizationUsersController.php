@@ -33,9 +33,8 @@ class GetAllOwnOrganizationUsersController extends ApiController
      */
     public function __invoke(
         GetAllOwnOrganizationUsersRequest $request,
-        GetAllOrganizationUsersAction     $action
-    ): JsonResponse
-    {
+        GetAllOrganizationUsersAction $action
+    ): JsonResponse {
         $users = $action->run(
             $request->getOrganizationId(),
             $request->getAuthUserId()
