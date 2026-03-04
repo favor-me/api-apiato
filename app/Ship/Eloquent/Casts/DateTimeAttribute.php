@@ -15,14 +15,25 @@
 
 namespace App\Ship\Eloquent\Casts;
 
+use Exception;
 use Illuminate\Support\Carbon;
 
 class DateTimeAttribute
 {
     public static function setFromCustomFormat(mixed $value, string $format): mixed
     {
-        if (client_timezone() && !$value instanceof Carbon) {
-            return Carbon::createFromFormat($format, $value, client_timezone())->utc();
+        if (!$value instanceof Carbon) {
+            try {
+                $value = Carbon::createFromFormat($format, $value);
+            } catch (Exception) {
+                $value = Carbon::make($value);
+            }
+        }
+
+        if (client_timezone()) {
+            return $value
+                ->setTimezone(client_timezone())
+                ->utc();
         }
 
         return $value;
