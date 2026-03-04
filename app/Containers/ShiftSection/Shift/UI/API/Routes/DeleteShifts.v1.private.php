@@ -12,8 +12,8 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
- * @apiGroup OrganizationShift
- * @apiName trashOrDeleteOrganizationShifts
+ * @apiGroup Shift
+ * @apiName deleteShifts
  * @api {delete} /v1/shifts Удалить
  * @apiDescription Удалить.
  *

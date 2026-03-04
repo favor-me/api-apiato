@@ -12,8 +12,8 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
- * @apiGroup OrganizationShift
- * @apiName getAllOrganizationShift
+ * @apiGroup Shift
+ * @apiName getAllShift
  * @api {get} /v1/shifts Список
  * @apiDescription Получить список.
  *

@@ -14,8 +14,8 @@
  *
  * @codingStandardsIgnoreStart
  *
- * @apiGroup OrganizationShift
- * @apiName createOrganizationShift
+ * @apiGroup Shift
+ * @apiName createShift
  * @api {post} /v1/shifts Создать
  * @apiDescription Создание.
  *

@@ -12,8 +12,8 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
- * @apiGroup OrganizationShift
- * @apiName updateOrganizationShift
+ * @apiGroup Shift
+ * @apiName updateShift
  * @api {patch} /v1/shifts/:id Изменить
  * @apiDescription Изменить.
  *

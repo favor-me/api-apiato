@@ -12,8 +12,8 @@
  * @link https://kalistratov.ru
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
- * @apiGroup OrganizationShift
- * @apiName findByIdOrganizationShift
+ * @apiGroup Shift
+ * @apiName findByIdShift
  * @api {get} /v1/shifts/:id Найти по id
  * @apiDescription Найти по id.
  *
