@@ -31,7 +31,7 @@ use App\Containers\OrderSection\PaymentType\Casts\PaymentType as PaymentTypeCast
 use App\Containers\OrderSection\PaymentType\Manager;
 use App\Containers\OrderSection\PaymentType\Type as PaymentType;
 use App\Containers\OrderSection\Status\Models\Status;
-use App\Containers\OrganizationSection\Shift\Models\Shift;
+use App\Containers\ShiftSection\Shift\Models\Shift;
 use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Database\Eloquent\Concerns\HasUpdatedBy;

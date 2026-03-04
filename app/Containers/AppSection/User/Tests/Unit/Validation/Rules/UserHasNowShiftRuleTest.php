@@ -18,7 +18,7 @@ namespace App\Containers\AppSection\User\Tests\Unit\Validation\Rules;
 use App\Containers\AppSection\User\Facades\Container;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
 use App\Containers\AppSection\User\Validation\Rules\UserHasNowShiftRule;
-use App\Containers\OrganizationSection\Shift\Models\Shift;
+use App\Containers\ShiftSection\Shift\Models\Shift;
 
 final class UserHasNowShiftRuleTest extends UnitTestCase
 {

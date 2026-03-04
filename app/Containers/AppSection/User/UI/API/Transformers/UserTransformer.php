@@ -20,7 +20,7 @@ use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\UserDevice\UI\API\Transformers\UserDeviceTransformer;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformerManager;
 use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformerManager;
-use App\Containers\OrganizationSection\Shift\UI\API\Transformers\ShiftTransformerManager;
+use App\Containers\ShiftSection\Shift\UI\API\Transformers\ShiftTransformerManager;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;

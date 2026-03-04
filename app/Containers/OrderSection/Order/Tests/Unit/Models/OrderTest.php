@@ -30,7 +30,7 @@ use App\Containers\OrderSection\PaymentType\CashType;
 use App\Containers\OrderSection\PaymentType\Type;
 use App\Containers\OrderSection\Status\Foundation\Status;
 use App\Containers\OrderSection\Status\Models\Status as StatusModel;
-use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
+use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

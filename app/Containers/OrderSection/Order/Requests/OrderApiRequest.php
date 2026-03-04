@@ -28,7 +28,7 @@ use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Traits\OrderValidationRules;
 use App\Containers\OrderSection\Order\UI\API\Transformers\OrderTransformerManager;
 use App\Containers\OrderSection\Status\Traits\StatusValidationRules;
-use App\Containers\OrganizationSection\Shift\Traits\ShiftValidationRules;
+use App\Containers\ShiftSection\Shift\Traits\ShiftValidationRules;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;

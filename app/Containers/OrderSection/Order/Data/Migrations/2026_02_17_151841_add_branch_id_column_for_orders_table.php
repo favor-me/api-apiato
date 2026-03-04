@@ -15,7 +15,7 @@
 
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
-use App\Containers\OrganizationSection\Shift\Models\Shift;
+use App\Containers\ShiftSection\Shift\Models\Shift;
 use App\Ship\Parents\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 

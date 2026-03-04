@@ -25,8 +25,8 @@ use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
-use App\Containers\OrganizationSection\Shift\Foundation\Shift;
-use App\Containers\OrganizationSection\Shift\Models\Shift as ShiftModel;
+use App\Containers\ShiftSection\Shift\Foundation\Shift;
+use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Database\Casts\JSON;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Models\UserModel;

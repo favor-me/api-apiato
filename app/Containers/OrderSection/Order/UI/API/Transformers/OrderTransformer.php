@@ -25,7 +25,7 @@ use App\Containers\OrderSection\Item\UI\API\Transformers\ItemTransformerManager;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Status\UI\API\Transformers\StatusTransformer;
-use App\Containers\OrganizationSection\Shift\UI\API\Transformers\ShiftTransformerManager;
+use App\Containers\ShiftSection\Shift\UI\API\Transformers\ShiftTransformerManager;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
