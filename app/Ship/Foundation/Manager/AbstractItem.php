@@ -15,7 +15,6 @@
 
 namespace App\Ship\Foundation\Manager;
 
-use App\Containers\OrganizationSection\OwnershipType\Manager;
 use App\Ship\Contracts\Namebled;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
@@ -47,6 +46,6 @@ abstract class AbstractItem implements Namebled, Arrayable
 
     protected function itemPrefix(): string
     {
-        return Manager::PREFIX;
+        return 'Type';
     }
 }
