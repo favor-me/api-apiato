@@ -39,9 +39,7 @@ class UserHasNowShiftRule extends ValidationRule
 
         if (is_null($this->user->nowShift)) {
             $fail(Container::trans('user.not_found_now_shift'));
-        }
-
-        if ($this->user->nowShift->id !== (int)$value) {
+        } elseif ($this->user->nowShift->id !== (int)$value) {
             $fail(Container::trans('validation.has_now_shift.invalid_shift'));
         }
     }
