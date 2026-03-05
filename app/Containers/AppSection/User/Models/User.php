@@ -62,6 +62,7 @@ use JBZoo\Data\JSON as JsonData;
  * @property-read bool $is_organization_owner
  * @property-read string $remember_token
  * @property-read string $password
+ * @property-read JsonData $shift_params Параметры смены.
  * @property-read JsonData $params Дополнительные параметры.
  * @property-read null|int $organization_id Уникальный идентификатор организации.
  * @property-read null|int $organization_branch_id Уникальный идентификатор отделения организации.
@@ -115,6 +116,7 @@ class User extends UserModel implements HasResourceKey, CanResetPassword
         BaseUser::ORGANIZATION_BRANCH_ID,
         BaseUser::PATRONYMIC,
         BaseUser::PHONE_NUMBER,
+        BaseUser::SHIFT_PARAMS,
         PARAMS
     ];
 
@@ -129,8 +131,9 @@ class User extends UserModel implements HasResourceKey, CanResetPassword
         BaseUser::GENDER => 'boolean',
         BaseUser::PHONE_NUMBER => 'int',
         BaseUser::IS_ADMIN => 'boolean',
-        BaseUser::IS_ORGANIZATION_OWNER => 'boolean',
+        BaseUser::SHIFT_PARAMS => JSON::class,
         BaseUser::EMAIL_VERIFIED_AT => 'datetime',
+        BaseUser::IS_ORGANIZATION_OWNER => 'boolean',
         BaseUser::PHONE_NUMBER_VERIFIED_AT => 'datetime'
     ];
 

@@ -14,16 +14,19 @@
 
 namespace App\Containers\AppSection\User\Requests;
 
+use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Traits\HasUserValidationRules;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformerManager;
 use App\Ship\Contracts\GettableTransformer;
 use App\Ship\Parents\Transformers\Transformer;
 use App\Ship\Requests\ApiRequest;
+use App\Ship\Traits\Validation\HasParamsValidationRules;
 use App\Ship\Utils\Str;
 
 abstract class UserApiRequest extends ApiRequest implements GettableTransformer
 {
     use HasUserValidationRules;
+    use HasParamsValidationRules;
 
     public function messages(): array
     {
@@ -44,15 +47,16 @@ abstract class UserApiRequest extends ApiRequest implements GettableTransformer
     protected function getUserRules(): array
     {
         return [
-            'name' => $this->getUserNameValidationRules(),
-            'email' => $this->getUserEmailValidationRules(),
-            'birth' => $this->getUserBirthValidationRules(),
-            'login' => $this->getUserLoginValidationRules(),
-            'gender' => $this->getUserGenderValidationRules(),
-            'surname' => $this->getUserSurnameValidationRules(),
-            'password' => $this->getUserPasswordValidationRules(),
-            'patronymic' => $this->getUserPatronymicValidationRules(),
-            'phone_number' => $this->getUserPhoneNumberValidationRules(),
+            User::NAME => $this->getUserNameValidationRules(),
+            User::EMAIL => $this->getUserEmailValidationRules(),
+            User::BIRTH => $this->getUserBirthValidationRules(),
+            User::LOGIN => $this->getUserLoginValidationRules(),
+            User::GENDER => $this->getUserGenderValidationRules(),
+            User::SURNAME => $this->getUserSurnameValidationRules(),
+            User::PASSWORD => $this->getUserPasswordValidationRules(),
+            User::PATRONYMIC => $this->getUserPatronymicValidationRules(),
+            User::PHONE_NUMBER => $this->getUserPhoneNumberValidationRules(),
+            User::SHIFT_PARAMS => $this->getParamsValidationRules(),
             'role' => $this->getUserRegistrationRolesValidationRules()
         ];
     }
@@ -64,9 +68,10 @@ abstract class UserApiRequest extends ApiRequest implements GettableTransformer
 
     protected function clearPhoneNumber(): void
     {
-        if ($this->has('phone_number')) {
+        $key = User::PHONE_NUMBER;
+        if ($this->has($key)) {
             $this->merge([
-                'phone_number' => Str::toPhoneNumber($this->get('phone_number'))
+                $key => Str::toPhoneNumber($this->get($key))
             ]);
         }
     }

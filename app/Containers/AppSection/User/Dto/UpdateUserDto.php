@@ -19,6 +19,7 @@ class UpdateUserDto extends RegisterUserDto
     public ?int $id;
     public ?bool $is_admin = null;
     public array $params = [];
+    public array $shift_params = [];
 
     protected function setDefaultRole(): void
     {

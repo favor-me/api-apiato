@@ -38,6 +38,9 @@ final class User extends SectionContainer
     public const string EMAIL_VERIFIED_AT = 'email_verified_at';
     public const string REMEMBER_TOKEN = 'remember_token';
     public const string NOW_SHIFT = 'nowShift';
+    public const string SHIFT_PARAMS = 'shift_params';
+    public const string SHIFT_PARAMS_FIX_DAY_RATE = 'fix_day_rate';
+    public const string SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT = 'percent_from_order_profit';
     public const string ORGANIZATION_ID = 'organization_id';
     public const string ORGANIZATION_BRANCH_ID = 'organization_branch_id';
     public const string IS_ORGANIZATION_OWNER = 'is_organization_owner';

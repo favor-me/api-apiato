@@ -24,6 +24,7 @@
  * @apiBody {String{2..30}} [patronymic] Отчество.
  * @apiBody {String{2..30}} [surname] Фамилия.
  * @apiBody {String{40}} [email] Email адрес.
+ * @apiBody {Array|Object} [shift_params] Параметры смены (только для `organization_owner`).
  * @apiBody {Boolean|String|Int="0/false = Ж", "1/true = М"} [gender] Пол.
  * @apiBody {String=16.05.1990} [birth] День рождения.
  * @apiBody {String{14}=+79001112233, 79001112233, 89001112233} [phone_number] Номер мобильного телефона.

@@ -20,6 +20,7 @@ use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Requests\UserApiRequest;
 use App\Containers\AppSection\User\Tasks\FindUserByIdTask;
+use App\Containers\AppSection\User\Traits\IsOrganizationOwner;
 use App\Containers\AppSection\User\Traits\IsOwnerTrait;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
@@ -34,6 +35,7 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
 {
     use HasInputId;
     use IsOwnerTrait;
+    use IsOrganizationOwner;
 
     protected array $access = [
         ROLES => [
@@ -97,9 +99,19 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
             ->addIgnoreIdForUnique($this->getId());
     }
 
+    /**
+     * @return array
+     * @throws NotFoundException
+     */
     protected function getUserRules(): array
     {
-        return array_merge(parent::getUserRules(), [
+        $rules = parent::getUserRules();
+
+        if (!$this->isOrganizationOwner()) {
+            unset($rules[User::SHIFT_PARAMS]);
+        }
+
+        return array_merge($rules, [
             ID => $this->getUserIdValidationRules(),
             User::ORGANIZATION_BRANCH_ID => $this->getUserOrganizationBranchIdValidationRules()
         ]);
@@ -129,6 +141,10 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
             );
     }
 
+    /**
+     * @return array
+     * @throws NotFoundException
+     */
     public function rules(): array
     {
         return $this->getUserRules();

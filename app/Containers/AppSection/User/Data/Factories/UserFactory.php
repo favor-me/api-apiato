@@ -14,7 +14,8 @@
 
 namespace App\Containers\AppSection\User\Data\Factories;
 
-use App\Containers\AppSection\User\Models\User;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,11 +23,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @method User|Collection create($attributes = [], ?Model $parent = null)
+ * @method UserModel|Collection create($attributes = [], ?Model $parent = null)
  */
 class UserFactory extends Factory
 {
-    protected $model = User::class;
+    protected $model = UserModel::class;
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -56,6 +57,7 @@ class UserFactory extends Factory
             'avatar' => null,
             'email' => $this->faker->unique()->safeEmail,
             PARAMS => [],
+            User::SHIFT_PARAMS => [],
             'phone_number' => $this->faker->e164PhoneNumber,
             'password' => $password ?: $password = Hash::make('testing-password'),
             'phone_number_verified_at' => now(),

@@ -20,12 +20,14 @@ use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Tests\ApiTestCase;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class UpdateUserTest extends ApiTestCase
 {
     protected array $access = [
         ROLES => [
+            RoleModel::ORGANIZATION_OWNER,
             RoleModel::ORGANIZATION_WORKER
         ]
     ];
@@ -50,7 +52,10 @@ final class UpdateUserTest extends ApiTestCase
             User::PATRONYMIC => 'Updated patronymic',
             User::SURNAME => 'Updated surname',
             User::GENDER => false,
-            User::BIRTH => '2015-10-15'
+            User::BIRTH => '2015-10-15',
+            User::SHIFT_PARAMS => [
+                User::SHIFT_PARAMS_FIX_DAY_RATE => 1000
+            ]
         ];
 
         $this
@@ -69,6 +74,9 @@ final class UpdateUserTest extends ApiTestCase
                     ->where('data.' . User::PATRONYMIC, $data[User::PATRONYMIC])
                     ->where('data.' . User::GENDER, $data[User::GENDER])
                     ->where('data.' . User::LOGIN, $user->login)
+                    ->where('data.' . User::SHIFT_PARAMS, function (Collection $shiftParams) {
+                        return $shiftParams->isEmpty();
+                    })
                     ->etc()
             );
 
@@ -197,7 +205,10 @@ final class UpdateUserTest extends ApiTestCase
             ->assignRole(RoleModel::ORGANIZATION_WORKER);
 
         $data = [
-            User::NAME => 'New worker'
+            User::NAME => 'New worker',
+            User::SHIFT_PARAMS => [
+                User::SHIFT_PARAMS_FIX_DAY_RATE => 1000
+            ]
         ];
 
         $this
@@ -211,6 +222,7 @@ final class UpdateUserTest extends ApiTestCase
                     ->has('data')
                     ->where('data.' . ID, $ownUser->getHashedKey())
                     ->where('data.' . User::NAME, $data[User::NAME])
+                    ->where('data.' . User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_FIX_DAY_RATE, 1000)
                     ->etc()
             );
     }

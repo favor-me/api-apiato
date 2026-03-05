@@ -53,6 +53,7 @@ class UserTransformer extends Transformer
             User::PHONE_NUMBER => $user->phone_number,
             User::IS_ORGANIZATION_OWNER => $user->is_organization_owner,
             PARAMS => $user->params,
+            User::SHIFT_PARAMS => $user->shift_params,
             User::EMAIL_VERIFIED_AT => $this->nullOrTimestamp($user->email_verified_at),
             User::PHONE_NUMBER_VERIFIED_AT => $user->phone_number_verified_at,
             User::ORGANIZATION_ID => $user->getHashedKey(User::ORGANIZATION_ID),

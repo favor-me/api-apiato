@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use JBZoo\Data\JSON;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -61,6 +62,7 @@ final class UserTest extends UnitTestCase
             User::ORGANIZATION_BRANCH_ID,
             User::PATRONYMIC,
             User::PHONE_NUMBER,
+            User::SHIFT_PARAMS,
             PARAMS
         ];
 
@@ -81,9 +83,10 @@ final class UserTest extends UnitTestCase
     {
         $user = UserModel::factory()->create();
 
-        $this->assertIsString($user->phone_number);
+        $this->assertIsInt($user->phone_number);
         $this->assertIsBool($user->gender);
         $this->assertIsBool($user->is_admin);
+        $this->assertInstanceOf(JSON::class, $user->shift_params);
         $this->assertInstanceOf(Carbon::class, $user->birth);
         $this->assertInstanceOf(Carbon::class, $user->created_at);
         $this->assertInstanceOf(Carbon::class, $user->updated_at);
@@ -243,6 +246,8 @@ final class UserTest extends UnitTestCase
 
         ShiftModel::factory()
             ->create([
+                Shift::START_AT => Carbon::yesterday()->subHours(2),
+                Shift::FINISH_AT => Carbon::yesterday()->addHours(2),
                 CREATED_BY => $userB->id
             ]);
 
