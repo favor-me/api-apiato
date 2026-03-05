@@ -54,7 +54,7 @@ final class UpdateUserTest extends ApiTestCase
             User::GENDER => false,
             User::BIRTH => '2015-10-15',
             User::SHIFT_PARAMS => [
-                User::SHIFT_PARAMS_FIX_DAY_RATE => 1000
+                User::SHIFT_PARAMS_FIX_RATE => 1000
             ]
         ];
 
@@ -207,7 +207,7 @@ final class UpdateUserTest extends ApiTestCase
         $data = [
             User::NAME => 'New worker',
             User::SHIFT_PARAMS => [
-                User::SHIFT_PARAMS_FIX_DAY_RATE => 1000
+                User::SHIFT_PARAMS_FIX_RATE => 1000
             ]
         ];
 
@@ -222,7 +222,7 @@ final class UpdateUserTest extends ApiTestCase
                     ->has('data')
                     ->where('data.' . ID, $ownUser->getHashedKey())
                     ->where('data.' . User::NAME, $data[User::NAME])
-                    ->where('data.' . User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_FIX_DAY_RATE, 1000)
+                    ->where('data.' . User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_FIX_RATE, 1000)
                     ->etc()
             );
     }
