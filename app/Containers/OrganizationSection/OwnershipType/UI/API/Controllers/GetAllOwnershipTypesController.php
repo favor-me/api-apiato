@@ -26,14 +26,9 @@ use Illuminate\Http\JsonResponse;
  */
 class GetAllOwnershipTypesController extends Controller
 {
-    /**
-     * @param GetAllOwnershipTypesRequest $request
-     * @param GetAllOwnershipTypesAction $action
-     * @return JsonResponse
-     */
     public function __invoke(
         GetAllOwnershipTypesRequest $request,
-        GetAllOwnershipTypesAction  $action
+        GetAllOwnershipTypesAction $action
     ): JsonResponse {
         return Response::create(
             $action->run(),
