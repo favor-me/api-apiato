@@ -143,9 +143,11 @@ final class OrderFactory extends Factory
         ]);
     }
 
-    public function shift(): self
+    public function shift(?ShiftModel $shift = null): self
     {
-        $shift = ShiftModel::factory()->create();
+        if (is_null($shift)) {
+            $shift = ShiftModel::factory()->create();
+        }
 
         return $this->state(fn() => [
             Order::SHIFT_ID => $shift->id
