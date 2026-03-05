@@ -37,6 +37,7 @@ const KEY_TOMORROW = 'tomorrow';
 const MAX_TIME = '23:59:59';
 const MIN_TIME = '00:00:00';
 const ZERO = 0;
+const CREATOR = 'creator';
 const CREATED_BY = 'created_by';
 const UPDATED_BY = 'updated_by';
 const UPDATED_AT = 'updated_at';

@@ -21,7 +21,7 @@ class HasCreatedByTest extends UnitTestCase
 {
     public function testGetCreatedByColumn(): void
     {
-        $this->assertSame('created_by', (new HasCreatedByTestModel)->getCreatedByColumn());
+        $this->assertSame('created_by', (new HasCreatedByTestModel())->getCreatedByColumn());
     }
 
     public function testSetCreatedBy(): void

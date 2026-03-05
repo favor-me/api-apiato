@@ -15,8 +15,11 @@
 
 namespace App\Ship\Events\Handlers;
 
+use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
+use App\Ship\Database\Eloquent\Concerns\HasUpdatedBy;
 use App\Ship\Parents\Events\Event as EventHandler;
 use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
 
 class ModelCreatingEventHandler extends EventHandler
 {
@@ -27,10 +30,14 @@ class ModelCreatingEventHandler extends EventHandler
     {
         collect($models)
             ->each(function (Model $model) {
-                if (method_exists($model, 'updateCreatedBy')) {
+                $reflection = new ReflectionClass($model);
+                $traitNames = $reflection->getTraitNames();
+
+                if (in_array(HasCreatedBy::class, $traitNames)) {
                     $model->updateCreatedBy();
                 }
-                if (method_exists($model, 'updateUpdatedBy')) {
+
+                if (in_array(HasUpdatedBy::class, $traitNames)) {
                     $model->updateUpdatedBy();
                 }
             });
