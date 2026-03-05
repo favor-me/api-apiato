@@ -33,7 +33,7 @@ class GetAllShiftsAction extends Action
      */
     public function run(mixed $limit = null): LengthAwarePaginator
     {
-        $task = app(GetAllShiftsTask::class);
+        $task = app(GetAllShiftsTask::class)->organization();
 
         if ($this->forAuthUser) {
             $task->forAuthUser();

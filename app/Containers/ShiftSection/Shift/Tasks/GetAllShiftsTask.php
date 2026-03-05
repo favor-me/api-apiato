@@ -15,6 +15,7 @@
 
 namespace App\Containers\ShiftSection\Shift\Tasks;
 
+use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Ship\Criterias\ThisEqualThatCriteria;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +42,20 @@ class GetAllShiftsTask extends ShiftTask
         $this->repository
             ->pushCriteria(
                 new ThisEqualThatCriteria(CREATED_BY, Auth::user()->id)
+            );
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * @throws RepositoryException
+     */
+    public function organization(): self
+    {
+        $this->repository
+            ->pushCriteria(
+                new ThisEqualThatCriteria(Shift::ORGANIZATION_ID, Auth::user()->organization_id)
             );
 
         return $this;
