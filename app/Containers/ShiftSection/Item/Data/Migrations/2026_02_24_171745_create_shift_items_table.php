@@ -15,7 +15,9 @@
 
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\OrderSection\Order\Models\Order;
-use App\Containers\OrganizationSection\Shift\Models\Shift;
+use App\Containers\ShiftSection\Item\Foundation\Item;
+use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
+use App\Containers\ShiftSection\Shift\Models\Shift;
 use App\Ship\Database\Migrations\CreateSchemaTable;
 use App\Ship\Database\Migrations\CreateTableMigration;
 use Illuminate\Database\Schema\Blueprint;
@@ -25,11 +27,11 @@ return new class extends CreateTableMigration
     public function addTableColumns(Blueprint $table): CreateSchemaTable
     {
         $table->id();
-        $table->unsignedBigInteger('shift_id');
-        $table->unsignedBigInteger('order_id')->nullable();
-        $table->string('type', 50);
-        $table->bigInteger('value')->default(ZERO);
-        $table->string('description', SCHEMA_DEFAULT_STRING_LENGTH)->nullable();
+        $table->unsignedBigInteger(Item::SHIFT_ID);
+        $table->unsignedBigInteger(Item::ORDER_ID)->nullable();
+        $table->string(Item::TYPE, Item::TYPE_MAX_LENGTH);
+        $table->bigInteger(Item::VALUE)->default(ZERO);
+        $table->string(Item::DESCRIPTION, SCHEMA_DEFAULT_STRING_LENGTH)->nullable();
         $table->unsignedBigInteger(CREATED_BY)->nullable();
         $table->timestamps();
 
@@ -39,13 +41,13 @@ return new class extends CreateTableMigration
     public function addTableColumnsForeign(Blueprint $table): CreateSchemaTable
     {
         $table
-            ->foreign('shift_id', $this->getFieldForeignKeyName('shift_id'))
+            ->foreign(Item::SHIFT_ID, $this->getFieldForeignKeyName(Item::SHIFT_ID))
             ->on(Shift::TABLE)
             ->references(ID)
             ->cascadeOnDelete();
 
         $table
-            ->foreign('order_id', $this->getFieldForeignKeyName('order_id'))
+            ->foreign(Item::ORDER_ID, $this->getFieldForeignKeyName(Item::ORDER_ID))
             ->on(Order::TABLE)
             ->references(ID)
             ->cascadeOnDelete();
@@ -61,8 +63,8 @@ return new class extends CreateTableMigration
 
     public function addTableColumnsIndex(Blueprint $table): CreateSchemaTable
     {
-        $table->index('shift_id', $this->getFieldIndexName('shift_id'));
-        $table->index('order_id', $this->getFieldIndexName('order_id'));
+        $table->index(Item::SHIFT_ID, $this->getFieldIndexName(Item::SHIFT_ID));
+        $table->index(Item::ORDER_ID, $this->getFieldIndexName(Item::ORDER_ID));
         $table->index(CREATED_BY, $this->getFieldIndexName(CREATED_BY));
 
         return $this;
@@ -70,6 +72,6 @@ return new class extends CreateTableMigration
 
     public function getTableName(): string
     {
-        return 'shift_items';
+        return ItemModel::TABLE;
     }
 };
