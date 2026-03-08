@@ -85,7 +85,7 @@ class OrderTransformer extends Transformer
         );
     }
 
-    protected function includeContract(OrderModel $order): Item
+    protected function includeContract(OrderModel $order): Item|Primitive
     {
         return $this->primitiveNullOrItem(
             $order->contract,
@@ -93,7 +93,7 @@ class OrderTransformer extends Transformer
         );
     }
 
-    protected function includeCounterparty(OrderModel $order): Item
+    protected function includeCounterparty(OrderModel $order): Item|Primitive
     {
         return $this->primitiveNullOrItem(
             $order->counterparty,
