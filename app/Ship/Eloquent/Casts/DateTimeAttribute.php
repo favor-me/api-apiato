@@ -30,7 +30,7 @@ class DateTimeAttribute
             }
         }
 
-        if (client_timezone()) {
+        if (client_timezone() && !is_null($value)) {
             return $value
                 ->setTimezone(client_timezone())
                 ->utc();
