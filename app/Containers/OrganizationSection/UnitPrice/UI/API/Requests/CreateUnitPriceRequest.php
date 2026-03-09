@@ -18,14 +18,10 @@ namespace App\Containers\OrganizationSection\UnitPrice\UI\API\Requests;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\OrganizationSection\UnitPrice\Dto\CreateUnitPriceDto;
-use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
-use App\Containers\OrganizationSection\UnitPrice\Map\Manager;
-use App\Containers\OrganizationSection\UnitPrice\Map\Type;
 use App\Containers\OrganizationSection\UnitPrice\Requests\UnitPriceApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
-use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Request\CanPrepareMoney;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
@@ -47,8 +43,6 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
         UnitPrice::MODEL_ID,
         UnitPrice::UNIT_ID
     ];
-
-    protected ?Money $internalClientPrice = null;
 
     public function rules(): array
     {
@@ -94,14 +88,8 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
 
     public function getUnitPriceClientPriceValidationRules(): ValidationRules
     {
-        $rules = parent::getUnitPriceClientPriceValidationRules();
-
-        $priceUp = (float)$this->get(UnitPrice::PRICE_UP);
-        if ($this->has(UnitPrice::COST_PRICE) && $priceUp > ZERO) {
-            $rules->add('size:' . $this->internalClientPrice->val());
-        }
-
-        return $rules->addRequired();
+        return parent::getUnitPriceClientPriceValidationRules()
+            ->addRequired();
     }
 
     public function getUnitPriceUnitIdExistsValidationRule(): Exists
@@ -150,18 +138,10 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
             ->getModelType()
             ->getUniqueUnitIdValidationRuleValidationMessage();
 
-        $messages = parent::messages() +
+        return parent::messages() +
             [
                 UnitPrice::UNIT_ID . '.unique' => $unitIdUniqueMessage
             ];
-
-        if ($this->has(UnitPrice::COST_PRICE)) {
-            $messages[UnitPrice::CLIENT_PRICE . '.size'] = Container::trans('container.validation.client_price.size', [
-                'size' => $this->internalClientPrice->currency()->text()
-            ]);
-        }
-
-        return $messages;
     }
 
     protected function getDtoData(): array
@@ -193,26 +173,5 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
         $this
             ->prepareMoney(UnitPrice::COST_PRICE)
             ->prepareMoney(UnitPrice::CLIENT_PRICE);
-
-        if ($this->has(UnitPrice::COST_PRICE)) {
-            $costPrice = app('money')
-                ->add(
-                    $this->cost_price
-                );
-
-            $clientPrice = app('money')->add($costPrice);
-            $priceUp = (float)$this->get(UnitPrice::PRICE_UP);
-
-            if ($priceUp > ZERO) {
-                $clientPrice->add($priceUp . '%');
-            }
-
-            $this->internalClientPrice = $clientPrice;
-            if (empty($this->get(UnitPrice::CLIENT_PRICE))) {
-                $this->merge([
-                    UnitPrice::CLIENT_PRICE => $this->internalClientPrice->val()
-                ]);
-            }
-        }
     }
 }
