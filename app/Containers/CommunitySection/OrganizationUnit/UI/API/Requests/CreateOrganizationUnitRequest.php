@@ -41,8 +41,6 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
         ]
     ];
 
-    protected ?Money $internalClientPrice = null;
-
     protected function afterInitialize(): void
     {
         parent::afterInitialize();
@@ -110,31 +108,6 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
         return new CreateOrganizationUnitDto($data);
     }
 
-    public function messages(): array
-    {
-        $messages = parent::messages();
-
-        if ($this->has(UnitPrice::COST_PRICE)) {
-            $messages[UnitPrice::CLIENT_PRICE . '.size'] = Container::trans('validation.client_price.size', [
-                'size' => $this->internalClientPrice->currency()->text()
-            ]);
-        }
-
-        return $messages;
-    }
-
-    public function getOrganizationUnitClientPriceValidationRules(): ValidationRules
-    {
-        $rules = parent::getOrganizationUnitClientPriceValidationRules();
-
-        $priceUp = (float)$this->get(UnitPrice::PRICE_UP);
-        if ($this->has(UnitPrice::COST_PRICE) && $priceUp > ZERO) {
-            $rules->add('size:' . $this->internalClientPrice->val());
-        }
-
-        return $rules;
-    }
-
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
@@ -157,26 +130,5 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
         $this
             ->prepareMoney(UnitPrice::COST_PRICE)
             ->prepareMoney(UnitPrice::CLIENT_PRICE);
-
-        if ($this->has(UnitPrice::COST_PRICE)) {
-            $costPrice = app('money')
-                ->add(
-                    $this->cost_price
-                );
-
-            $clientPrice = app('money')->add($costPrice);
-            $priceUp = (float)$this->get(UnitPrice::PRICE_UP);
-
-            if ($priceUp > ZERO) {
-                $clientPrice->add($priceUp . '%');
-            }
-
-            $this->internalClientPrice = $clientPrice;
-            if (empty($this->get(UnitPrice::CLIENT_PRICE))) {
-                $this->merge([
-                    UnitPrice::CLIENT_PRICE => $this->internalClientPrice->val()
-                ]);
-            }
-        }
     }
 }
