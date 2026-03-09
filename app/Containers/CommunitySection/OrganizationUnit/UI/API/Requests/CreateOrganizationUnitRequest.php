@@ -65,6 +65,12 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
         ];
     }
 
+    public function getOrganizationUnitClientPriceValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitClientPriceValidationRules()
+            ->addRequired();
+    }
+
     public function getOrganizationUnitSystemUnitIdValidationRules(): ValidationRules
     {
         return $this->getUnitIdValidationRules()
