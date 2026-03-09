@@ -21,5 +21,5 @@ use Symfony\Component\HttpFoundation\Response;
 class NowShiftExistsException extends Exception
 {
     protected $code = Response::HTTP_BAD_REQUEST;
-    protected $message = 'organizationSection@shift::container.now_shift_exists';
+    protected $message = 'shiftSection@shift::container.now_shift_exists';
 }
