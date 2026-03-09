@@ -70,9 +70,12 @@ class CreateOrderAction extends Action
             collect($dto->items)
                 ->each(function (array $itemData) use ($order, $items) {
                     $itemData += [
-                        Item::ORDER_ID => $order->id,
-                        Item::UNIT_CLIENT_PRICE => $items->get($itemData[Item::UNIT_ID])
+                        Item::ORDER_ID => $order->id
                     ];
+
+                    if (array_key_exists(Item::UNIT_ID, $itemData)) {
+                        $itemData[Item::UNIT_CLIENT_PRICE] = $items->get($itemData[Item::UNIT_ID]);
+                    }
 
                     $this->createItem(new CreateItemDto($itemData));
                 });

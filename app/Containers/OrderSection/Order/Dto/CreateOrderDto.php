@@ -44,6 +44,7 @@ class CreateOrderDto extends Dto
     public function itemsIds(): array
     {
         return collect($this->items)
+            ->filter(fn (array $data) => isset($data[Item::UNIT_ID]))
             ->map(fn (array $data) => $data[Item::UNIT_ID])
             ->values()
             ->toArray();
