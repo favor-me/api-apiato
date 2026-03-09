@@ -22,7 +22,7 @@ use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Parents\Transformers\Transformer;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\Primitive;
 
 class ShiftTransformer extends Transformer
 {
@@ -63,9 +63,9 @@ class ShiftTransformer extends Transformer
         return $this->item($shift->organization, (new OrganizationTransformerManager())->getDefaultOrAdmin());
     }
 
-    protected function includeOrganizationBranch(ShiftModel $shift): Item|NullResource
+    protected function includeOrganizationBranch(ShiftModel $shift): Item|Primitive
     {
-        return $this->nullOrItem(
+        return $this->primitiveNullOrItem(
             $shift->organizationBranch,
             (new OrganizationBranchTransformerManager())->getDefaultOrAdmin()
         );
