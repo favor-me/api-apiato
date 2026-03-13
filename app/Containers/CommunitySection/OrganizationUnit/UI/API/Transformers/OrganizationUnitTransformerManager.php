@@ -17,7 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Transformers;
 
 use App\Ship\Transformers\TransformerManager;
 
-class OrganizationUnitTransformerManager extends TransformerManager
+final class OrganizationUnitTransformerManager extends TransformerManager
 {
     public function getDefault(): OrganizationUnitTransformer
     {

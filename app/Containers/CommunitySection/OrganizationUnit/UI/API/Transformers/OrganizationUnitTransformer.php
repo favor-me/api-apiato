@@ -36,7 +36,7 @@ class OrganizationUnitTransformer extends Transformer
 
     public function transform(OrganizationUnitModel $organizationUnit): array
     {
-        $response = [
+        return [
             OBJECT => $organizationUnit->getResourceKey(),
             ID => $organizationUnit->getHashedKey(),
             OrganizationUnitModel::NUMBER => $organizationUnit->getNumber(),
@@ -67,8 +67,6 @@ class OrganizationUnitTransformer extends Transformer
             UPDATED_AT => $this->time($organizationUnit->updated_at),
             DELETED_AT => $this->time($organizationUnit->deleted_at)
         ];
-
-        return $response;
     }
 
     protected function includeSystemUnit(OrganizationUnitModel $organizationUnit): Item
