@@ -16,15 +16,15 @@
 namespace App\Containers\OrganizationSection\UnitPrice\UI\API\Requests;
 
 use App\Containers\OrganizationSection\UnitPrice\Data\Repositories\UnitPriceRepository;
-use App\Containers\OrganizationSection\UnitPrice\Dto\CreateUnitPriceDto;
 use App\Containers\OrganizationSection\UnitPrice\Dto\UpdateUnitPriceDto;
-use Prettus\Repository\Exceptions\RepositoryException;
-use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Ship\Criterias\ThisEqualThatCriteria;
+use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Exceptions\ValidationFailedException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\Rules\Unique;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 /**
  * @method UpdateUnitPriceDto getDto()
@@ -58,12 +58,20 @@ class UpdateUnitPriceRequest extends CreateUnitPriceRequest
 
     /**
      * @return array
+     * @throws NotFoundException
      * @throws RepositoryException
      */
     protected function getDtoData(): array
     {
         $data = parent::getDtoData();
-        $data[ID] = $this->getUnitPrice()->id;
+
+        $unitPrice = $this->getUnitPrice();
+
+        if (is_null($unitPrice)) {
+            throw new NotFoundException();
+        }
+
+        $data[ID] = $unitPrice->id;
 
         return $data;
     }

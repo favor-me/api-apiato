@@ -18,6 +18,7 @@ namespace App\Containers\OrganizationSection\UnitPrice\UI\API\Controllers;
 use Apiato\Core\Facades\Response;
 use App\Containers\OrganizationSection\UnitPrice\Actions\UpdateUnitPriceAction;
 use App\Containers\OrganizationSection\UnitPrice\UI\API\Requests\UpdateUnitPriceRequest;
+use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
@@ -29,6 +30,7 @@ class UpdateUnitPriceController extends ApiController
      * @param UpdateUnitPriceRequest $request
      * @param UpdateUnitPriceAction $action
      * @return JsonResponse
+     * @throws NotFoundException
      * @throws UnknownProperties
      * @throws UpdateResourceFailedException
      */

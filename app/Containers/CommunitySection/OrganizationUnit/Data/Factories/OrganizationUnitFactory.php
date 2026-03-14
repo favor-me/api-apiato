@@ -15,12 +15,13 @@
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Data\Factories;
 
+use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\CommunitySection\OrganizationUnitType\Manager;
 use App\Containers\CommunitySection\OrganizationUnitType\ProductType;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\Vendor\Unit\Models\Unit as UnitModel;
-use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
-use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
-use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Parents\Factories\Factory;
 use App\Ship\Traits\Factory\HasTrashedState;
@@ -39,13 +40,13 @@ final class OrganizationUnitFactory extends Factory
     public function definition(): array
     {
         return [
-            OrganizationUnit::BALANCE => null,
-            OrganizationUnit::IS_INFINITY_BALANCE => false,
+            UnitPrice::BALANCE => null,
+            UnitPrice::IS_INFINITY_BALANCE => false,
             OrganizationUnit::NAME => $this->faker->title,
             OrganizationUnit::ORDERING => ZERO,
             OrganizationUnit::ORGANIZATION_ID => OrganizationModel::factory(),
-            OrganizationUnit::CLIENT_PRICE => null,
-            OrganizationUnit::COST_PRICE => null,
+            UnitPrice::CLIENT_PRICE => null,
+            UnitPrice::COST_PRICE => null,
             OrganizationUnit::SKU => uniqid('sku-'),
             OrganizationUnit::SYSTEM_UNIT_ID => UnitModel::factory(),
             OrganizationUnit::TYPE => Manager::getInstance()->get(ProductType::class)->getName(),

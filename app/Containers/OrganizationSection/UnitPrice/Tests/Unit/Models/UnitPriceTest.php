@@ -26,6 +26,7 @@ final class UnitPriceTest extends UnitTestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->getTestingOrganizationUser();
         $this->model = UnitPriceModel::factory()->make();
     }
 
@@ -41,7 +42,7 @@ final class UnitPriceTest extends UnitTestCase
 
     public function testTimestamp(): void
     {
-        $this->assertTrue($this->model->timestamps);
+        $this->assertFalse($this->model->timestamps);
     }
 
     public function testGetResourceKey(): void
@@ -56,7 +57,9 @@ final class UnitPriceTest extends UnitTestCase
             UnitPrice::MODEL_ID,
             UnitPrice::UNIT_ID,
             UnitPrice::COST_PRICE,
-            UnitPrice::CLIENT_PRICE
+            UnitPrice::CLIENT_PRICE,
+            UnitPrice::BALANCE,
+            UnitPrice::IS_INFINITY_BALANCE
         ], $this->model->getFillable());
     }
 }

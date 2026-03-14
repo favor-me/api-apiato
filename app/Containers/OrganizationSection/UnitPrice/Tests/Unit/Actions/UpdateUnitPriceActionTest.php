@@ -15,6 +15,9 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Tests\Unit\Actions;
 
+use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
+use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
+use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\OrganizationSection\UnitPrice\Actions\UpdateUnitPriceAction;
 use App\Containers\OrganizationSection\UnitPrice\Dto\UpdateUnitPriceDto;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
@@ -42,20 +45,36 @@ final class UpdateUnitPriceActionTest extends UnitTestCase
     {
         $this->getTestingOrganizationUser();
 
-        $model = UnitPriceModel::factory()->create();
-        $this->assertInstanceOf(UnitPriceModel::class, $model);
+        $contract = ContractModel::factory()
+            ->counterparty(
+                $this->testingUser->organization_id
+            )
+            ->create();
 
-        $data = UnitPriceModel::factory()
-            ->make([
-                ID => $model->id,
-                UnitPrice::COST_PRICE => 132000
+        $unit = OrganizationUnitModel::factory()
+            ->create([
+                OrganizationUnit::ORGANIZATION_ID => $this->testingUser->organization_id
             ]);
 
-        $dto = new UpdateUnitPriceDto($data->toArray());
+        $model = UnitPriceModel::factory()
+            ->create([
+                UnitPrice::MODEL_ID => $contract->id,
+                UnitPrice::UNIT_ID => $unit->id
+            ]);
+
+        $this->assertInstanceOf(UnitPriceModel::class, $model);
+
+        $data = [
+            ID => $model->id,
+            UnitPrice::COST_PRICE => 132000,
+            UnitPrice::UNIT_ID => $unit->id
+        ];
+
+        $dto = new UpdateUnitPriceDto($data);
 
         $result = app(UpdateUnitPriceAction::class)->run($dto);
 
-        $this->assertInstanceOf(UnitPriceModel::class, $result);
+        $this->assertInstanceOf(OrganizationUnitModel::class, $result);
         $this->assertSame(1320.0, $result->cost_price->currency()->val());
     }
 }
