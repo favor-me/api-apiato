@@ -15,9 +15,12 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Tests\Functional\API;
 
+use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\OrganizationSection\UnitPrice\Facades\Container;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\OrganizationSection\UnitPrice\Map\ContractType;
+use App\Containers\OrganizationSection\UnitPrice\Map\Manager;
 use App\Containers\OrganizationSection\UnitPrice\Models\UnitPrice as UnitPriceModel;
 use App\Containers\OrganizationSection\UnitPrice\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -34,7 +37,8 @@ final class UpdateUnitPriceTest extends ApiTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->endpoint = 'patch@v1/' . Container::getApiUri('{' . ID . '}');
+        $uri = Container::getApiUri('{' . UnitPrice::MODEL_ID . '}/{' . UnitPrice::UNIT_ID . '}');
+        $this->endpoint = 'patch@v1/' . $uri;
     }
 
     public function testWithEmptyData(): void
@@ -59,14 +63,23 @@ final class UpdateUnitPriceTest extends ApiTestCase
     {
         $this->getTestingOrganizationOwnerUser();
 
-        $data = [
-            // Write here
-        ];
+        $contract = ContractModel::factory()
+            ->counterparty(
+                $this->testingUser->organization_id
+            )
+            ->create();
 
+        $contractType = Manager::getInstance()->get(ContractType::class);
+
+        $data = [
+            UnitPrice::MODEL_ID => $contract->getHashedKey(),
+        ];
+dump($data);
         $this
             ->injectId(123123)
+            ->injectId($contractType->getModelKey(), true, '{' . UnitPrice::MODEL . '}')
             ->makeCall($data);
-
+dd($this->getResponseContentObject());
         $this->assertGivenDataIsInvalid();
 
         $this->response->assertJson(

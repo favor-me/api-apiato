@@ -54,7 +54,6 @@ final class UnitPriceFactory extends Factory
             UnitPrice::COST_PRICE => $costPrice,
             UnitPrice::MODEL => ContractModel::class,
             UnitPrice::MODEL_ID => $contract->id,
-            UnitPrice::PRICE_UP => $priceUpVal,
             UnitPrice::UNIT_ID => OrganizationUnit::factory()
         ];
     }

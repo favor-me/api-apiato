@@ -17,12 +17,14 @@ namespace App\Containers\OrganizationSection\UnitPrice\Dto;
 
 use App\Ship\Dto\Dto;
 
+/**
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ */
 class CreateUnitPriceDto extends Dto
 {
-    public ?string $client_price;
-    public ?string $cost_price;
+    public ?int $client_price;
+    public ?int $cost_price;
     public ?string $model;
-    public ?string $model_id;
-    public ?string $price_up;
-    public ?string $unit_id;
+    public ?int $model_id;
+    public ?int $unit_id;
 }

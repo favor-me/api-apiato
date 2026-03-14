@@ -46,10 +46,6 @@ trait UnitPriceValidationRules
         return validation_rules(Container::getConfig('rules.' . UnitPrice::COST_PRICE));
     }
 
-    public function getUnitPricePriceUpValidationRules(): ValidationRules
-    {
-        return validation_rules(Container::getConfig('rules.' . UnitPrice::PRICE_UP));
-    }
     public function getUnitPriceClientPriceValidationRules(): ValidationRules
     {
         return validation_rules(Container::getConfig('rules.' . UnitPrice::CLIENT_PRICE));

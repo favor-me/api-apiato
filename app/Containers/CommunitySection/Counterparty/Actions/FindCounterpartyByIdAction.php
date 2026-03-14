@@ -26,7 +26,7 @@ class FindCounterpartyByIdAction extends Action
      * @param int $id
      * @return Counterparty
      * @throws NotFoundException
-     * @SuppressWarnings(PHPMD.ShortVariable)
+     * `@SuppressWarnings(PHPMD.ShortVariable)`
      */
     public function run(int $id): Counterparty
     {

@@ -26,7 +26,6 @@
  * @apiParam {String} unit_id Уникальный идентификатор товара или услуги
  *
  * @apiBody {Numeric} [cost_price] Себестоимость.
- * @apiBody {Numeric} [price_up] Наценка себестоимости в % для расчёта цены продажи.
  * @apiBody {Numeric} [client_price] Цена продажи.
  *
  * @apiUse OrganizationUnitSuccessSingleResponse

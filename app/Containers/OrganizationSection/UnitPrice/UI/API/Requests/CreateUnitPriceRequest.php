@@ -51,7 +51,6 @@ class CreateUnitPriceRequest extends UnitPriceApiRequest implements GettableDto
             UnitPrice::MODEL_ID => $this->getUnitPriceModelIdValidationRules(),
             UnitPrice::UNIT_ID => $this->getOrganizationUnitIdValidationRules(),
             UnitPrice::COST_PRICE => $this->getUnitPriceCostPriceValidationRules(),
-            UnitPrice::PRICE_UP => $this->getUnitPricePriceUpValidationRules(),
             UnitPrice::CLIENT_PRICE => $this->getUnitPriceClientPriceValidationRules()
         ];
     }

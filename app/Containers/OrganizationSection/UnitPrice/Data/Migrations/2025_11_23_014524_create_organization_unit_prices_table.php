@@ -29,7 +29,6 @@ return new class extends CreateTableMigration
         $table->unsignedBigInteger(UnitPrice::MODEL_ID);
         $table->unsignedBigInteger(UnitPrice::UNIT_ID);
         $table->unsignedBigInteger(UnitPrice::COST_PRICE)->nullable();
-        $table->unsignedBigInteger(UnitPrice::PRICE_UP)->nullable();
         $table->unsignedBigInteger(UnitPrice::CLIENT_PRICE)->nullable();
         $table->float(UnitPrice::BALANCE)->nullable();
         $table->boolean(UnitPrice::IS_INFINITY_BALANCE)->default(false);

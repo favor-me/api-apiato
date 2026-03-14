@@ -89,7 +89,6 @@ class OrganizationUnit extends Model
         BaseOrganizationUnit::SKU,
         BaseOrganizationUnit::ORDERING,
         UnitPrice::COST_PRICE,
-        UnitPrice::PRICE_UP,
         UnitPrice::CLIENT_PRICE,
         UnitPrice::BALANCE,
         UnitPrice::IS_INFINITY_BALANCE,
@@ -99,7 +98,6 @@ class OrganizationUnit extends Model
 
     protected $casts = [
         PARAMS => JsonCast::class,
-        UnitPrice::PRICE_UP => 'float',
         UnitPrice::BALANCE => 'float',
         UnitPrice::COST_PRICE => MoneyCast::class,
         UnitPrice::CLIENT_PRICE => MoneyCast::class,

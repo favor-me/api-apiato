@@ -15,6 +15,9 @@
 
 namespace App\Containers\OrganizationSection\UnitPrice\Dto;
 
+/**
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 class UpdateUnitPriceDto extends CreateUnitPriceDto
 {
     public int $id;

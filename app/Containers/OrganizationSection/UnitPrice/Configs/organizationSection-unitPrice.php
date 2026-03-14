@@ -32,10 +32,6 @@ return [
             'numeric',
             'max:' . UnitPrice::PRICE_MAX_LENGTH
         ],
-        UnitPrice::PRICE_UP => [
-            'nullable',
-            'numeric'
-        ],
         UnitPrice::CLIENT_PRICE => [
             'nullable',
             'numeric',

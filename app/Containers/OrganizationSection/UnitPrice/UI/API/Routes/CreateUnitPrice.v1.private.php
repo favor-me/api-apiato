@@ -26,7 +26,6 @@
  * @apiBody {String} model_id Уникальный идентификатор сущности типа модели.
  * @apiBody {String} unit_id Уникальный идентификатор товара или услуги.
  * @apiBody {Numeric} cost_price Себестоимость.
- * @apiBody {Numeric} price_up Наценка себестоимости в % для расчёта цены продажи.
  * @apiBody {Numeric} client_price Цена продажи.
  *
  * @apiUse OrganizationUnitSuccessSingleResponse

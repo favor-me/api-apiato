@@ -23,7 +23,6 @@ HTTP/1.1 200 OK
         "model_id": null,
         "unit_id": null,
         "cost_price": null,
-        "price_up": null,
         "client_price": null
     },
     "meta": {

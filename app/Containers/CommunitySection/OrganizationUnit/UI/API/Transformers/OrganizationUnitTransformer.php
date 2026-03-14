@@ -53,8 +53,6 @@ class OrganizationUnitTransformer extends Transformer
             OrganizationUnit::PRIORITY_FROM => $organizationUnit->getAttribute(OrganizationUnit::PRIORITY_FROM),
             OrganizationUnit::PRIORITY_COST_PRICE => $this->money($organizationUnit
                 ->getAttribute(OrganizationUnit::PRIORITY_COST_PRICE)),
-            OrganizationUnit::PRIORITY_PRICE_UP => $organizationUnit
-                ->getAttribute(OrganizationUnit::PRIORITY_PRICE_UP),
             OrganizationUnit::PRIORITY_CLIENT_PRICE => $this->money($organizationUnit
                 ->getAttribute(OrganizationUnit::PRIORITY_CLIENT_PRICE)),
             OrganizationUnit::PRIORITY_BALANCE => $organizationUnit

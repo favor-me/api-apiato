@@ -53,7 +53,6 @@ final class OrganizationUnit extends SectionContainer
     public const string MODEL_NOTES = 'modelNotes';
     public const string PRIORITY_FROM = 'priority_from';
     public const string PRIORITY_BALANCE = 'priority_balance';
-    public const string PRIORITY_PRICE_UP = 'priority_price_up';
     public const string PRIORITY_COST_PRICE = 'priority_cost_price';
     public const string PRIORITY_CLIENT_PRICE = 'priority_client_price';
     public const string PRIORITY_IS_INFINITY_BALANCE = 'priority_is_infinity_balance';

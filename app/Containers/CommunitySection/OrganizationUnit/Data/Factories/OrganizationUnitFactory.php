@@ -45,7 +45,6 @@ final class OrganizationUnitFactory extends Factory
             OrganizationUnit::ORDERING => ZERO,
             OrganizationUnit::ORGANIZATION_ID => OrganizationModel::factory(),
             OrganizationUnit::CLIENT_PRICE => null,
-            OrganizationUnit::PRICE_UP => null,
             OrganizationUnit::COST_PRICE => null,
             OrganizationUnit::SKU => uniqid('sku-'),
             OrganizationUnit::SYSTEM_UNIT_ID => UnitModel::factory(),

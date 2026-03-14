@@ -56,7 +56,6 @@ final class UnitPriceTest extends UnitTestCase
             UnitPrice::MODEL_ID,
             UnitPrice::UNIT_ID,
             UnitPrice::COST_PRICE,
-            UnitPrice::PRICE_UP,
             UnitPrice::CLIENT_PRICE
         ], $this->model->getFillable());
     }

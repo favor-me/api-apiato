@@ -30,7 +30,6 @@ class UnitPriceTransformer extends Transformer
             UnitPrice::MODEL_ID => $unitPrice->getHashedKey(UnitPrice::MODEL_ID),
             UnitPrice::UNIT_ID => $unitPrice->getHashedKey(UnitPrice::UNIT_ID),
             UnitPrice::COST_PRICE => $this->money($unitPrice->cost_price),
-            UnitPrice::PRICE_UP => $unitPrice->price_up,
             UnitPrice::CLIENT_PRICE => $this->money($unitPrice->client_price),
             UnitPrice::BALANCE => $unitPrice->balance,
             UnitPrice::IS_INFINITY_BALANCE => $unitPrice->is_infinity_balance,

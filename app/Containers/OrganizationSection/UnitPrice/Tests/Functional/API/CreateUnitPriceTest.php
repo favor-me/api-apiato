@@ -71,7 +71,6 @@ final class CreateUnitPriceTest extends ApiTestCase
             UnitPrice::MODEL_ID => $contract->getHashedKey(),
             UnitPrice::UNIT_ID => $unit->getHashedKey(),
             UnitPrice::COST_PRICE => 100,
-            UnitPrice::PRICE_UP => 10,
             UnitPrice::CLIENT_PRICE => 110
         ];
 
@@ -87,7 +86,6 @@ final class CreateUnitPriceTest extends ApiTestCase
                     ->where('data.' . OBJECT, OrganizationUnitModel::RESOURCE_KEY)
                     ->where('data.' . ID, $data[UnitPrice::UNIT_ID])
                     ->where('data.' . UnitPrice::COST_PRICE . '.currency.value', $data[UnitPrice::COST_PRICE])
-                    ->where('data.' . UnitPrice::PRICE_UP, $data[UnitPrice::PRICE_UP])
                     ->where('data.' . UnitPrice::CLIENT_PRICE . '.currency.value', $data[UnitPrice::CLIENT_PRICE])
                     ->etc()
             );

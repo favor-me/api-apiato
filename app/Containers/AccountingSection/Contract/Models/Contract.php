@@ -121,7 +121,6 @@ class Contract extends OrganizationModel
                 OrganizationUnitModel::TABLE . '.' . PARAMS,
                 UnitPriceModel::TABLE . '.' . UnitPrice::MODEL,
                 UnitPriceModel::TABLE . '.' . UnitPrice::COST_PRICE,
-                UnitPriceModel::TABLE . '.' . UnitPrice::PRICE_UP,
                 UnitPriceModel::TABLE . '.' . UnitPrice::CLIENT_PRICE,
                 OrganizationUnitModel::TABLE . '.' . UnitPrice::BALANCE,
                 OrganizationUnitModel::TABLE . '.' . UnitPrice::IS_INFINITY_BALANCE,
@@ -129,7 +128,7 @@ class Contract extends OrganizationModel
                 OrganizationUnitModel::TABLE . '.' . OrganizationUnit::SYSTEM_UNIT_ID,
                 OrganizationUnitModel::TABLE . '.' . CREATED_AT,
                 OrganizationUnitModel::TABLE . '.' . UPDATED_AT,
-                OrganizationUnitModel::TABLE . '.' . DELETED_AT,
+                OrganizationUnitModel::TABLE . '.' . DELETED_AT
             ]);
     }
 

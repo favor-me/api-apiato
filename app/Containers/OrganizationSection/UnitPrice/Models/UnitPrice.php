@@ -29,7 +29,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read int $model_id Уникальный идентификатор.
  * @property-read int $unit_id Уникальный идентификатор.
  * @property-read Money $cost_price Себестоимость.
- * @property-read Money $price_up Наценка.
  * @property-read mixed $client_price Цена продажи.
  * @property-read float $balance Баланс.
  * @property-read bool $is_infinity_balance Флаг бесконечного баланса.
@@ -52,14 +51,12 @@ class UnitPrice extends Model
         BaseUnitPrice::MODEL_ID,
         BaseUnitPrice::UNIT_ID,
         BaseUnitPrice::COST_PRICE,
-        BaseUnitPrice::PRICE_UP,
         BaseUnitPrice::CLIENT_PRICE,
         BaseUnitPrice::BALANCE,
         BaseUnitPrice::IS_INFINITY_BALANCE
     ];
 
     protected $casts = [
-        BaseUnitPrice::PRICE_UP => 'float',
         BaseUnitPrice::COST_PRICE => MoneyCast::class,
         BaseUnitPrice::CLIENT_PRICE => MoneyCast::class,
         BaseUnitPrice::IS_INFINITY_BALANCE => 'boolean'

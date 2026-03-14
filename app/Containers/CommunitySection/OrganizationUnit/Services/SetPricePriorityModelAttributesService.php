@@ -26,7 +26,6 @@ class SetPricePriorityModelAttributesService
     protected array $priorityAttributes = [
         OrganizationUnit::PRIORITY_FROM => null,
         OrganizationUnit::PRIORITY_BALANCE => null,
-        OrganizationUnit::PRIORITY_PRICE_UP => null,
         OrganizationUnit::PRIORITY_COST_PRICE => null,
         OrganizationUnit::PRIORITY_CLIENT_PRICE => null,
         OrganizationUnit::PRIORITY_IS_INFINITY_BALANCE => null
@@ -45,7 +44,6 @@ class SetPricePriorityModelAttributesService
         $this->priorityAttributes = [
             OrganizationUnit::PRIORITY_FROM => null,
             OrganizationUnit::PRIORITY_BALANCE => $this->attributes->get(UnitPrice::BALANCE),
-            OrganizationUnit::PRIORITY_PRICE_UP => $this->attributes->get(UnitPrice::PRICE_UP),
             OrganizationUnit::PRIORITY_COST_PRICE => $this->attributes->get(UnitPrice::COST_PRICE),
             OrganizationUnit::PRIORITY_CLIENT_PRICE => $this->attributes->get(UnitPrice::CLIENT_PRICE),
             OrganizationUnit::PRIORITY_IS_INFINITY_BALANCE => $this->attributes->get(UnitPrice::IS_INFINITY_BALANCE)

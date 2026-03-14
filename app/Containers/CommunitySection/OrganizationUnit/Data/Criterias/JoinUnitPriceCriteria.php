@@ -74,7 +74,6 @@ class JoinUnitPriceCriteria extends Criteria
                 $unitTable . '.*',
                 $this->priceAsTableSelect($unitPriceAsTable, ID, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::COST_PRICE, $priceModel),
-                $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::PRICE_UP, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::CLIENT_PRICE, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::BALANCE, $priceModel),
                 $this->priceAsTableSelect($unitPriceAsTable, UnitPrice::IS_INFINITY_BALANCE, $priceModel)
