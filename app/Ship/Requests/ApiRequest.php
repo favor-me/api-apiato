@@ -26,13 +26,13 @@ use Illuminate\Validation\Rules\Exists;
 
 class ApiRequest extends Request
 {
-    public const TITLE_AS = 'title-as';
-    public const VALUE_AS = 'value-as';
-    public const TO_LIST_VALUE = 'list';
+    public const string TITLE_AS = 'title-as';
+    public const string VALUE_AS = 'value-as';
+    public const string TO_LIST_VALUE = 'list';
 
     protected array $access = [
-        'permissions' => '',
-        'roles' => ''
+        PERMISSIONS => '',
+        ROLES => ''
     ];
 
     protected array $decode = [];
@@ -87,17 +87,17 @@ class ApiRequest extends Request
             $errorMessage = __('validation.custom.ids.exists');
         }
 
-        return Rule::exists($table, 'id')
+        return Rule::exists($table, ID)
             ->where(function (Builder $query) use ($user, $ids, $errorMessage) {
                 if (!$user->is_admin) {
-                    $query->where('created_by', $user->id);
+                    $query->where(CREATED_BY, $user->id);
                 }
 
-                $query->whereIn('id', $ids);
+                $query->whereIn(ID, $ids);
 
-                if ($query->count() > 0 && count($ids) !== $query->count()) {
+                if ($query->count() > ZERO && count($ids) !== $query->count()) {
                     $this->validator->setCustomMessages([
-                        'ids.exists' => $errorMessage
+                        IDS . '.exists' => $errorMessage
                     ]);
                 }
 
@@ -110,7 +110,7 @@ class ApiRequest extends Request
         return [];
     }
 
-    protected function failedAuthorization()
+    protected function failedAuthorization(): void
     {
         throw new AuthorizationException(__('ship::exception.unauthorized_action'));
     }
@@ -132,7 +132,7 @@ class ApiRequest extends Request
 
     protected function mergeUrlParameters($values): self
     {
-        $this->urlParameters = array_merge($this->urlParameters, (array) $values);
+        $this->urlParameters = array_merge($this->urlParameters, (array)$values);
         return $this;
     }
 
@@ -142,7 +142,7 @@ class ApiRequest extends Request
     protected function throwIfEmptyInput(): void
     {
         if (!count($this->post())) {
-            throw new ValidationFailedException(__('ship::exception.message.empty_update_data'));
+            throw new ValidationFailedException(__('ship::exception.empty_update_data'));
         }
     }
 
