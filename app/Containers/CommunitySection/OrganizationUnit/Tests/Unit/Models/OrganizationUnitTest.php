@@ -70,7 +70,6 @@ final class OrganizationUnitTest extends UnitTestCase
             OrganizationUnit::SKU,
             OrganizationUnit::ORDERING,
             UnitPrice::COST_PRICE,
-            UnitPrice::PRICE_UP,
             UnitPrice::CLIENT_PRICE,
             UnitPrice::BALANCE,
             UnitPrice::IS_INFINITY_BALANCE,

@@ -50,7 +50,6 @@ use JBZoo\Data\JSON;
  * @property-read int $ordering Значение для сортировки.
  * @property-read JSON $params Дополнительные параметры.
  * @property-read Money $cost_price Себестоимость.
- * @property-read null|float $price_up Наценка в %.
  * @property-read Money $client_price Цена для клиента.
  * @property-read null|float $balance Остаток.
  * @property-read bool $is_infinity_balance Флаг бесконечного остатка.

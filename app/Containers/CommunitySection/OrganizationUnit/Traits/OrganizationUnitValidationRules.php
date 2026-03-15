@@ -18,6 +18,7 @@ namespace App\Containers\CommunitySection\OrganizationUnit\Traits;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
@@ -68,27 +69,22 @@ trait OrganizationUnitValidationRules
 
     public function getOrganizationUnitCostPriceValidationRules(): ValidationRules
     {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::COST_PRICE));
-    }
-
-    public function getOrganizationUnitPriceUpValidationRules(): ValidationRules
-    {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::PRICE_UP));
+        return validation_rules(Container::getConfig('rules.' . UnitPrice::COST_PRICE));
     }
 
     public function getOrganizationUnitClientPriceValidationRules(): ValidationRules
     {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::CLIENT_PRICE));
+        return validation_rules(Container::getConfig('rules.' . UnitPrice::CLIENT_PRICE));
     }
 
     public function getOrganizationUnitBalanceValidationRules(): ValidationRules
     {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::BALANCE));
+        return validation_rules(Container::getConfig('rules.' . UnitPrice::BALANCE));
     }
 
     public function getOrganizationUnitIsInfinityBalanceValidationRules(): ValidationRules
     {
-        return validation_rules(Container::getConfig('rules.' . OrganizationUnit::IS_INFINITY_BALANCE));
+        return validation_rules(Container::getConfig('rules.' . UnitPrice::IS_INFINITY_BALANCE));
     }
 
     public function getOrganizationUnitIdExistsValidationRule(string $column = 'NULL'): Exists

@@ -19,6 +19,7 @@ use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class PlusOrganizationUnitBalanceTest extends ApiTestCase
@@ -39,7 +40,7 @@ final class PlusOrganizationUnitBalanceTest extends ApiTestCase
 
         $model = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::BALANCE => 4,
+                UnitPrice::BALANCE => 4,
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
@@ -48,7 +49,7 @@ final class PlusOrganizationUnitBalanceTest extends ApiTestCase
         $this
             ->injectId($model->id)
             ->makeCall([
-                OrganizationUnit::BALANCE => $addBalance
+                UnitPrice::BALANCE => $addBalance
             ]);
 
         $this->response
@@ -57,7 +58,7 @@ final class PlusOrganizationUnitBalanceTest extends ApiTestCase
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
                     ->where('data.' . ID, $model->getHashedKey())
-                    ->where('data.' . OrganizationUnit::BALANCE, (int)$model->balance + $addBalance)
+                    ->where('data.' . UnitPrice::BALANCE, (int)$model->balance + $addBalance)
                     ->etc()
             );
     }
@@ -68,14 +69,14 @@ final class PlusOrganizationUnitBalanceTest extends ApiTestCase
 
         $model = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::BALANCE => 4,
+                UnitPrice::BALANCE => 4,
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
         $this
             ->injectId($model->id)
             ->makeCall([
-                OrganizationUnit::IS_INFINITY_BALANCE => 1
+                UnitPrice::IS_INFINITY_BALANCE => 1
             ]);
 
         $this->response
@@ -84,8 +85,8 @@ final class PlusOrganizationUnitBalanceTest extends ApiTestCase
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('data')
                     ->where('data.' . ID, $model->getHashedKey())
-                    ->where('data.' . OrganizationUnit::BALANCE, ZERO)
-                    ->where('data.' . OrganizationUnit::IS_INFINITY_BALANCE, true)
+                    ->where('data.' . UnitPrice::BALANCE, ZERO)
+                    ->where('data.' . UnitPrice::IS_INFINITY_BALANCE, true)
                     ->etc()
             );
     }

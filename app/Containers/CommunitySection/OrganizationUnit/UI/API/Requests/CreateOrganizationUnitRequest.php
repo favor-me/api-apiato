@@ -1,29 +1,27 @@
 <?php
 
 /**
- * __PROJECT_NAME__
+ * FavorMe system
  *
- * This file is part of the __PROJECT_NAME__ package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license __PROJECT_LICENCE__
- * @copyright Copyright (C) __PROJECT_AUTHOR__, All rights reserved ©.
- * @link __PROJECT_URL__
- * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 
-use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Dto\CreateOrganizationUnitDto;
-use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Requests\OrganizationUnitApiRequest;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
-use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Request\CanPrepareMoney;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
@@ -58,7 +56,6 @@ class CreateOrganizationUnitRequest extends OrganizationUnitApiRequest implement
             OrganizationUnit::SKU => $this->getOrganizationUnitSkuValidationRules(),
             OrganizationUnit::ORDERING => $this->getOrganizationUnitOrderingValidationRules(),
             UnitPrice::COST_PRICE => $this->getOrganizationUnitCostPriceValidationRules(),
-            UnitPrice::PRICE_UP => $this->getOrganizationUnitPriceUpValidationRules(),
             UnitPrice::CLIENT_PRICE => $this->getOrganizationUnitClientPriceValidationRules(),
             OrganizationUnit::ORGANIZATION_ID => $this->getOrganizationUnitOrganizationIdValidationRules(),
             OrganizationUnit::SYSTEM_UNIT_ID => $this->getOrganizationUnitSystemUnitIdValidationRules(),

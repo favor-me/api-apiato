@@ -15,29 +15,29 @@
 namespace App\Containers\CommunitySection\OrganizationUnit\History\Events;
 
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container;
-use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\HistorySection\ModelNote\Types\SystemMessageModelNoteType;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 
 /**
  * @method null|OrganizationUnitModel getModelData()
  */
 class PlusOrganizationUnitBalanceEvent extends OrganizationUnitEvent
 {
-    public const OLD_BALANCE_VALUE = 'oldBalanceValue';
-    public const IS_INFINITY_BALANCE = 'isInfinityBalance';
+    public const string OLD_BALANCE_VALUE = 'oldBalanceValue';
+    public const string IS_INFINITY_BALANCE = 'isInfinityBalance';
 
     public function getDataChanges(): array
     {
         return [
-            OrganizationUnit::BALANCE => $this->getModelData()->balance
+            UnitPrice::BALANCE => $this->getModelData()->balance
         ];
     }
 
     public function getData(): array
     {
         return [
-            OrganizationUnit::BALANCE => $this->data->get(self::OLD_BALANCE_VALUE)
+            UnitPrice::BALANCE => $this->data->get(self::OLD_BALANCE_VALUE)
         ];
     }
 

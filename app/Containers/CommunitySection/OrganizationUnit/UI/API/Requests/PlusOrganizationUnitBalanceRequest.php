@@ -17,6 +17,7 @@ namespace App\Containers\CommunitySection\OrganizationUnit\UI\API\Requests;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Requests\OrganizationUnitApiRequest;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Traits\Request\HasInputId;
 use Illuminate\Validation\Rules\Exists;
@@ -43,24 +44,24 @@ class PlusOrganizationUnitBalanceRequest extends OrganizationUnitApiRequest
 
     public function getBalance(): float
     {
-        return (float)$this->get(OrganizationUnit::BALANCE);
+        return (float)$this->get(UnitPrice::BALANCE);
     }
 
     public function isInfinityBalance(): bool
     {
-        return (bool)$this->get(OrganizationUnit::IS_INFINITY_BALANCE);
+        return (bool)$this->get(UnitPrice::IS_INFINITY_BALANCE);
     }
 
     public function rules(): array
     {
         $rules = [
             ID => $this->getOrganizationUnitIdValidationRules(),
-            OrganizationUnit::BALANCE => $this->getOrganizationUnitBalanceValidationRules()
+            UnitPrice::BALANCE => $this->getOrganizationUnitBalanceValidationRules()
         ];
 
-        if ($this->get(OrganizationUnit::IS_INFINITY_BALANCE)) {
-            unset($rules[OrganizationUnit::BALANCE]);
-            $rules[OrganizationUnit::IS_INFINITY_BALANCE] = $this
+        if ($this->get(UnitPrice::IS_INFINITY_BALANCE)) {
+            unset($rules[UnitPrice::BALANCE]);
+            $rules[UnitPrice::IS_INFINITY_BALANCE] = $this
                 ->getOrganizationUnitIsInfinityBalanceValidationRules();
         }
 

@@ -15,9 +15,9 @@
 namespace App\Containers\CommunitySection\OrganizationUnit\Tasks;
 
 use App\Containers\CommunitySection\OrganizationUnit\Events\MinusOrganizationUnitBalanceEvent;
-use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use Exception;
 
@@ -40,15 +40,22 @@ class MinusOrganizationUnitBalanceTask extends OrganizationUnitTask
             }
 
             $data = [
-                OrganizationUnit::BALANCE => $newBalance,
+                UnitPrice::BALANCE => $newBalance,
             ];
 
             $resultUnit = $this->repository->update($data, $unit->id);
 
-            event(new MinusOrganizationUnitBalanceEvent($resultUnit, $minusBalance, $unit->balance, $order));
+            event(
+                new MinusOrganizationUnitBalanceEvent(
+                    $resultUnit,
+                    $minusBalance,
+                    $unit->balance,
+                    $order
+                )
+            );
 
             return $resultUnit;
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new UpdateResourceFailedException();
         }
     }

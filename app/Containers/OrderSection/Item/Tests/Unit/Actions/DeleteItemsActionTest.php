@@ -22,6 +22,7 @@ use App\Containers\OrderSection\Item\Models\Item as ItemModel;
 use App\Containers\OrderSection\Item\Tests\UnitTestCase;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 
 final class DeleteItemsActionTest extends UnitTestCase
 {
@@ -46,15 +47,15 @@ final class DeleteItemsActionTest extends UnitTestCase
 
         $unitA = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => 100,
-                OrganizationUnit::CLIENT_PRICE => 210,
+                UnitPrice::COST_PRICE => 100,
+                UnitPrice::CLIENT_PRICE => 210,
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
         $unitB = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => 120,
-                OrganizationUnit::CLIENT_PRICE => 150,
+                UnitPrice::COST_PRICE => 120,
+                UnitPrice::CLIENT_PRICE => 150,
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
@@ -68,7 +69,7 @@ final class DeleteItemsActionTest extends UnitTestCase
             ->order($order)
             ->create();
 
-        $itemB = ItemModel::factory()
+        ItemModel::factory()
             ->unit($unitB)
             ->order($order)
             ->create();

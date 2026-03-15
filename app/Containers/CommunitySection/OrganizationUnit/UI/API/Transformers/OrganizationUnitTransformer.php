@@ -46,7 +46,6 @@ class OrganizationUnitTransformer extends Transformer
             OrganizationUnit::ORDERING => $organizationUnit->ordering,
             PARAMS => $organizationUnit->params,
             UnitPrice::COST_PRICE => $this->money($organizationUnit->cost_price),
-            UnitPrice::PRICE_UP => $organizationUnit->price_up,
             UnitPrice::CLIENT_PRICE => $this->money($organizationUnit->client_price),
             UnitPrice::BALANCE => (float)$organizationUnit->balance,
             UnitPrice::IS_INFINITY_BALANCE => $organizationUnit->is_infinity_balance,

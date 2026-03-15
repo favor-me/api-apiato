@@ -1,16 +1,16 @@
 <?php
 
 /**
- * __PROJECT_NAME__
+ * FavorMe system
  *
- * This file is part of the __PROJECT_NAME__ package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license __PROJECT_LICENCE__
- * @copyright Copyright (C) __PROJECT_AUTHOR__, All rights reserved ©.
- * @link __PROJECT_URL__
- * @author __PROJECT_AUTHOR__ <__PROJECT_AUTHOR__EMAIL__>
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\API;
@@ -21,6 +21,7 @@ use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\CommunitySection\OrganizationUnit\Tests\Functional\ApiTestCase;
 use App\Containers\CommunitySection\OrganizationUnitType\ProductType;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use App\Containers\Vendor\Unit\Models\Unit;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -67,8 +68,8 @@ final class CreateOrganizationUnitTest extends ApiTestCase
             OrganizationUnit::TYPE => $type->getName(),
             OrganizationUnit::SKU => 'sk-45t',
             OrganizationUnit::ORDERING => 10,
-            OrganizationUnit::COST_PRICE => $costPrice,
-            OrganizationUnit::PRICE_UP => $priceUp,
+            UnitPrice::CLIENT_PRICE => $clientPrice,
+            UnitPrice::COST_PRICE => $costPrice,
             OrganizationUnit::SYSTEM_UNIT_ID => $unit->getHashedKey(),
         ];
 
@@ -84,47 +85,12 @@ final class CreateOrganizationUnitTest extends ApiTestCase
                     ->where('data.' . OrganizationUnit::TYPE, $type->toArray())
                     ->where('data.' . OrganizationUnit::SKU, $data[OrganizationUnit::SKU])
                     ->where('data.' . OrganizationUnit::ORDERING, $data[OrganizationUnit::ORDERING])
-                    ->where('data.' . OrganizationUnit::PRICE_UP, $data[OrganizationUnit::PRICE_UP])
                     ->where(
-                        'data.' . OrganizationUnit::COST_PRICE . '.currency.value',
-                        $data[OrganizationUnit::COST_PRICE]
+                        'data.' . UnitPrice::COST_PRICE . '.currency.value',
+                        $data[UnitPrice::COST_PRICE]
                     )
-                    ->where('data.' . OrganizationUnit::CLIENT_PRICE . '.currency.value', $clientPrice)
+                    ->where('data.' . UnitPrice::CLIENT_PRICE . '.currency.value', $clientPrice)
                     ->etc()
             );
-    }
-
-    public function testWithInvalidClientPrice(): void
-    {
-        $this->getTestingOrganizationUser();
-
-        $costPrice = 100;
-        $priceUp = 8;
-
-        $data = [
-            OrganizationUnit::NAME => 'My product',
-            OrganizationUnit::TYPE => (new ProductType())->getName(),
-            OrganizationUnit::COST_PRICE => $costPrice,
-            OrganizationUnit::PRICE_UP => $priceUp,
-            OrganizationUnit::CLIENT_PRICE => 200
-        ];
-
-        $this->makeCall($data);
-
-        $this->assertGivenDataIsInvalid();
-
-        $this->response->assertJson(
-            fn(AssertableJson $json): AssertableJson => $json
-                ->has('errors')
-                ->where('errors.' . OrganizationUnit::CLIENT_PRICE, [
-                    Container::trans('validation.client_price.size', [
-                        'size' => app('money')
-                            ->addCurrency(108)
-                            ->currency()
-                            ->text()
-                    ])
-                ])
-                ->etc()
-        );
     }
 }

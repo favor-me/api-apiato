@@ -28,7 +28,6 @@
  * @apiBody {Numeric} [ordering] Значение сортировки
  * @apiBody {Array|Object} [params] Дополнительные параметры
  * @apiBody {Numeric} [cost_price] Себестоимость
- * @apiBody {Numeric} [price_up] Наценка себестоимости в % для расчёта цены продажи
  * @apiBody {Numeric} [client_price] Цена продажи
  * @apiBody {String} [organization_id] Уникальный идентификатор органзации. Устанавливается автоматически.
  * @apiBody {String} system_unit_id Уникальный идентификатор еденицы измерения

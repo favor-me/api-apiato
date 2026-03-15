@@ -29,6 +29,7 @@ use App\Containers\OrderSection\Order\Tests\Functional\ApiTestCase;
 use App\Containers\OrderSection\Status\Foundation\Status;
 use App\Containers\CommunitySection\OrganizationUnit\Facades\Container as OrganizationUnitContainer;
 use App\Containers\OrderSection\Status\Models\Status as StatusModel;
+use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -119,22 +120,22 @@ final class UpdateOrderTest extends ApiTestCase
 
         $unitA = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(100)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(210)->val(),
+                UnitPrice::COST_PRICE => app('money')->addCurrency(100)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(210)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
         $unitB = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(120)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(150)->val(),
+                UnitPrice::COST_PRICE => app('money')->addCurrency(120)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(150)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
         $unitC = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(100)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(110)->val(),
+                UnitPrice::COST_PRICE => app('money')->addCurrency(100)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(110)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
@@ -337,18 +338,18 @@ final class UpdateOrderTest extends ApiTestCase
 
         $unitA = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::BALANCE => 17,
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(50)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(60)->val(),
+                UnitPrice::BALANCE => 17,
+                UnitPrice::COST_PRICE => app('money')->addCurrency(50)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(60)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 
         $unitInfinityBalance = OrganizationUnitModel::factory()
             ->create([
-                OrganizationUnit::BALANCE => 0,
-                OrganizationUnit::IS_INFINITY_BALANCE => true,
-                OrganizationUnit::COST_PRICE => app('money')->addCurrency(50)->val(),
-                OrganizationUnit::CLIENT_PRICE => app('money')->addCurrency(60)->val(),
+                UnitPrice::BALANCE => 0,
+                UnitPrice::IS_INFINITY_BALANCE => true,
+                UnitPrice::COST_PRICE => app('money')->addCurrency(50)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(60)->val(),
                 OrganizationUnit::ORGANIZATION_ID => $user->organization_id
             ]);
 

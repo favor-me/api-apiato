@@ -33,7 +33,6 @@ return new class extends CreateTableMigration
         $table->unsignedInteger(OrganizationUnit::ORDERING)->default(ZERO);
         $table->json(PARAMS)->nullable();
         $table->unsignedBigInteger(UnitPrice::COST_PRICE)->nullable();
-        $table->unsignedBigInteger(UnitPrice::PRICE_UP)->nullable();
         $table->unsignedBigInteger(UnitPrice::CLIENT_PRICE)->nullable();
         $table->float(UnitPrice::BALANCE)->nullable();
         $table->boolean(UnitPrice::IS_INFINITY_BALANCE)->default(false);

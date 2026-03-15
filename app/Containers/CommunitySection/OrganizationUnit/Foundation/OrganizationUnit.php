@@ -19,33 +19,9 @@ use App\Ship\Foundation\SectionContainer;
 
 final class OrganizationUnit extends SectionContainer
 {
-    /**
-     * @deprecated use UnitPrice::IS_INFINITY_BALANCE
-     */
-    public const string BALANCE = 'balance';
-
-    /**
-     * @deprecated use UnitPrice::IS_INFINITY_BALANCE
-     */
-    public const string IS_INFINITY_BALANCE = 'is_infinity_balance';
-
-    /**
-     * @deprecated use UnitPrice::CLIENT_PRICE
-     */
-    public const string CLIENT_PRICE = 'client_price';
-
-    /**
-     * @deprecated use UnitPrice::COST_PRICE
-     */
-    public const string COST_PRICE = 'cost_price';
     public const string NAME = 'name';
     public const string ORDERING = 'ordering';
     public const string ORGANIZATION_ID = 'organization_id';
-
-    /**
-     * @deprecated use UnitPrice::PRICE_UP
-     */
-    public const string PRICE_UP = 'price_up';
     public const string SKU = 'sku';
     public const string SYSTEM_UNIT_ID = 'system_unit_id';
     public const string TYPE = 'type';

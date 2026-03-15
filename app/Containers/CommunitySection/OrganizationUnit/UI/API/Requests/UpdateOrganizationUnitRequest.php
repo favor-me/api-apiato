@@ -71,6 +71,12 @@ class UpdateOrganizationUnitRequest extends CreateOrganizationUnitRequest
             ->removeRequired();
     }
 
+    public function getOrganizationUnitClientPriceValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationUnitClientPriceValidationRules()
+            ->removeRequired();
+    }
+
     public function getOrganizationUnitNameValidationRules(): ValidationRules
     {
         return parent::getOrganizationUnitNameValidationRules()

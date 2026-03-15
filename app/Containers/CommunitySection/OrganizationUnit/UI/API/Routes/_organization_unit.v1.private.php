@@ -44,7 +44,6 @@ HTTP/1.1 200 OK
                 "rule": "exchange"
             }
         },
-        "price_up": null,
         "client_price": {
             "currency": {
                 "value": 0,
