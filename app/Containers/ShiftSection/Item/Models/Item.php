@@ -22,6 +22,7 @@ use App\Containers\ShiftSection\Item\Foundation\Item as BaseItem;
 use App\Containers\ShiftSection\ItemType\Casts\ItemType;
 use App\Containers\ShiftSection\ItemType\Type;
 use App\Containers\ShiftSection\Shift\Models\Shift;
+use App\Ship\Database\Casts\JSON as JsonCast;
 use App\Ship\Database\Casts\Money as MoneyCast;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Parents\Models\Model;
@@ -29,6 +30,7 @@ use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Model\IsNumbered;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use JBZoo\Data\JSON;
 
 /**
  * @property-read int $id Уникальный идентификатор.
@@ -36,7 +38,8 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $order_id Уникальный идентификатор заказа.
  * @property-read Type $type Тип позиции.
  * @property-read Money $value Стоимость позиции.
- * @property-read string|null $description Описание
+ * @property-read string|null $description Описание.
+ * @property-read JSON $system_note Системная заметка.
  * @property-read int|null $created_by Уникальный идентификатор кто создал.
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $updated_at Дата и время обновления.
@@ -63,12 +66,14 @@ class Item extends Model
         BaseItem::TYPE,
         BaseItem::VALUE,
         BaseItem::DESCRIPTION,
+        BaseItem::SYSTEM_NOTE,
         CREATED_BY
     ];
 
     protected $casts = [
         BaseItem::TYPE => ItemType::class,
-        BaseItem::VALUE => MoneyCast::class
+        BaseItem::VALUE => MoneyCast::class,
+        BaseItem::SYSTEM_NOTE => JsonCast::class
     ];
 
     public function shift(): BelongsTo

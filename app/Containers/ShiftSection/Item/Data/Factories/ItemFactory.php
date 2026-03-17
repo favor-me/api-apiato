@@ -58,7 +58,8 @@ final class ItemFactory extends Factory
             Item::ORDER_ID => null,
             Item::SHIFT_ID => ShiftModel::factory(),
             Item::TYPE => IncomeType::class,
-            Item::VALUE => 1000
+            Item::VALUE => 1000,
+            Item::SYSTEM_NOTE => []
         ];
     }
 }

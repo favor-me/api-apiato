@@ -17,6 +17,7 @@ namespace App\Containers\ShiftSection\Item\UI\API\Transformers;
 
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformerManager;
 use App\Containers\OrderSection\Order\UI\API\Transformers\OrderTransformerManager;
+use App\Containers\ShiftSection\Item\Dto\SystemNoteDto;
 use App\Containers\ShiftSection\Item\Foundation\Item;
 use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
 use App\Containers\ShiftSection\Shift\UI\API\Transformers\ShiftTransformerManager;
@@ -42,10 +43,33 @@ class ItemTransformer extends Transformer
             Item::TYPE => $item->type->toArray(),
             Item::VALUE => $this->money($item->value),
             Item::DESCRIPTION => $item->description,
+            Item::SYSTEM_NOTE => $this->toSystemNote($item),
             CREATED_BY => $item->getHashedKey(CREATED_BY),
             CREATED_AT => $this->nullOrTimeObject($item->created_at),
             UPDATED_AT => $this->nullOrTimeObject($item->updated_at)
         ];
+    }
+
+    protected function toSystemNote(ItemModel $item): ?array
+    {
+        $note = clone $item->system_note;
+        $message = $note->get(SystemNoteDto::MESSAGE);
+        $messageArgs = $note->get(SystemNoteDto::MESSAGE_ARGS);
+
+        if ($message) {
+            $valueArg = $note->find(SystemNoteDto::MESSAGE_ARGS . '.value');
+
+            if ($valueArg) {
+                $moneyValue = app('money')->addCurrency($valueArg);
+                $messageArgs['value'] = $moneyValue->currency()->text();
+            }
+
+            return $note
+                ->set(SystemNoteDto::MESSAGE, __($message, $messageArgs))
+                ->getArrayCopy();
+        }
+
+        return null;
     }
 
     protected function includeCreator(ItemModel $item): ResourceItem|NullResource

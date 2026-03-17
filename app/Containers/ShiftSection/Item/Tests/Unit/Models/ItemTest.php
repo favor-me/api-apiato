@@ -24,6 +24,7 @@ use App\Containers\ShiftSection\ItemType\Type;
 use App\Containers\ShiftSection\Shift\Models\Shift;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use JBZoo\Data\JSON;
 
 final class ItemTest extends UnitTestCase
 {
@@ -63,6 +64,7 @@ final class ItemTest extends UnitTestCase
             Item::TYPE,
             Item::VALUE,
             Item::DESCRIPTION,
+            Item::SYSTEM_NOTE,
             CREATED_BY
         ], $this->model->getFillable());
     }
@@ -71,6 +73,7 @@ final class ItemTest extends UnitTestCase
     {
         $this->assertInstanceOf(Type::class, $this->model->type);
         $this->assertInstanceOf(Money::class, $this->model->value);
+        $this->assertInstanceOf(JSON::class, $this->model->system_note);
     }
 
     public function testBelongsToShift(): void

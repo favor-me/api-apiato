@@ -26,6 +26,7 @@ final class Item extends SectionContainer
     public const string SHIFT = 'shift';
     public const string TYPE = 'type';
     public const int TYPE_MAX_LENGTH = 50;
+    public const string SYSTEM_NOTE = 'system_note';
     public const string VALUE = 'value';
 
     protected string $apiBaseUri = 'shift/items';

@@ -15,14 +15,22 @@
 
 namespace App\Containers\ShiftSection\Item\Dto;
 
-use App\Ship\Dto\Dto;
-
-class CreateItemDto extends Dto
+class SystemNoteDto
 {
-    public ?string $description;
-    public ?int $order_id;
-    public ?int $shift_id;
-    public ?string $type;
-    public ?string $value;
-    public ?array $system_note;
+    public const string MESSAGE = 'message';
+    public const string MESSAGE_ARGS = 'message_args';
+
+    public function __construct(
+        protected string $message,
+        protected array $messageArgs
+    ) {
+    }
+
+    public function toArray(): array
+    {
+        return [
+            self::MESSAGE => $this->message,
+            self::MESSAGE_ARGS => $this->messageArgs
+        ];
+    }
 }

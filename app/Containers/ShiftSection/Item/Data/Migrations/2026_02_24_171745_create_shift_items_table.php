@@ -31,6 +31,7 @@ return new class extends CreateTableMigration
         $table->unsignedBigInteger(Item::ORDER_ID)->nullable();
         $table->string(Item::TYPE, Item::TYPE_MAX_LENGTH);
         $table->bigInteger(Item::VALUE)->default(ZERO);
+        $table->json(Item::SYSTEM_NOTE)->nullable();
         $table->string(Item::DESCRIPTION, SCHEMA_DEFAULT_STRING_LENGTH)->nullable();
         $table->unsignedBigInteger(CREATED_BY)->nullable();
         $table->timestamps();

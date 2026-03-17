@@ -42,6 +42,12 @@ HTTP/1.1 200 OK
             }
         },
         "description": null,
+        "system_note": {
+            "message": "Фиксированная ставка за смену 1 000,00 руб.",
+            "message_args": {
+                "value": 1000
+            }
+        },
         "created_by": "Q9V2RLOKZ0wEm1qY",
         "created_at": {
             "timestamp": 1772737596,
