@@ -25,6 +25,7 @@ use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBr
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use Faker\Generator;
 use Illuminate\Contracts\Console\Kernel as ApiatoConsoleKernel;
+use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use JsonException;
 
@@ -40,6 +41,7 @@ abstract class TestCase extends AbstractTestCase
     use TestRequestHelperTrait;
 
     protected array $testData = [];
+    protected array $query = [];
 
     public function createApplication()
     {
@@ -61,11 +63,8 @@ abstract class TestCase extends AbstractTestCase
 
     public function makeCall(array $data = [], array $headers = []): TestResponse
     {
-        if (!array_key_exists('accept-language', $headers)) {
-            $headers = array_merge($headers, [
-                'accept-language' => $this->app->getLocale()
-            ]);
-        }
+        $this->applyQuery();
+        $this->addAcceptLanguageHeader($headers);
 
         return parent::makeCall($data, $headers);
     }
@@ -178,7 +177,6 @@ abstract class TestCase extends AbstractTestCase
         return $user;
     }
 
-
     public function getTestingOrganizationBranchUser(?array $userDetails = null, ?array $access = null): UserModel
     {
         $user = $this->getTestingUser($userDetails, $access);
@@ -199,5 +197,35 @@ abstract class TestCase extends AbstractTestCase
             ->update();
 
         return $user;
+    }
+
+    public function include(array $includes): static
+    {
+        return $this->addQuery('include', implode(',', $includes));
+    }
+
+    public function addQuery(string $key, mixed $value): static
+    {
+        if (!array_key_exists($key, $this->query)) {
+            $this->query[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    protected function applyQuery(): void
+    {
+        if (count($this->query)) {
+            $this->endpoint($this->endpoint . '?' . Arr::query($this->query));
+        }
+    }
+
+    protected function addAcceptLanguageHeader(array &$headers = []): void
+    {
+        if (!array_key_exists('accept-language', $headers)) {
+            $headers = array_merge($headers, [
+                'accept-language' => $this->app->getLocale()
+            ]);
+        }
     }
 }
