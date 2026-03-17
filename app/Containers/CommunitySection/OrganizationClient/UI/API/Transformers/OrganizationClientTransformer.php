@@ -41,9 +41,9 @@ class OrganizationClientTransformer extends Transformer
             OrganizationClient::SURNAME => $organizationClient->surname,
             OrganizationClient::PHONE_NUMBER => $organizationClient->phone_number,
             OrganizationClient::NOTE => $organizationClient->note,
-            CREATED_AT => $this->time($organizationClient->created_at),
-            UPDATED_AT => $this->time($organizationClient->updated_at),
-            DELETED_AT => $this->time($organizationClient->deleted_at)
+            CREATED_AT => $this->nullOrTimeObject($organizationClient->created_at),
+            UPDATED_AT => $this->nullOrTimeObject($organizationClient->updated_at),
+            DELETED_AT => $this->nullOrTimeObject($organizationClient->deleted_at)
         ];
     }
 

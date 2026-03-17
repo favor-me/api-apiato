@@ -47,9 +47,9 @@ class ContractTransformer extends Transformer
             Contract::START_AT => $this->date($contract->start_at),
             Contract::FINISH_AT => $this->date($contract->finish_at),
             Contract::IS_LIVE_NOW => $contract->is_live_now,
-            CREATED_AT => $this->time($contract->created_at),
-            UPDATED_AT => $this->time($contract->updated_at),
-            DELETED_AT => $this->time($contract->deleted_at)
+            CREATED_AT => $this->nullOrTimeObject($contract->created_at),
+            UPDATED_AT => $this->nullOrTimeObject($contract->updated_at),
+            DELETED_AT => $this->nullOrTimeObject($contract->deleted_at)
         ];
     }
 

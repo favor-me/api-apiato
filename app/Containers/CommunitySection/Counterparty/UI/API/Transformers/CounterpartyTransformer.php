@@ -42,9 +42,9 @@ class CounterpartyTransformer extends Transformer
             Counterparty::COUNTRY => $counterparty->country->toArray(),
             Counterparty::BANK_DATA => $counterparty->bank_data,
             Counterparty::ORGANIZATION_ID => $counterparty->getHashedKey(Counterparty::ORGANIZATION_ID),
-            CREATED_AT => $this->time($counterparty->created_at),
-            UPDATED_AT => $this->time($counterparty->updated_at),
-            DELETED_AT => $this->time($counterparty->deleted_at)
+            CREATED_AT => $this->nullOrTimeObject($counterparty->created_at),
+            UPDATED_AT => $this->nullOrTimeObject($counterparty->updated_at),
+            DELETED_AT => $this->nullOrTimeObject($counterparty->deleted_at)
         ];
     }
 

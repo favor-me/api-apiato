@@ -40,16 +40,16 @@ class ShiftTransformer extends Transformer
             Shift::ORGANIZATION_ID => $shift->getHashedKey(Shift::ORGANIZATION_ID),
             Shift::ORGANIZATION_BRANCH_ID => $shift->getHashedKey(Shift::ORGANIZATION_BRANCH_ID),
             Shift::MONEY => $this->money($shift->money),
-            Shift::START_AT => $this->time($shift->start_at),
-            Shift::FINISH_AT => $this->time($shift->finish_at),
+            Shift::START_AT => $this->nullOrTimeObject($shift->start_at),
+            Shift::FINISH_AT => $this->nullOrTimeObject($shift->finish_at),
             Shift::STATUS => $shift->status->toArray(),
             self::DATE_DIFF => $shift->start_at->diff($shift->finish_at),
             Shift::CONFIRMED_BY => $shift->getHashedKey(Shift::CONFIRMED_BY),
             CREATED_BY => $shift->getHashedKey(CREATED_BY),
-            Shift::CONFIRMED_AT => $this->time($shift->confirmed_at),
-            Shift::PAYMENT_AT => $this->time($shift->payment_at),
-            CREATED_AT => $this->time($shift->created_at),
-            UPDATED_AT => $this->time($shift->updated_at)
+            Shift::CONFIRMED_AT => $this->nullOrTimeObject($shift->confirmed_at),
+            Shift::PAYMENT_AT => $this->nullOrTimeObject($shift->payment_at),
+            CREATED_AT => $this->nullOrTimeObject($shift->created_at),
+            UPDATED_AT => $this->nullOrTimeObject($shift->updated_at)
         ];
     }
 

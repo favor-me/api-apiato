@@ -69,11 +69,11 @@ class OrderTransformer extends Transformer
             Order::CONTRACT_ID => $order->getHashedKey(Order::CONTRACT_ID),
             CREATED_BY => $order->getHashedKey(CREATED_BY),
             UPDATED_BY => $order->getHashedKey(UPDATED_BY),
-            Order::CANCELED_AT => $this->time($order->canceled_at),
-            Order::COMPLETED_AT => $this->time($order->completed_at),
-            CREATED_AT => $this->time($order->created_at),
-            UPDATED_AT => $this->time($order->updated_at),
-            DELETED_AT => $this->time($order->deleted_at)
+            Order::CANCELED_AT => $this->nullOrTimeObject($order->canceled_at),
+            Order::COMPLETED_AT => $this->nullOrTimeObject($order->completed_at),
+            CREATED_AT => $this->nullOrTimeObject($order->created_at),
+            UPDATED_AT => $this->nullOrTimeObject($order->updated_at),
+            DELETED_AT => $this->nullOrTimeObject($order->deleted_at)
         ];
     }
 

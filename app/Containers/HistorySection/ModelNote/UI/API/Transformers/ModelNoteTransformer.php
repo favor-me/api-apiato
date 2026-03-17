@@ -43,7 +43,7 @@ class ModelNoteTransformer extends Transformer
             ModelNote::EVENT_ID => $modelNote->getHashedKey(ModelNote::EVENT_ID),
             PARAMS => $this->transformParams($modelNote),
             CREATED_BY => $modelNote->getHashedKey(CREATED_BY),
-            CREATED_AT => $this->time($modelNote->created_at)
+            CREATED_AT => $this->nullOrTimeObject($modelNote->created_at)
         ];
     }
 

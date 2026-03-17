@@ -99,7 +99,7 @@ abstract class Transformer extends AbstractTransformer
         return null;
     }
 
-    public function time(?Carbon $carbon): ?array
+    public function nullOrTimeObject(?Carbon $carbon): ?array
     {
         if ($carbon instanceof Carbon) {
             $this->setCarbonClientTimeZone($carbon);
@@ -107,7 +107,7 @@ abstract class Transformer extends AbstractTransformer
             return [
                 'timestamp' => $carbon->getTimestamp(),
                 'diff_for_humans' => $carbon->diffForHumans(),
-                'date_for_human' => $carbon->format(self::HUMAN_DATE_FORMAT),
+                'date_for_human' => $carbon->format(DATE_FORMAT),
                 'date_for_human_full' => $carbon->translatedFormat(__('time.full_to_human')),
                 'date_for_human_full_with_time' => $carbon->translatedFormat(__('time.full_to_human_with_time')),
                 'iso' => $carbon->toISOString(true),

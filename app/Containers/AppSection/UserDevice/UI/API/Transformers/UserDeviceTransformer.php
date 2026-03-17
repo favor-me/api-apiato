@@ -37,8 +37,8 @@ class UserDeviceTransformer extends Transformer
             BaseUser::ID => $userDevice->getHashedKey(BaseUser::ID),
             BaseUserDevice::MODEL => $userDevice->model,
             BaseUserDevice::TOKEN => $userDevice->token,
-            CREATED_AT => $this->time($userDevice->created_at),
-            UPDATED_AT => $this->time($userDevice->updated_at)
+            CREATED_AT => $this->nullOrTimeObject($userDevice->created_at),
+            UPDATED_AT => $this->nullOrTimeObject($userDevice->updated_at)
         ];
     }
 

@@ -60,9 +60,9 @@ class OrganizationUnitTransformer extends Transformer
                 ->getAttribute(OrganizationUnit::PRIORITY_IS_INFINITY_BALANCE),
             OrganizationUnit::ORGANIZATION_ID => $organizationUnit->getHashedKey(OrganizationUnit::ORGANIZATION_ID),
             OrganizationUnit::SYSTEM_UNIT_ID => $organizationUnit->getHashedKey(OrganizationUnit::SYSTEM_UNIT_ID),
-            CREATED_AT => $this->time($organizationUnit->created_at),
-            UPDATED_AT => $this->time($organizationUnit->updated_at),
-            DELETED_AT => $this->time($organizationUnit->deleted_at)
+            CREATED_AT => $this->nullOrTimeObject($organizationUnit->created_at),
+            UPDATED_AT => $this->nullOrTimeObject($organizationUnit->updated_at),
+            DELETED_AT => $this->nullOrTimeObject($organizationUnit->deleted_at)
         ];
     }
 

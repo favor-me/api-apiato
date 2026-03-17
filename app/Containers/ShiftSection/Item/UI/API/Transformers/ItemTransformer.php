@@ -43,8 +43,8 @@ class ItemTransformer extends Transformer
             Item::VALUE => $this->money($item->value),
             Item::DESCRIPTION => $item->description,
             CREATED_BY => $item->getHashedKey(CREATED_BY),
-            CREATED_AT => $this->time($item->created_at),
-            UPDATED_AT => $this->time($item->updated_at)
+            CREATED_AT => $this->nullOrTimeObject($item->created_at),
+            UPDATED_AT => $this->nullOrTimeObject($item->updated_at)
         ];
     }
 
