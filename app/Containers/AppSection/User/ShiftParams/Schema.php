@@ -43,4 +43,10 @@ class Schema extends ShipSchema
             $percentOrderProfitKey => PercentFromOrderProfitParamElement::getValidationRules()
         ];
     }
+
+    public static function getElementsValidationRuleMessages(): array
+    {
+        return FixRateParamElement::getValidationRuleMessages() +
+            PercentFromOrderProfitParamElement::getValidationRuleMessages();
+    }
 }

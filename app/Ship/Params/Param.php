@@ -47,13 +47,18 @@ abstract class Param
 
     public function getValue(): mixed
     {
-        $param = $this->model->getAttribute(PARAMS);
+        $param = $this->model->getAttribute($this->modelColumnName());
         return $param instanceof JSON ? $param->get($this->name) : null;
     }
 
     public static function getValidationRules(): ValidationRules
     {
         return validation_rules();
+    }
+
+    public static function getValidationRuleMessages(): array
+    {
+        return [];
     }
 
     protected function getTitle(): string
@@ -68,6 +73,11 @@ abstract class Param
 
     protected function init(): void
     {
+    }
+
+    protected function modelColumnName(): string
+    {
+        return PARAMS;
     }
 
     protected function getCacheKey(): string

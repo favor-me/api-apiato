@@ -27,7 +27,17 @@ class PercentFromOrderProfitParamElement extends FloatParam
     public static function getValidationRules(): ValidationRules
     {
         return parent::getValidationRules()
-            ->add('float');
+            ->add('max:100')
+            ->add('numeric');
+    }
+
+    public static function getValidationRuleMessages(): array
+    {
+        $key = User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT;
+
+        return [
+            $key . '.numeric' => Container::trans('container.shift_params.percent_from_order_profit.validation.number')
+        ];
     }
 
     protected function getTitle(): string
@@ -38,5 +48,10 @@ class PercentFromOrderProfitParamElement extends FloatParam
     protected function getHint(): string
     {
         return Container::trans('container.shift_params.' . $this->name . '.hint');
+    }
+
+    protected function modelColumnName(): string
+    {
+        return User::SHIFT_PARAMS;
     }
 }

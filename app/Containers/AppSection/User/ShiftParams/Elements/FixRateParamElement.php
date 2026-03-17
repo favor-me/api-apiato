@@ -27,7 +27,17 @@ class FixRateParamElement extends IntParam
     public static function getValidationRules(): ValidationRules
     {
         return parent::getValidationRules()
+            ->add('max_digits:5')
             ->add('numeric');
+    }
+
+    public static function getValidationRuleMessages(): array
+    {
+        $key = User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_FIX_RATE;
+
+        return [
+            $key . '.numeric' => Container::trans('container.shift_params.fix_rate.validation.number')
+        ];
     }
 
     protected function getTitle(): string
@@ -38,5 +48,10 @@ class FixRateParamElement extends IntParam
     protected function getHint(): string
     {
         return Container::trans('container.shift_params.' . $this->name . '.hint');
+    }
+
+    protected function modelColumnName(): string
+    {
+        return User::SHIFT_PARAMS;
     }
 }

@@ -54,36 +54,6 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
         ID
     ];
 
-    protected function getCheckAuthorizeMethods(): array
-    {
-        return array_merge(parent::getCheckAuthorizeMethods(), [
-            'isOwner|isOrganizationOwner'
-        ]);
-    }
-
-    /**
-     * @return bool
-     * @throws NotFoundException
-     */
-    protected function isOrganizationOwner(): bool
-    {
-        $updatingUser = app(FindUserByIdTask::class)
-            ->setColumns([
-                ID,
-                User::ORGANIZATION_ID
-            ])
-            ->run($this->id);
-
-        if (!is_null($updatingUser)) {
-            return $this->user()
-                ->isRealOrganizationOwner(
-                    $updatingUser->organization_id
-                );
-        }
-
-        return false;
-    }
-
     public function getUserEmailValidationRules(): ValidationRules
     {
         return parent::getUserEmailValidationRules()
@@ -94,26 +64,6 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
     {
         return parent::getUserLoginValidationRules()
             ->addIgnoreIdForUnique($this->getId());
-    }
-
-    /**
-     * @return array
-     * @throws NotFoundException
-     */
-    protected function getUserRules(): array
-    {
-        $rules = parent::getUserRules();
-
-        if (!$this->isOrganizationOwner()) {
-            unset($rules[User::SHIFT_PARAMS]);
-        } else {
-            $rules += Schema::getElementsValidationRules();
-        }
-
-        return array_merge($rules, [
-            ID => $this->getUserIdValidationRules(),
-            User::ORGANIZATION_BRANCH_ID => $this->getUserOrganizationBranchIdValidationRules()
-        ]);
     }
 
     public function getUserOrganizationBranchIdValidationRules(): ValidationRules
@@ -149,6 +99,11 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
         return $this->getUserRules();
     }
 
+    public function messages(): array
+    {
+        return parent::messages() + Schema::getElementsValidationRuleMessages();
+    }
+
     /**
      * @return UpdateUserDto
      * @throws UnknownProperties
@@ -166,5 +121,55 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
     public function newDto(array $data = []): UpdateUserDto
     {
         return new UpdateUserDto($data);
+    }
+
+    /**
+     * @return array
+     * @throws NotFoundException
+     */
+    protected function getUserRules(): array
+    {
+        $rules = parent::getUserRules();
+
+        if (!$this->isOrganizationOwner()) {
+            unset($rules[User::SHIFT_PARAMS]);
+        } else {
+            $rules += Schema::getElementsValidationRules();
+        }
+
+        return array_merge($rules, [
+            ID => $this->getUserIdValidationRules(),
+            User::ORGANIZATION_BRANCH_ID => $this->getUserOrganizationBranchIdValidationRules()
+        ]);
+    }
+
+    /**
+     * @return bool
+     * @throws NotFoundException
+     */
+    protected function isOrganizationOwner(): bool
+    {
+        $updatingUser = app(FindUserByIdTask::class)
+            ->setColumns([
+                ID,
+                User::ORGANIZATION_ID
+            ])
+            ->run($this->id);
+
+        if (!is_null($updatingUser)) {
+            return $this->user()
+                ->isRealOrganizationOwner(
+                    $updatingUser->organization_id
+                );
+        }
+
+        return false;
+    }
+
+    protected function getCheckAuthorizeMethods(): array
+    {
+        return array_merge(parent::getCheckAuthorizeMethods(), [
+            'isOwner|isOrganizationOwner'
+        ]);
     }
 }
