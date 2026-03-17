@@ -22,21 +22,25 @@ use App\Ship\Params\FloatParam;
 
 class PercentFromOrderProfitParamElement extends FloatParam
 {
+    public const int MAX = 100;
+
     protected string $name = User::SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT;
 
     public static function getValidationRules(): ValidationRules
     {
         return parent::getValidationRules()
-            ->add('max:100')
+            ->add('max:' . self::MAX)
             ->add('numeric');
     }
 
     public static function getValidationRuleMessages(): array
     {
         $key = User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT;
+        $paramKey = 'container.shift_params.percent_from_order_profit.validation';
 
         return [
-            $key . '.numeric' => Container::trans('container.shift_params.percent_from_order_profit.validation.number')
+            $key . '.numeric' => Container::trans($paramKey . '.number'),
+            $key . '.max' => Container::trans($paramKey . '.max', ['max' => self::MAX]),
         ];
     }
 
