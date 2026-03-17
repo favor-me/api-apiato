@@ -26,6 +26,7 @@ final class Shift extends SectionContainer
     public const string ORGANIZATION_BRANCH_ID = 'organization_branch_id';
     public const string MONEY = 'money';
     public const string CREATOR = 'creator';
+    public const string ITEMS = 'items';
     public const string EXCLUDE_ORGANIZATION_BRANCH = 'exclude_organization_branch';
     public const string CONFIRMED_BY = 'confirmed_by';
     public const string START_AT = 'start_at';

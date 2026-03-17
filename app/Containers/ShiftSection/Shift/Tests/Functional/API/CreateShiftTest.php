@@ -17,6 +17,7 @@ namespace App\Containers\ShiftSection\Shift\Tests\Functional\API;
 
 use AllowDynamicProperties;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\ShiftSection\Shift\Facades\Container;
 use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
@@ -120,6 +121,38 @@ final class CreateShiftTest extends ApiTestCase
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
                     ->where('data.' . Shift::ORGANIZATION_BRANCH_ID, null)
+                    ->etc()
+            );
+    }
+
+    public function testSuccessAndCreateFixRateShiftItem(): void
+    {
+        $this->getTestingOrganizationUser([
+            User::SHIFT_PARAMS => [
+                User::SHIFT_PARAMS_FIX_RATE => 500
+            ]
+        ]);
+
+        $startAt = Carbon::now();
+        $finishAt = Carbon::now()->addHours(8);
+
+        $data = [
+            Shift::START_AT => $startAt->format(DATE_TIME_FORMAT),
+            Shift::FINISH_AT => $finishAt->format(DATE_TIME_FORMAT)
+        ];
+
+        $this
+            ->include([
+                Shift::ITEMS
+            ])
+            ->makeCall($data);
+
+        $this->response
+            ->assertCreated()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data.' . Shift::ITEMS . '.data', 1)
+                    ->where('data.' . Shift::ITEMS . '.data.0.value.currency.value', 500)
                     ->etc()
             );
     }

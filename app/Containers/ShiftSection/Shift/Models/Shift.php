@@ -18,11 +18,14 @@ namespace App\Containers\ShiftSection\Shift\Models;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
+use App\Containers\ShiftSection\Item\Foundation\Item;
+use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
 use App\Containers\ShiftSection\Shift\Data\Factories\ShiftFactory;
 use App\Containers\ShiftSection\Shift\Foundation\Shift as BaseShift;
 use App\Containers\ShiftSection\Shift\Statuses\Manager;
 use App\Containers\ShiftSection\Shift\Statuses\Status;
 use App\Ship\Database\Casts\Money as MoneyCast;
+use App\Ship\Database\Eloquent\Collection;
 use App\Ship\Database\Eloquent\Concerns\HasCreatedBy;
 use App\Ship\Parents\Models\Model;
 use App\Ship\SimpleTypes\Type\Money;
@@ -33,6 +36,7 @@ use App\Ship\Traits\Model\StartAtAttribute;
 use App\Ship\Traits\Model\UpdatedAtAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -50,6 +54,7 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $updated_at Дата и время обновления.
  *
+ * @property-read Collection $items Коллекция моделей позиций смены.
  * @property-read User $creator Связанная модель пользователя чья смена.
  * @property-read Organization $organization Связанная модель организации.
  * @property-read OrganizationBranch|null $organizationBranch Связанная модель отделения организации.
@@ -104,6 +109,11 @@ class Shift extends Model
     public function organizationBranch(): BelongsTo
     {
         return $this->belongsTo(OrganizationBranch::class, BaseShift::ORGANIZATION_BRANCH_ID, ID);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(ItemModel::class, Item::SHIFT_ID, ID);
     }
 
     public function status(): Attribute

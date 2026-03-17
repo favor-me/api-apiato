@@ -18,13 +18,17 @@ namespace App\Containers\ShiftSection\Shift\Tests\Unit\Models;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
+use App\Containers\ShiftSection\Item\Foundation\Item;
+use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
 use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
 use App\Containers\ShiftSection\Shift\Statuses\CompletedStatus;
 use App\Containers\ShiftSection\Shift\Statuses\OpenStatus;
 use App\Containers\ShiftSection\Shift\Tests\UnitTestCase;
+use App\Ship\Database\Eloquent\Collection;
 use App\Ship\SimpleTypes\Type\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -126,5 +130,27 @@ final class ShiftTest extends UnitTestCase
             ]);
 
         $this->assertInstanceOf(CompletedStatus::class, $shift->status);
+    }
+
+    public function testHasManyItems(): void
+    {
+        $startAt = now()->utc()->subHours(8);
+        $finishAt = now()->utc()->subHours(1);
+
+        $shift = ShiftModel::factory()
+            ->create([
+                Shift::START_AT => $startAt,
+                Shift::FINISH_AT => $finishAt
+            ]);
+
+        ItemModel::factory()
+            ->create([
+                Item::SHIFT_ID => $shift->id
+            ]);
+
+        $this->assertInstanceOf(HasMany::class, $shift->items());
+        $this->assertInstanceOf(ItemModel::class, $shift->items()->getModel());
+        $this->assertInstanceOf(Collection::class, $shift->items);
+        $this->assertCount(1, $shift->items);
     }
 }
