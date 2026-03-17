@@ -17,6 +17,7 @@ namespace App\Containers\AppSection\User\UI\API\Transformers;
 use App\Containers\AppSection\Authorization\UI\API\Transformers\RoleTransformer;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\AppSection\User\ShiftParams\Schema as ShiftParamsSchema;
 use App\Containers\AppSection\UserDevice\UI\API\Transformers\UserDeviceTransformer;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformerManager;
 use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformerManager;
@@ -33,7 +34,8 @@ class UserTransformer extends Transformer
         'devices',
         'organization',
         'organizationBranch',
-        User::NOW_SHIFT
+        User::NOW_SHIFT,
+        User::SHIFT_PARAMS_SCHEMA
     ];
 
     public function transform(UserModel $user): array
@@ -62,6 +64,15 @@ class UserTransformer extends Transformer
             UPDATED_AT => $user->updated_at->getTimestamp(),
             DELETED_AT => $this->nullOrTime($user->deleted_at)
         ];
+    }
+
+    protected function includeShiftParamsSchema(UserModel $user): Primitive
+    {
+        return $this->primitive(
+            (new ShiftParamsSchema($user))
+                ->getElements()
+                ->toArray()
+        );
     }
 
     protected function includeRoles(UserModel $user): Collection

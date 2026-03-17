@@ -19,6 +19,7 @@ use App\Containers\AppSection\User\Dto\UpdateUserDto;
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Models\User as UserModel;
 use App\Containers\AppSection\User\Requests\UserApiRequest;
+use App\Containers\AppSection\User\ShiftParams\Schema;
 use App\Containers\AppSection\User\Tasks\FindUserByIdTask;
 use App\Containers\AppSection\User\Traits\IsOrganizationOwner;
 use App\Containers\AppSection\User\Traits\IsOwnerTrait;
@@ -66,10 +67,6 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
      */
     protected function isOrganizationOwner(): bool
     {
-        if ($this->user()->id === $this->id) {
-            return false;
-        }
-
         $updatingUser = app(FindUserByIdTask::class)
             ->setColumns([
                 ID,
@@ -109,6 +106,8 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
 
         if (!$this->isOrganizationOwner()) {
             unset($rules[User::SHIFT_PARAMS]);
+        } else {
+            $rules += Schema::getElementsValidationRules();
         }
 
         return array_merge($rules, [
