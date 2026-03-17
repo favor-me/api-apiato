@@ -22,7 +22,7 @@ use App\Ship\Params\IntParam;
 
 class FixRateParamElement extends IntParam
 {
-    protected string $key = User::SHIFT_PARAMS_FIX_RATE;
+    protected string $name = User::SHIFT_PARAMS_FIX_RATE;
 
     public static function getValidationRules(): ValidationRules
     {
@@ -32,11 +32,11 @@ class FixRateParamElement extends IntParam
 
     protected function getTitle(): string
     {
-        return Container::trans('container.shift_params.' . $this->key . '.title');
+        return Container::trans('container.shift_params.' . $this->name . '.title');
     }
 
     protected function getHint(): string
     {
-        return Container::trans('container.shift_params.' . $this->key . '.hint');
+        return Container::trans('container.shift_params.' . $this->name . '.hint');
     }
 }

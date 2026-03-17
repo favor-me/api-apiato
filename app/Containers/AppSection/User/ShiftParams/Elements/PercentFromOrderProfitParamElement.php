@@ -22,7 +22,7 @@ use App\Ship\Params\FloatParam;
 
 class PercentFromOrderProfitParamElement extends FloatParam
 {
-    protected string $key = User::SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT;
+    protected string $name = User::SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT;
 
     public static function getValidationRules(): ValidationRules
     {
@@ -32,11 +32,11 @@ class PercentFromOrderProfitParamElement extends FloatParam
 
     protected function getTitle(): string
     {
-        return Container::trans('container.shift_params.' . $this->key . '.title');
+        return Container::trans('container.shift_params.' . $this->name . '.title');
     }
 
     protected function getHint(): string
     {
-        return Container::trans('container.shift_params.' . $this->key . '.hint');
+        return Container::trans('container.shift_params.' . $this->name . '.hint');
     }
 }

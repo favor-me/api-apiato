@@ -23,7 +23,7 @@ use JBZoo\Data\JSON;
 abstract class Param
 {
     protected string $type;
-    protected string $key;
+    protected string $name;
     protected string $cacheKey;
 
     public function __construct(
@@ -36,7 +36,7 @@ abstract class Param
     public function get(): array
     {
         return [
-            'key' => $this->key,
+            'name' => $this->name,
             'title' => $this->getTitle(),
             'hint' => $this->getHint(),
             'type' => $this->type,
@@ -48,7 +48,7 @@ abstract class Param
     public function getValue(): mixed
     {
         $param = $this->model->getAttribute(PARAMS);
-        return $param instanceof JSON ? $param->get($this->key) : null;
+        return $param instanceof JSON ? $param->get($this->name) : null;
     }
 
     public static function getValidationRules(): ValidationRules
@@ -58,12 +58,12 @@ abstract class Param
 
     protected function getTitle(): string
     {
-        return 'container.params.' . $this->key . '.title';
+        return 'container.params.' . $this->name . '.title';
     }
 
     protected function getHint(): string
     {
-        return 'container.params.' . $this->key . '.hint';
+        return 'container.params.' . $this->name . '.hint';
     }
 
     protected function init(): void
