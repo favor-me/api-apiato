@@ -18,4 +18,8 @@ use JBZoo\SimpleTypes\Config\AbstractConfig;
 
 abstract class Config extends AbstractConfig
 {
+    public function __construct()
+    {
+        $this->isDebug = config('money.debug');
+    }
 }

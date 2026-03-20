@@ -14,9 +14,9 @@
 
 namespace App\Ship\SimpleTypes\Config;
 
+use App\Containers\AppSection\User\Foundation\User as BaseUser;
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Dto\CurrencyDto;
-use App\Containers\AppSection\User\Foundation\User as BaseUser;
 use App\Ship\Parents\SimpleTypes\Config\Config as ShipConfig;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -25,11 +25,12 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class Money extends ShipConfig
 {
-    public const CURRENCY = 'currency';
-    public const EXCHANGE = 'exchange';
+    public const string CURRENCY = 'currency';
+    public const string EXCHANGE = 'exchange';
 
     public function __construct()
     {
+        parent::__construct();
         $this->default = self::EXCHANGE;
         $this->setDefaultParams();
     }

@@ -15,6 +15,7 @@
 use App\Ship\SimpleTypes\Config\Money;
 
 return [
+    'debug' => env('MONEY_DEBUG', false),
     'num_decimals' => env('MONEY_NUM_DECIMALS', 2),
     'decimal_sep' => env('MONEY_DECIMAL_SEP', '.'),
     'thousands_sep' => env('MONEY_THOUSAND_SEP', ' '),
