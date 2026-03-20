@@ -57,12 +57,7 @@ class ItemTransformer extends Transformer
         $messageArgs = $note->get(SystemNoteDto::MESSAGE_ARGS);
 
         if ($message) {
-            $valueArg = $note->find(SystemNoteDto::MESSAGE_ARGS . '.value');
-
-            if ($valueArg) {
-                $moneyValue = app('money')->addCurrency($valueArg);
-                $messageArgs['value'] = $moneyValue->currency()->text();
-            }
+            $messageArgs['value'] = $item->value->currency()->text();
 
             return $note
                 ->set(SystemNoteDto::MESSAGE, __($message, $messageArgs))

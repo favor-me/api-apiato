@@ -19,8 +19,6 @@ use App\Containers\AccountingSection\Contract\Foundation\Contract;
 use App\Containers\AccountingSection\Contract\Models\Contract as ContractModel;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Foundation\User;
-use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
-use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
 use App\Containers\CommunitySection\OrganizationClient\Foundation\OrganizationClient;
 use App\Containers\CommunitySection\OrganizationClient\Models\OrganizationClient as OrganizationClientModel;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
@@ -34,6 +32,7 @@ use App\Containers\OrderSection\PaymentType\CashType;
 use App\Containers\OrderSection\PaymentType\ContractType;
 use App\Containers\OrderSection\PaymentType\Manager;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\ShiftSection\Item\Models\Item as ShiftItemModel;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class CreateOrderTest extends ApiTestCase
@@ -70,7 +69,9 @@ final class CreateOrderTest extends ApiTestCase
 
     public function testWithNotOrganizationClient(): void
     {
-        $this->getTestingOrganizationUser();
+        $this->getTestingOrganizationUser([
+            'now_shift' => true
+        ]);
 
         $client = OrganizationClientModel::factory()->create();
 
@@ -94,7 +95,9 @@ final class CreateOrderTest extends ApiTestCase
 
     public function testInvalidTotal(): void
     {
-        $user = $this->getTestingOrganizationUser();
+        $user = $this->getTestingOrganizationUser([
+            'now_shift' => true
+        ]);
 
         $client = OrganizationClientModel::factory()
             ->create([
@@ -152,6 +155,7 @@ final class CreateOrderTest extends ApiTestCase
     public function testSuccessForContract(): void
     {
         $user = $this->getTestingOrganizationBranchUser();
+        $this->createUserNowShift($user);
 
         $client = OrganizationClientModel::factory()
             ->create([
@@ -226,11 +230,18 @@ final class CreateOrderTest extends ApiTestCase
 
     public function testSuccessForClient(): void
     {
-        $user = $this->getTestingOrganizationUser();
+        $userOrderPercentProfit = 12;
+
+        $this->getTestingOrganizationUser([
+            'now_shift' => true,
+            User::SHIFT_PARAMS => [
+                User::SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT => $userOrderPercentProfit
+            ]
+        ]);
 
         $client = OrganizationClientModel::factory()
             ->create([
-                OrganizationClient::ORGANIZATION_ID => $user->organization_id
+                OrganizationClient::ORGANIZATION_ID => $this->testingUser->organization_id
             ]);
 
         $paymentType = Manager::getInstance()->get(CashType::class);
@@ -239,14 +250,14 @@ final class CreateOrderTest extends ApiTestCase
             ->create([
                 UnitPrice::COST_PRICE => app('money')->addCurrency(100)->val(),
                 UnitPrice::CLIENT_PRICE => app('money')->addCurrency(210)->val(),
-                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+                OrganizationUnit::ORGANIZATION_ID => $this->testingUser->organization_id
             ]);
 
         $unitB = OrganizationUnitModel::factory()
             ->create([
                 UnitPrice::COST_PRICE => app('money')->addCurrency(120)->val(),
                 UnitPrice::CLIENT_PRICE => app('money')->addCurrency(150)->val(),
-                OrganizationUnit::ORGANIZATION_ID => $user->organization_id
+                OrganizationUnit::ORGANIZATION_ID => $this->testingUser->organization_id
             ]);
 
         $data = [
@@ -277,6 +288,8 @@ final class CreateOrderTest extends ApiTestCase
 
         $this->makeCall($data);
 
+        $expectedProfit = (110 * 2) + 30;
+
         $this->response
             ->assertCreated()
             ->assertJson(
@@ -286,7 +299,9 @@ final class CreateOrderTest extends ApiTestCase
                     ->where('data.' . Order::PAYMENT_TYPE, $paymentType->toArray())
                     ->where('data.' . Order::CLIENT_ID, $data[Order::CLIENT_ID])
                     ->where('data.' . Order::COMMENT, $data[Order::COMMENT])
+                    ->where('data.' . Order::SHIFT_ID, $this->testingUser->nowShift->getHashedKey())
                     ->where('data.' . Order::TOTAL . '.currency.value', $data[Order::TOTAL])
+                    ->where('data.' . Order::PROFIT . '.currency.value', $expectedProfit)
                     ->has('data.' . Order::ITEMS . '.data', count($data[Order::ITEMS]))
 
                     // Check unitA.
@@ -320,5 +335,20 @@ final class CreateOrderTest extends ApiTestCase
                     ->where('data.' . Order::ITEMS . '.data.1.' . Item::AMOUNT, $data[Order::ITEMS][1][Item::AMOUNT])
                     ->etc()
             );
+
+        $shift = $this->testingUser->nowShift;
+
+        $this->assertCount(1, $shift->items);
+
+        /** @var ShiftItemModel $firstItem */
+        $firstItem = $shift->items->first();
+
+        $shiftItemValue = ($expectedProfit / 100) * $userOrderPercentProfit;
+
+        $this->assertSame($shiftItemValue, $firstItem->value->currency()->val());
+
+        $shift->refresh();
+
+        $this->assertSame($shiftItemValue, $shift->money->currency()->val());
     }
 }

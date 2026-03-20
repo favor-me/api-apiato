@@ -16,6 +16,8 @@
 namespace App\Containers\OrderSection\Order\Tests\Functional\API;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\CommunitySection\OrganizationUnit\Facades\Container as OrganizationUnitContainer;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
 use App\Containers\CommunitySection\OrganizationUnit\Models\OrganizationUnit as OrganizationUnitModel;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote;
@@ -26,10 +28,10 @@ use App\Containers\OrderSection\Order\Facades\Container;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\OrderSection\Order\Tests\Functional\ApiTestCase;
-use App\Containers\OrderSection\Status\Foundation\Status;
-use App\Containers\CommunitySection\OrganizationUnit\Facades\Container as OrganizationUnitContainer;
 use App\Containers\OrderSection\Status\Models\Status as StatusModel;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
+use App\Containers\ShiftSection\Item\Foundation\Item as ShiftItem;
+use App\Containers\ShiftSection\Item\Models\Item as ShiftItemModel;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -61,7 +63,7 @@ final class UpdateOrderTest extends ApiTestCase
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has(MESSAGE)
-                    ->where(MESSAGE, __('ship::exception.message.empty_update_data'))
+                    ->where(MESSAGE, __('ship::exception.empty_update_data'))
                     ->etc()
             );
     }
@@ -333,6 +335,7 @@ final class UpdateOrderTest extends ApiTestCase
 
         $order = OrderModel::factory()
             ->create([
+                Order::SHIFT_ID => $user->nowShift->id,
                 Order::ORGANIZATION_ID => $user->organization_id
             ]);
 
@@ -400,7 +403,10 @@ final class UpdateOrderTest extends ApiTestCase
 
         $this->assertSame([
             'old_value' => (int)$oldUnitA->balance,
-            'new_value' => (int)$newUnitABalance
+            'new_value' => (int)$newUnitABalance,
+            'minus_balance' => 1,
+            'order_number' => $order->id,
+            'order_id' => $order->getHashedKey()
         ], $unitAFirstNote->params->get(SystemMessageModelNoteType::PARAM_KEY_MESSAGE_ARGS));
         /** End Test Unit A  */
 
@@ -416,14 +422,131 @@ final class UpdateOrderTest extends ApiTestCase
         $this->assertSame($unitInfinityBalance->id, $unitInfinityFirstNote->model_id);
 
         $this->assertSame(
-            OrganizationUnitContainer::transFullKey('history.minus_organization_unit_balance.note_message'),
+            OrganizationUnitContainer::transFullKey('history.minus_organization_unit_balance.infinity_note_message'),
             $unitInfinityFirstNote->params->get(SystemMessageModelNoteType::PARAM_KEY_MESSAGE)
         );
 
         $this->assertSame([
             'old_value' => 0,
-            'new_value' => 0
+            'new_value' => 0,
+            'minus_balance' => 1,
+            'order_number' => $order->id,
+            'order_id' => $order->getHashedKey()
         ], $unitInfinityFirstNote->params->get(SystemMessageModelNoteType::PARAM_KEY_MESSAGE_ARGS));
         /** Finish Test Unit infinity  */
+    }
+
+    public function testCalculateShiftMoney(): void
+    {
+        $userOrderPercentProfit = 14;
+
+        $this->getTestingOrganizationUser([
+            'now_shift' => true,
+            User::SHIFT_PARAMS => [
+                User::SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT => $userOrderPercentProfit
+            ]
+        ]);
+
+        $order = OrderModel::factory()
+            ->create([
+                Order::SHIFT_ID => $this->testingUser->nowShift->id,
+                Order::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
+
+        $unitA = OrganizationUnitModel::factory()
+            ->create([
+                UnitPrice::BALANCE => 17,
+                UnitPrice::COST_PRICE => app('money')->addCurrency(100)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(120)->val(),
+                OrganizationUnit::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
+
+        $unitB = OrganizationUnitModel::factory()
+            ->create([
+                UnitPrice::BALANCE => 0,
+                UnitPrice::IS_INFINITY_BALANCE => true,
+                UnitPrice::COST_PRICE => app('money')->addCurrency(50)->val(),
+                UnitPrice::CLIENT_PRICE => app('money')->addCurrency(80)->val(),
+                OrganizationUnit::ORGANIZATION_ID => $this->testingUser->organization_id
+            ]);
+
+        $itemA = ItemModel::factory()
+            ->unit($unitA)
+            ->order($order)
+            ->create();
+
+        $itemB = ItemModel::factory()
+            ->unit($unitB)
+            ->order($order)
+            ->create();
+
+        $order->calculateTotal(true);
+
+        $expectedProfit = 50.0;
+        $this->assertSame($expectedProfit, $order->profit->currency()->val());
+
+        $shiftItemValue = ($expectedProfit / 100) * $userOrderPercentProfit;
+
+        ShiftItemModel::factory()
+            ->create([
+                ShiftItem::SHIFT_ID => $this->testingUser->nowShift->id,
+                ShiftItem::ORDER_ID => $order->id,
+                ShiftItem::VALUE => $shiftItemValue
+            ]);
+
+        $data = [
+            Order::TOTAL => 280, // 120 + (80 * 2)
+            Order::COMMENT => 'Comment',
+            Order::ITEMS => [
+                [
+                    ID => $itemB->getHashedKey(),
+                    Item::NAME => $itemB->name,
+                    Item::UNIT_ID => $itemB->getHashedKey(),
+                    Item::SKU => $itemB->sku,
+                    Item::COST_PRICE => $itemB->cost_price->currency()->val(),
+                    Item::CLIENT_PRICE => $itemB->client_price->currency()->val(),
+                    Item::AMOUNT => 2
+                ],
+                [
+                    ID => $itemA->getHashedKey(),
+                    Item::NAME => $itemA->name,
+                    Item::UNIT_ID => $unitA->getHashedKey(),
+                    Item::SKU => $itemA->sku,
+                    Item::COST_PRICE => $itemA->cost_price->currency()->val(),
+                    Item::CLIENT_PRICE => $itemA->client_price->currency()->val(),
+                    Item::AMOUNT => 1
+                ]
+            ]
+        ];
+
+        $this
+            ->injectId($order->id)
+            ->makeCall($data);
+
+        $this->response
+            ->assertOk()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . Order::PROFIT . '.currency.value', (30 * 2) + 20)
+                    ->etc()
+            );
+
+        $order->refresh();
+
+        $this->testingUser->nowShift->refresh();
+
+        $shift = $this->testingUser->nowShift;
+        $this->assertCount(1, $shift->items);
+
+        $expectedShiftMoney = $order->profit
+            ->getClone()
+            ->division(100)
+            ->multiply($userOrderPercentProfit);
+
+        $this->assertSame(
+            $expectedShiftMoney->val(),
+            $shift->money->val()
+        );
     }
 }

@@ -21,6 +21,7 @@ use App\Containers\OrderSection\Item\Dto\CreateItemDto;
 use App\Containers\OrderSection\Item\Foundation\Item;
 use App\Containers\OrderSection\Item\Tasks\CreateItemTask;
 use App\Containers\OrderSection\Order\Dto\CreateOrderDto;
+use App\Containers\OrderSection\Order\Jobs\CreateOrderShiftItemJob;
 use App\Containers\OrderSection\Order\Models\Order;
 use App\Containers\OrderSection\Order\Tasks\CalculateOrderTotalTask;
 use App\Containers\OrderSection\Order\Tasks\CreateOrderTask;
@@ -49,8 +50,10 @@ class CreateOrderAction extends Action
 
         $this->createItems($order, $dto);
         if ($dto->hasItems()) {
-            return app(CalculateOrderTotalTask::class)->run($order);
+            $order = app(CalculateOrderTotalTask::class)->run($order);
         }
+
+        dispatch(new CreateOrderShiftItemJob($order));
 
         return $order;
     }

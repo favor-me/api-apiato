@@ -13,14 +13,8 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\ShiftSection\ItemType;
+namespace App\Containers\ShiftSection\Item\Events\Handlers;
 
-use App\Ship\SimpleTypes\Type\Money;
-
-class FineType extends Type
+class ItemUpdatedEventHandler extends ItemCreatedEventHandler
 {
-    public function calculateShiftValue(Money &$shiftValue, Money $itemValue): void
-    {
-        $shiftValue->add($itemValue->negative());
-    }
 }

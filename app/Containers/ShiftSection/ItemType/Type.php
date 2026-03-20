@@ -17,11 +17,17 @@ namespace App\Containers\ShiftSection\ItemType;
 
 use App\Containers\ShiftSection\ItemType\Facades\Container;
 use App\Ship\Foundation\Manager\AbstractItem;
+use App\Ship\SimpleTypes\Type\Money;
 
 abstract class Type extends AbstractItem
 {
     public function getTitle(): string
     {
         return (string)Container::trans('container.' . $this->getName() . '.title');
+    }
+
+    public function calculateShiftValue(Money &$shiftValue, Money $itemValue): void
+    {
+        $shiftValue->add($itemValue);
     }
 }

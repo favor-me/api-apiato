@@ -49,7 +49,8 @@ class ShiftCreatedEventHandler extends Event
      */
     protected function createShiftItemFixRate(ShiftModel $shift): void
     {
-        $shiftFixRate = (int)$shift->creator->shift_params->get(User::SHIFT_PARAMS_FIX_RATE);
+        $paramKey = User::SHIFT_PARAMS_FIX_RATE;
+        $shiftFixRate = (int)$shift->creator->shift_params->get($paramKey);
 
         if ($shiftFixRate > ZERO) {
             $type = Manager::getInstance()
@@ -59,10 +60,7 @@ class ShiftCreatedEventHandler extends Event
             $fixRateMoney = app('money')->addCurrency($shiftFixRate);
 
             $systemNote = new SystemNoteDto(
-                ItemContainer::transFullKey('container.system_note.fix_rate'),
-                [
-                    'value' => $fixRateMoney->currency()->val()
-                ]
+                ItemContainer::transFullKey('container.system_note.' . $paramKey)
             );
 
             $dto = new CreateItemDto([

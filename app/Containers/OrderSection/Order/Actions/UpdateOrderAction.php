@@ -23,6 +23,7 @@ use App\Containers\OrderSection\Item\Foundation\Item;
 use App\Containers\OrderSection\Item\Tasks\CreateItemTask;
 use App\Containers\OrderSection\Item\Tasks\UpdateItemTask;
 use App\Containers\OrderSection\Order\Dto\UpdateOrderDto;
+use App\Containers\OrderSection\Order\Jobs\UpdateOrderShiftItemJob;
 use App\Containers\OrderSection\Order\Models\Order;
 use App\Containers\OrderSection\Order\Tasks\CalculateOrderTotalTask;
 use App\Containers\OrderSection\Order\Tasks\UpdateOrderTask;
@@ -53,8 +54,10 @@ class UpdateOrderAction extends Action
 
         $this->createOrUpdateItems($order, $dto);
         if ($dto->hasItems()) {
-            return app(CalculateOrderTotalTask::class)->run($order);
+            $order = app(CalculateOrderTotalTask::class)->run($order);
         }
+
+        dispatch(new UpdateOrderShiftItemJob($order));
 
         return $order;
     }

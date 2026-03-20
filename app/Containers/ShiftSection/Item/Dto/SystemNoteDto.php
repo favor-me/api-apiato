@@ -22,7 +22,7 @@ class SystemNoteDto
 
     public function __construct(
         protected string $message,
-        protected array $messageArgs
+        protected array $messageArgs = []
     ) {
     }
 

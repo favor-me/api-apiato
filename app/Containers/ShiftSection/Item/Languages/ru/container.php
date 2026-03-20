@@ -17,6 +17,7 @@ return [
     'name' => 'Позиция смены',
     'items' => 'Позиция смены|Позиции смены|Позиций смены',
     'system_note' => [
-        'fix_rate' => 'Фиксированная ставка за смену :value'
+        'fix_rate' => 'Фиксированная ставка за смену :value.',
+        'percent_from_order_profit' => 'Заработано :value по заказу #:order_oid.'
     ]
 ];

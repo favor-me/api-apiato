@@ -196,6 +196,6 @@ final class ShiftTest extends UnitTestCase
             ->add($itemB->value)
             ->add($itemC->value->negative());
 
-        $this->assertSame($shiftMoney->value, $shift->money->value);
+        $this->assertSame($shiftMoney->val(), $shift->money->val());
     }
 }

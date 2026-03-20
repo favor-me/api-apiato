@@ -13,14 +13,13 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\ShiftSection\ItemType;
+namespace App\Containers\ShiftSection\Item\Providers;
 
-use App\Ship\SimpleTypes\Type\Money;
+use App\Ship\Parents\Providers\MainServiceProvider as ShipMainServiceProvider;
 
-class FineType extends Type
+final class MainServiceProvider extends ShipMainServiceProvider
 {
-    public function calculateShiftValue(Money &$shiftValue, Money $itemValue): void
-    {
-        $shiftValue->add($itemValue->negative());
-    }
+    public array $serviceProviders = [
+        EventsServiceProvider::class
+    ];
 }
