@@ -30,6 +30,20 @@ class Money extends Type
         parent::__construct($value, $config);
     }
 
+    public function percentValue(float|int|string $percent, bool $getClone = false): self
+    {
+        $obj = $getClone ? clone $this : $this;
+        $percent = (float)$percent;
+
+        if ($percent > ZERO) {
+            $percentValue = ($this->internalValue / 100) * $percent;
+            $logMsg = 'Calc percent value. (' . $this->internalValue . '/100)*' . $percent;
+            return $this->modifier($percentValue, $logMsg, $getClone);
+        }
+
+        return $obj;
+    }
+
     public function currency(): AbstractType
     {
         return $this->convert(MoneyConfig::CURRENCY, true);
