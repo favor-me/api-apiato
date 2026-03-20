@@ -20,6 +20,9 @@ use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
 use App\Containers\ShiftSection\Item\Foundation\Item;
 use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
+use App\Containers\ShiftSection\ItemType\AwardType;
+use App\Containers\ShiftSection\ItemType\FineType;
+use App\Containers\ShiftSection\ItemType\IncomeType;
 use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
 use App\Containers\ShiftSection\Shift\Statuses\CompletedStatus;
@@ -152,5 +155,47 @@ final class ShiftTest extends UnitTestCase
         $this->assertInstanceOf(ItemModel::class, $shift->items()->getModel());
         $this->assertInstanceOf(Collection::class, $shift->items);
         $this->assertCount(1, $shift->items);
+    }
+
+    public function testCalculate(): void
+    {
+        $startAt = now()->utc()->subHours(7);
+        $finishAt = now()->utc()->subHours(1);
+
+        $shift = ShiftModel::factory()
+            ->create([
+                Shift::START_AT => $startAt,
+                Shift::FINISH_AT => $finishAt
+            ]);
+
+        $itemA = ItemModel::factory()
+            ->create([
+                Item::VALUE => 1000,
+                Item::TYPE => IncomeType::class,
+                Item::SHIFT_ID => $shift->id
+            ]);
+
+        $itemB = ItemModel::factory()
+            ->create([
+                Item::VALUE => 2000,
+                Item::TYPE => AwardType::class,
+                Item::SHIFT_ID => $shift->id
+            ]);
+
+        $itemC = ItemModel::factory()
+            ->create([
+                Item::VALUE => 500,
+                Item::TYPE => FineType::class,
+                Item::SHIFT_ID => $shift->id
+            ]);
+
+        $shift->calculate();
+
+        $shiftMoney = app('money')
+            ->add($itemA->value)
+            ->add($itemB->value)
+            ->add($itemC->value->negative());
+
+        $this->assertSame($shiftMoney->value, $shift->money->value);
     }
 }

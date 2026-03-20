@@ -96,6 +96,28 @@ class Shift extends Model
         BaseShift::MONEY => MoneyCast::class
     ];
 
+    public function calculate(bool $write = true): self
+    {
+        $money = app('money');
+
+        $this->items
+            ->each(
+                fn (ItemModel $item) => $item->type->calculateShiftValue($money, $item->value)
+            );
+
+        if ($write === true) {
+            $this->save([
+                BaseShift::MONEY => $money
+            ]);
+
+            $this->refresh();
+        }
+
+        $this->setAttribute(BaseShift::MONEY, $money);
+
+        return $this;
+    }
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, CREATED_BY, ID);
@@ -113,7 +135,9 @@ class Shift extends Model
 
     public function items(): HasMany
     {
-        return $this->hasMany(ItemModel::class, Item::SHIFT_ID, ID);
+        return $this
+            ->hasMany(ItemModel::class, Item::SHIFT_ID, ID)
+            ->orderByDesc(CREATED_AT);
     }
 
     public function status(): Attribute
