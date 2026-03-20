@@ -96,7 +96,7 @@ class Shift extends Model
         BaseShift::MONEY => MoneyCast::class
     ];
 
-    public function calculate(bool $write = true): self
+    public function calculate(): self
     {
         $money = app('money');
 
@@ -104,14 +104,6 @@ class Shift extends Model
             ->each(
                 fn (ItemModel $item) => $item->type->calculateShiftValue($money, $item->value)
             );
-
-        if ($write === true) {
-            $this->save([
-                BaseShift::MONEY => $money
-            ]);
-
-            $this->refresh();
-        }
 
         $this->setAttribute(BaseShift::MONEY, $money);
 
