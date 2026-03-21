@@ -100,7 +100,8 @@ class Shift extends Model
     {
         $money = app('money');
 
-        $this->items
+        $this->items()
+            ->get()
             ->each(
                 fn (ItemModel $item) => $item->type->calculateShiftValue($money, $item->value)
             );
