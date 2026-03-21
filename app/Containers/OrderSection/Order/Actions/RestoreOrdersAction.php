@@ -15,9 +15,10 @@
 
 namespace App\Containers\OrderSection\Order\Actions;
 
+use App\Containers\OrderSection\Order\Events\RestoredOrdersEvent;
 use App\Containers\OrderSection\Order\Tasks\RestoreOrdersTask;
-use App\Ship\Parents\Actions\Action;
 use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Parents\Actions\Action;
 
 class RestoreOrdersAction extends Action
 {
@@ -28,6 +29,8 @@ class RestoreOrdersAction extends Action
      */
     public function run(array $ids): int
     {
-        return app(RestoreOrdersTask::class)->run($ids);
+        $result = app(RestoreOrdersTask::class)->run($ids);
+        event(new RestoredOrdersEvent($ids));
+        return $result;
     }
 }

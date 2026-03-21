@@ -331,7 +331,9 @@ final class UpdateOrderTest extends ApiTestCase
 
     public function testSuccessCompletedOrder(): void
     {
-        $user = $this->getTestingOrganizationUser();
+        $user = $this->getTestingOrganizationUser([
+            'now_shift' => true
+        ]);
 
         $order = OrderModel::factory()
             ->create([

@@ -105,10 +105,14 @@ final class FindOrderByIdTest extends ApiTestCase
                     ->where('data.' . ID, $model->getHashedKey())
                     ->has('meta')
                     ->where('meta.include', [
+                        Order::SHIFT,
                         Order::CLIENT,
                         Order::CREATOR,
                         Order::UPDATER,
-                        Order::ORGANIZATION
+                        Order::CONTRACT,
+                        Order::COUNTERPARTY,
+                        Order::ORGANIZATION,
+                        Order::ORGANIZATION_BRANCH
                     ])
                     ->etc()
             );

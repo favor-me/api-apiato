@@ -17,14 +17,23 @@ namespace App\Containers\OrderSection\Order\Events;
 
 use App\Containers\OrderSection\Order\Data\Repositories\OrderRepository;
 use App\Ship\Criterias\InCriteria;
-use App\Ship\Criterias\OnlyTrashedCriteria;
 use App\Ship\Database\Eloquent\Collection;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class TrashedOrdersEvent extends OrdersEvent
+abstract class OrdersEvent
 {
+    public function __construct(
+        protected array $ids = []
+    ) {
+    }
+
+    public function getIds(): array
+    {
+        return $this->ids;
+    }
+
     /**
      * @return Collection
      * @throws ContainerExceptionInterface
@@ -34,7 +43,6 @@ class TrashedOrdersEvent extends OrdersEvent
     public function getOrders(): Collection
     {
         return app(OrderRepository::class)
-            ->pushCriteria(new OnlyTrashedCriteria())
             ->pushCriteria(new InCriteria($this->ids, ID))
             ->get();
     }

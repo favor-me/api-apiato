@@ -87,7 +87,7 @@ final class UpdateOrderActionTest extends UnitTestCase
                     [
                         ID => $itemA->id,
                         Item::NAME => $itemA->name,
-                        Item::UNIT_ID => $itemA->id,
+                        Item::UNIT_ID => $itemA->unit_id,
                         Item::SKU => $itemA->sku,
                         Item::COST_PRICE => $itemA->cost_price->val(),
                         Item::CLIENT_PRICE => $itemA->client_price->val(),

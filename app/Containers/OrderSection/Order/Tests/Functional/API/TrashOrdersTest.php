@@ -118,7 +118,9 @@ final class TrashOrdersTest extends ApiTestCase
         $this->assertCount(1, $this->testingUser->nowShift->items()->get());
 
         $this->makeCall([
-            IDS => $model->getHashedKey()
+            IDS => [
+                $model->getHashedKey()
+            ]
         ]);
 
         $this->assertCount(0, $this->testingUser->nowShift->items()->get());

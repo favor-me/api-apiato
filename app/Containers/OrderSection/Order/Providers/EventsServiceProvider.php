@@ -18,7 +18,9 @@ namespace App\Containers\OrderSection\Order\Providers;
 use App\Containers\OrderSection\Order\Events\Handlers\OrderCreatingEventHandler;
 use App\Containers\OrderSection\Order\Events\Handlers\OrderUpdatedEventHandler;
 use App\Containers\OrderSection\Order\Events\Handlers\OrderUpdatingEventHandler;
+use App\Containers\OrderSection\Order\Events\Handlers\RestoredOrdersEventHandler;
 use App\Containers\OrderSection\Order\Events\Handlers\TrashedOrderEventHandler;
+use App\Containers\OrderSection\Order\Events\RestoredOrdersEvent;
 use App\Containers\OrderSection\Order\Events\TrashedOrdersEvent;
 use App\Containers\OrderSection\Order\Models\Order;
 use App\Ship\Parents\Providers\EventsServiceProvider as ShipEventsServiceProvider;
@@ -37,6 +39,9 @@ final class EventsServiceProvider extends ShipEventsServiceProvider
         ],
         TrashedOrdersEvent::class => [
             TrashedOrderEventHandler::class
+        ],
+        RestoredOrdersEvent::class => [
+            RestoredOrdersEventHandler::class
         ]
     ];
 }
