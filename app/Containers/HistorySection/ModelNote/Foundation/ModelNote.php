@@ -18,13 +18,13 @@ use App\Ship\Foundation\SectionContainer;
 
 final class ModelNote extends SectionContainer
 {
-    public const DEFAULT_DATABASE = 'zmch_erp_notes';
-    public const TYPE = 'type';
-    public const MODEL = 'model';
-    public const MODEL_ID = 'model_id';
-    public const EVENT_ID = 'event_id';
-    public const INCLUDE_EVENT = 'event';
-    public const INCLUDE_MODEL_NOTES = 'model_notes';
+    public const string TYPE = 'type';
+    public const string MODEL = 'model';
+    public const string MODEL_SHORT = 'model_short';
+    public const string MODEL_ID = 'model_id';
+    public const string EVENT_ID = 'event_id';
+    public const string INCLUDE_EVENT = 'event';
+    public const string INCLUDE_MODEL_NOTES = 'model_notes';
 
     protected string $apiBaseUri = 'model-notes';
 }

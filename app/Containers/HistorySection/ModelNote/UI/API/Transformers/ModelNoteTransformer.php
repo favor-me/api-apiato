@@ -19,6 +19,7 @@ use App\Containers\HistorySection\ModelEvent\UI\API\Transformers\ModelEventTrans
 use App\Containers\HistorySection\ModelNote\Foundation\ModelNote;
 use App\Containers\HistorySection\ModelNote\Models\ModelNote as ModelNoteModel;
 use App\Ship\Parents\Transformers\Transformer;
+use ReflectionClass;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 
@@ -34,11 +35,14 @@ class ModelNoteTransformer extends Transformer
 
     public function transform(ModelNoteModel $modelNote): array
     {
+        $modelReflection = new ReflectionClass($modelNote->model);
+
         return [
             OBJECT => $modelNote->getResourceKey(),
             ID => $modelNote->getHashedKey(),
             ModelNote::TYPE => $modelNote->getType()->toArray(),
             ModelNote::MODEL => $modelNote->model,
+            ModelNote::MODEL_SHORT => $modelReflection->getShortName(),
             ModelNote::MODEL_ID => $modelNote->getHashedKey(ModelNote::MODEL_ID),
             ModelNote::EVENT_ID => $modelNote->getHashedKey(ModelNote::EVENT_ID),
             PARAMS => $this->transformParams($modelNote),
