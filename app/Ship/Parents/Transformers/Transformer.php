@@ -43,6 +43,18 @@ abstract class Transformer extends AbstractTransformer
         return $this;
     }
 
+    public function clearDefaultIncludes(): self
+    {
+        $this->availableIncludes = array_merge(
+            $this->availableIncludes,
+            $this->defaultIncludes
+        );
+
+        $this->defaultIncludes = [];
+
+        return $this;
+    }
+
     protected function addNewDefaultInclude(string $newInclude): self
     {
         if ($this->canAddNewDefaultInclude($newInclude)) {
