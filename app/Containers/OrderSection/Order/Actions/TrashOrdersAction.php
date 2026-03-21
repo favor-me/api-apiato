@@ -15,9 +15,10 @@
 
 namespace App\Containers\OrderSection\Order\Actions;
 
+use App\Containers\OrderSection\Order\Events\TrashedOrdersEvent;
 use App\Containers\OrderSection\Order\Tasks\TrashOrdersTask;
-use App\Ship\Parents\Actions\Action;
 use App\Ship\Exceptions\DeleteResourceFailedException;
+use App\Ship\Parents\Actions\Action;
 
 class TrashOrdersAction extends Action
 {
@@ -28,6 +29,8 @@ class TrashOrdersAction extends Action
      */
     public function run(array $ids): int
     {
-        return app(TrashOrdersTask::class)->run($ids);
+        $result = app(TrashOrdersTask::class)->run($ids);
+        event(new TrashedOrdersEvent($ids));
+        return $result;
     }
 }

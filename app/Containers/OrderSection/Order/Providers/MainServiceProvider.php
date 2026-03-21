@@ -17,7 +17,7 @@ namespace App\Containers\OrderSection\Order\Providers;
 
 use App\Ship\Parents\Providers\MainServiceProvider as ShipMainServiceProvider;
 
-class MainServiceProvider extends ShipMainServiceProvider
+final class MainServiceProvider extends ShipMainServiceProvider
 {
     public array $serviceProviders = [
         EventsServiceProvider::class

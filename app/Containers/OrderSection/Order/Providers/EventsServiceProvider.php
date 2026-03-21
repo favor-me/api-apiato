@@ -18,10 +18,12 @@ namespace App\Containers\OrderSection\Order\Providers;
 use App\Containers\OrderSection\Order\Events\Handlers\OrderCreatingEventHandler;
 use App\Containers\OrderSection\Order\Events\Handlers\OrderUpdatedEventHandler;
 use App\Containers\OrderSection\Order\Events\Handlers\OrderUpdatingEventHandler;
+use App\Containers\OrderSection\Order\Events\Handlers\TrashedOrderEventHandler;
+use App\Containers\OrderSection\Order\Events\TrashedOrdersEvent;
 use App\Containers\OrderSection\Order\Models\Order;
 use App\Ship\Parents\Providers\EventsServiceProvider as ShipEventsServiceProvider;
 
-class EventsServiceProvider extends ShipEventsServiceProvider
+final class EventsServiceProvider extends ShipEventsServiceProvider
 {
     protected $listen = [
         'eloquent.creating: ' . Order::class => [
@@ -32,6 +34,9 @@ class EventsServiceProvider extends ShipEventsServiceProvider
         ],
         'eloquent.updated: ' . Order::class => [
             OrderUpdatedEventHandler::class
+        ],
+        TrashedOrdersEvent::class => [
+            TrashedOrderEventHandler::class
         ]
     ];
 }
