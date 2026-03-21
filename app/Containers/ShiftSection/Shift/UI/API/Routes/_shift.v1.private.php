@@ -123,6 +123,7 @@ HTTP/1.1 200 OK
     "meta": {
         "include": [
             "items",
+            "orders",
             "creator",
             "organization",
             "organization_branch"

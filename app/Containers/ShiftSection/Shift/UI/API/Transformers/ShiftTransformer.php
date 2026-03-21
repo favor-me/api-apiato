@@ -18,6 +18,7 @@ namespace App\Containers\ShiftSection\Shift\UI\API\Transformers;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformerManager;
 use App\Containers\CommunitySection\Organization\UI\API\Transformers\OrganizationTransformerManager;
 use App\Containers\CommunitySection\OrganizationBranch\UI\API\Transformers\OrganizationBranchTransformerManager;
+use App\Containers\OrderSection\Order\UI\API\Transformers\OrderTransformerManager;
 use App\Containers\ShiftSection\Item\UI\API\Transformers\ItemTransformerManager;
 use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
@@ -30,6 +31,7 @@ class ShiftTransformer extends Transformer
 {
     protected array $availableIncludes = [
         Shift::ITEMS,
+        Shift::ORDERS,
         Shift::CREATOR,
         Shift::ORGANIZATION,
         Shift::ORGANIZATION_BRANCH
@@ -54,6 +56,15 @@ class ShiftTransformer extends Transformer
             CREATED_AT => $this->nullOrTimeObject($shift->created_at),
             UPDATED_AT => $this->nullOrTimeObject($shift->updated_at)
         ];
+    }
+
+    protected function includeOrders(ShiftModel $shift): Collection
+    {
+        $transformer = (new OrderTransformerManager())->getDefaultOrAdmin();
+
+        $transformer->clearDefaultIncludes();
+
+        return $this->collection($shift->orders, $transformer);
     }
 
     protected function includeItems(ShiftModel $shift): Collection

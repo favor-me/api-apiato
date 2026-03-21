@@ -18,6 +18,8 @@ namespace App\Containers\ShiftSection\Shift\Models;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
+use App\Containers\OrderSection\Order\Foundation\Order;
+use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\ShiftSection\Item\Foundation\Item;
 use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
 use App\Containers\ShiftSection\Shift\Data\Factories\ShiftFactory;
@@ -54,6 +56,7 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon|null $created_at Дата и время создания.
  * @property-read Carbon|null $updated_at Дата и время обновления.
  *
+ * @property-read Collection $orders Коллекция моделей заказов смены.
  * @property-read Collection $items Коллекция моделей позиций смены.
  * @property-read User $creator Связанная модель пользователя чья смена.
  * @property-read Organization $organization Связанная модель организации.
@@ -130,6 +133,12 @@ class Shift extends Model
     {
         return $this
             ->hasMany(ItemModel::class, Item::SHIFT_ID, ID)
+            ->orderByDesc(CREATED_AT);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(OrderModel::class, Order::SHIFT_ID, ID)
             ->orderByDesc(CREATED_AT);
     }
 

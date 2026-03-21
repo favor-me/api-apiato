@@ -18,6 +18,8 @@ namespace App\Containers\ShiftSection\Shift\Tests\Unit\Models;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\CommunitySection\Organization\Models\Organization;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch;
+use App\Containers\OrderSection\Order\Foundation\Order;
+use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Containers\ShiftSection\Item\Foundation\Item;
 use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
 use App\Containers\ShiftSection\ItemType\AwardType;
@@ -197,5 +199,33 @@ final class ShiftTest extends UnitTestCase
             ->add($itemC->value->negative());
 
         $this->assertSame($shiftMoney->val(), $shift->money->val());
+    }
+
+    public function testHasManyOrders(): void
+    {
+        $startAt = now()->utc()->subHours(8);
+        $finishAt = now()->utc()->subHours(1);
+
+        $shift = ShiftModel::factory()
+            ->create([
+                Shift::START_AT => $startAt,
+                Shift::FINISH_AT => $finishAt
+            ]);
+
+        $order = OrderModel::factory()
+            ->create([
+                Order::SHIFT_ID => $shift->id
+            ]);
+
+        ItemModel::factory()
+            ->create([
+                Item::ORDER_ID => $order->id,
+                Item::SHIFT_ID => $shift->id
+            ]);
+
+        $this->assertInstanceOf(HasMany::class, $shift->orders());
+        $this->assertInstanceOf(OrderModel::class, $shift->orders()->getModel());
+        $this->assertCount(1, $shift->orders);
+        $this->assertSame($order->id, $shift->orders->first()->id);
     }
 }
