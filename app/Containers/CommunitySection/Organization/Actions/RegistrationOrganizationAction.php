@@ -17,8 +17,11 @@ namespace App\Containers\CommunitySection\Organization\Actions;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\AppSection\User\Dto\UpdateUserDto;
+use App\Containers\AppSection\User\Events\UserRegisteredEvent;
 use App\Containers\AppSection\User\Foundation\User;
+use App\Containers\AppSection\User\Mails\UserRegisteredMail;
 use App\Containers\AppSection\User\Models\User as UserModel;
+use App\Containers\AppSection\User\Notifications\UserRegisteredNotification;
 use App\Containers\AppSection\User\Tasks\CreateUserByCredentialsTask;
 use App\Containers\AppSection\User\Tasks\UpdateUserTask;
 use App\Containers\CommunitySection\Organization\Dto\CreateOrganizationDto;
@@ -31,6 +34,8 @@ use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Actions\Action;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Throwable;
 
 /**
@@ -141,6 +146,14 @@ class RegistrationOrganizationAction extends Action
         try {
             $user = app(CreateUserByCredentialsTask::class)->run($dto->toRegisterUserDto());
             $user->assignRole(RoleModel::ORGANIZATION_OWNER);
+
+            if (!empty($user->email)) {
+                Mail::send(new UserRegisteredMail($user));
+            }
+
+            Notification::send($user, new UserRegisteredNotification($user));
+            dispatch(new UserRegisteredEvent($user));
+
             return $user;
         } catch (Exception $e) {
             throw new CreateResourceFailedException($e->getMessage());
