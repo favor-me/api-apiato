@@ -39,7 +39,8 @@ trait HasUserValidationRules
 
     public function getUserEmailValidationRules(): ValidationRules
     {
-        return validation_rules(config('appSection-user.rules.email'));
+        return validation_rules(config('appSection-user.rules.email'))
+            ->add($this->getUserUniqueEmailValidationRule());
     }
 
     public function getUserGenderValidationRules(): ValidationRules
@@ -98,6 +99,11 @@ trait HasUserValidationRules
     }
 
     public function getUserUniquePhoneNumberValidationRule($column = User::PHONE_NUMBER): Unique
+    {
+        return Rule::unique(UserModel::TABLE, $column);
+    }
+
+    public function getUserUniqueEmailValidationRule($column = User::EMAIL): Unique
     {
         return Rule::unique(UserModel::TABLE, $column);
     }

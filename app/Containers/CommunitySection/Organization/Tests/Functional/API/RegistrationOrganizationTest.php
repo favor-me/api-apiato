@@ -26,7 +26,6 @@ use App\Containers\CommunitySection\Organization\Models\Organization as Organiza
 use App\Containers\CommunitySection\Organization\Tests\Functional\ApiTestCase;
 use App\Containers\OrganizationSection\OwnershipType\Manager as OwnershipTypeManager;
 use App\Containers\OrganizationSection\OwnershipType\OooType;
-use App\Ship\Utils\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class RegistrationOrganizationTest extends ApiTestCase
@@ -46,8 +45,8 @@ final class RegistrationOrganizationTest extends ApiTestCase
                         Organization::NAME => [
                             Container::trans('validation.name.required')
                         ],
-                        Organization::PHONE_NUMBER => [
-                            Container::trans('validation.phone_number.required')
+                        Organization::EMAIL => [
+                            Container::trans('validation.email.required')
                         ],
                         Organization::OWNER_NAME => [
                             Container::trans('validation.owner_name.required')
@@ -63,11 +62,11 @@ final class RegistrationOrganizationTest extends ApiTestCase
             );
     }
 
-    public function testWithInvalidPhoneNumber(): void
+    public function testWithInvalidEmail(): void
     {
         $this->makeCall([
             Organization::NAME => 'Test Organization',
-            Organization::PHONE_NUMBER => 7927
+            Organization::EMAIL => 'ema'
         ]);
 
         $this
@@ -75,8 +74,8 @@ final class RegistrationOrganizationTest extends ApiTestCase
             ->assertJson(
                 fn(AssertableJson $json): AssertableJson => $json
                     ->has('errors')
-                    ->where('errors.' . Organization::PHONE_NUMBER, [
-                        __('validation.phone.real_number')
+                    ->where('errors.' . Organization::EMAIL, [
+                        __('validation.custom.email.email')
                     ])
                     ->etc()
             );
@@ -90,42 +89,43 @@ final class RegistrationOrganizationTest extends ApiTestCase
         $data = [
             Organization::OWNERSHIP_TYPE => $ownershipType->getName(),
             Organization::NAME => 'Test Organization',
-            Organization::PHONE_NUMBER => '+79272236975',
+            Organization::EMAIL => 'ivan@test.test',
             Organization::OWNER_NAME => 'Ivanov|Ivan|Ivanovich',
-            User::PASSWORD => 25644578,
+            User::PASSWORD => 25644578
         ];
 
         $this->makeCall($data);
-        $this->response->assertCreated();
 
         $organizationId = $this->getResponseContentObject()->data->id;
         $userOwnerId = $this->getResponseContentObject()->data->user_owner->data->id;
 
-        $this->response->assertJson(
-            fn(AssertableJson $json): AssertableJson => $json
-                ->has('data')
-                ->where('data.' . OBJECT, OrganizationModel::RESOURCE_KEY)
-                ->where('data.' . Organization::NAME, $data[Organization::NAME])
-                ->where('data.' . Organization::OWNERSHIP_TYPE . '.name', $data[Organization::OWNERSHIP_TYPE])
-                ->where('data.' . Organization::COUNTRY, $defaultCountry->toArray())
-                ->where('data.' . Organization::PHONE_NUMBER, Str::toPhoneNumber($data[Organization::PHONE_NUMBER]))
-                ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::SURNAME, 'Ivanov')
-                ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::NAME, 'Ivan')
-                ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::PATRONYMIC, 'Ivanovich')
-                ->where(
-                    'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::PHONE_NUMBER,
-                    Str::toPhoneNumber($data[Organization::PHONE_NUMBER])
-                )
-                ->where(
-                    'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::ORGANIZATION_ID,
-                    $organizationId
-                )
-                ->where(
-                    'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::IS_ORGANIZATION_OWNER,
-                    true
-                )
-                ->etc()
-        );
+        $this->response
+            ->assertCreated()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('data')
+                    ->where('data.' . OBJECT, OrganizationModel::RESOURCE_KEY)
+                    ->where('data.' . Organization::NAME, $data[Organization::NAME])
+                    ->where('data.' . Organization::OWNERSHIP_TYPE . '.name', $data[Organization::OWNERSHIP_TYPE])
+                    ->where('data.' . Organization::COUNTRY, $defaultCountry->toArray())
+                    ->where('data.' . Organization::EMAIL, $data[Organization::EMAIL])
+                    ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::SURNAME, 'Ivanov')
+                    ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::NAME, 'Ivan')
+                    ->where('data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::PATRONYMIC, 'Ivanovich')
+                    ->where(
+                        'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::EMAIL,
+                        $data[Organization::EMAIL]
+                    )
+                    ->where(
+                        'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::ORGANIZATION_ID,
+                        $organizationId
+                    )
+                    ->where(
+                        'data.' . Organization::INCLUDE_USER_OWNER . '.data.' . User::IS_ORGANIZATION_OWNER,
+                        true
+                    )
+                    ->etc()
+            );
 
         /** @var UserModel $userOwner */
         $userOwner = UserModel::find(hash_decode($userOwnerId));

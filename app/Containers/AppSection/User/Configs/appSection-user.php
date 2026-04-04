@@ -89,8 +89,7 @@ return [
         User::EMAIL => [
             'nullable',
             'email',
-            'max:' . User::EMAIL_MAX_LENGTH,
-            'unique:' . UserModel::TABLE . ',' . User::EMAIL
+            'max:' . User::EMAIL_MAX_LENGTH
         ],
         User::PHONE_NUMBER => [
             'nullable',

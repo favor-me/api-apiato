@@ -47,16 +47,42 @@ class RegistrationOrganizationAction extends Action
     public function run(RegistrationOrganizationDto $dto): OrganizationModel
     {
         try {
-            DB::beginTransaction();
-            $ownerUser = $this->createOrganizationUserOwner($dto);
-            $organization = $this->createOrganization($ownerUser, $dto);
-            $this->assignOrganizationOwner($ownerUser, $organization);
-            DB::commit();
-            return $organization;
+            return $this->registration($dto);
         } catch (Exception $e) {
-            DB::rollback();
-            throw new CreateResourceFailedException($e->getMessage());
+            $this->registrationError($e);
         }
+    }
+
+    /**
+     * @param RegistrationOrganizationDto $dto
+     * @return OrganizationModel
+     * @throws CreateResourceFailedException
+     * @throws Throwable
+     * @throws UpdateResourceFailedException
+     */
+    protected function registration(RegistrationOrganizationDto $dto): OrganizationModel
+    {
+        DB::beginTransaction();
+
+        $ownerUser = $this->createOrganizationUserOwner($dto);
+        $organization = $this->createOrganization($ownerUser, $dto);
+        $this->assignOrganizationOwner($ownerUser, $organization);
+
+        DB::commit();
+
+        return $organization;
+    }
+
+    /**
+     * @param Exception $e
+     * @return void
+     * @throws CreateResourceFailedException
+     * @throws Throwable
+     */
+    protected function registrationError(Exception $e): void
+    {
+        DB::rollback();
+        throw new CreateResourceFailedException($e->getMessage());
     }
 
     /**
@@ -92,6 +118,7 @@ class RegistrationOrganizationAction extends Action
         try {
             $createOrganizationDto = new CreateOrganizationDto([
                 Organization::NAME => $dto->name,
+                Organization::EMAIL => $dto->email,
                 Organization::PHONE_NUMBER => $dto->phone_number,
                 Organization::USER_OWNER_ID => $ownerUser->id,
                 Organization::OWNERSHIP_TYPE => $dto->ownership_type,

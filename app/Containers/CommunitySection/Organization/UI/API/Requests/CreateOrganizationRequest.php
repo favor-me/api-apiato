@@ -121,6 +121,7 @@ class CreateOrganizationRequest extends OrganizationApiRequest implements Gettab
     {
         return parent::messages() + $this->countryMessages +
             [
+                Organization::EMAIL . '.required' => Container::trans('validation.email.required'),
                 Organization::NAME . '.required' => Container::trans('validation.name.required'),
                 Organization::NAME . '.unique' => Container::trans('validation.name.unique'),
                 Organization::COUNTRY . '.required' => Container::trans('validation.country.required'),

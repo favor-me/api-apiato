@@ -78,6 +78,7 @@ trait OrganizationValidationRules
     public function getOrganizationEmailValidationRules(): ValidationRules
     {
         return validation_rules([
+            'email',
             $this->getOrganizationEmailUniqueValidationRule()
         ]);
     }

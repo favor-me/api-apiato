@@ -22,7 +22,7 @@
  *
  * @apiBody {String} [name] Название компании (Обязательное для `payment_type=ooo`).
  * @apiBody {String=ip,ooo,self_employed} ownership_type Тип собственности.
- * @apiBody {String} phone_number Контактный номер телефона.
+ * @apiBody {String} email Адрес электронной почты.
  * @apiBody {String} owner_name Ф|И|О собственника.
  * @apiBody {String} password Пароль для входа.
  *

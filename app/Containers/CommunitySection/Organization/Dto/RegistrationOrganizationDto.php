@@ -41,7 +41,8 @@ class RegistrationOrganizationDto extends CreateOrganizationDto
             User::SURNAME => $surname,
             User::PATRONYMIC => $patronymic,
             User::PASSWORD => $this->password,
-            User::PHONE_NUMBER => $this->phone_number
+            User::PHONE_NUMBER => $this->phone_number,
+            User::EMAIL => $this->email
         ]);
     }
 }
