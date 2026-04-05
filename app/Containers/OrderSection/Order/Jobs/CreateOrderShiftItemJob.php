@@ -20,6 +20,7 @@ use App\Containers\ShiftSection\Item\Dto\CreateItemDto;
 use App\Containers\ShiftSection\Item\Dto\SystemNoteDto;
 use App\Containers\ShiftSection\Item\Facades\Container as ItemContainer;
 use App\Containers\ShiftSection\Item\Foundation\Item;
+use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
 use App\Containers\ShiftSection\Item\Tasks\CreateItemTask;
 use App\Containers\ShiftSection\ItemType\IncomeType;
 use App\Containers\ShiftSection\ItemType\Manager;
@@ -29,11 +30,11 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 class CreateOrderShiftItemJob extends OrderShiftItemJob
 {
     /**
-     * @return void
+     * @return null|ItemModel
      * @throws CreateResourceFailedException
      * @throws UnknownProperties
      */
-    protected function run(): void
+    protected function run(): ?ItemModel
     {
         $type = Manager::getInstance()
             ->get(IncomeType::class)
@@ -58,6 +59,6 @@ class CreateOrderShiftItemJob extends OrderShiftItemJob
             Item::VALUE => $shiftItemOrderIncomeMoney->val()
         ]);
 
-        app(CreateItemTask::class)->run($dto);
+        return app(CreateItemTask::class)->run($dto);
     }
 }

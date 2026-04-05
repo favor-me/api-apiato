@@ -15,6 +15,7 @@
 
 namespace App\Containers\OrderSection\Order\Jobs;
 
+use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\ShiftSection\Item\Dto\UpdateItemDto;
 use App\Containers\ShiftSection\Item\Foundation\Item;
 use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
@@ -25,31 +26,40 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 class UpdateOrderShiftItemJob extends OrderShiftItemJob
 {
     /**
-     * @return void
+     * @return null|ItemModel
      * @throws UnknownProperties
      * @throws UpdateResourceFailedException
      */
-    protected function run(): void
+    protected function run(): ?ItemModel
     {
-        /** @var ItemModel $item */
-        $item = $this->order->shift->items
-            ->first(
-                fn(ItemModel $item) => $item->order_id === $this->order->id
-            );
+        if ($this->order->shift_id) {
+            /** @var ItemModel $item */
+            $item = $this->order->shift->items
+                ->first(
+                    fn(ItemModel $item) => $item->order_id === $this->order->id
+                );
 
-        if (!is_null($item)) {
-            $shiftItemOrderIncomeMoney = $this->order->profit
-                ->getClone()
-                ->percentValue($this->orderProfitPercent);
+            // Create shift item on complete order.
+            if (is_null($item) && !is_null($this->order->completed_at)) {
+                $item = (new CreateOrderShiftItemJob($this->order))->__invoke();
+            }
 
-            $dto = new UpdateItemDto([
-                ID => $item->id,
-                Item::VALUE => $shiftItemOrderIncomeMoney->val()
-            ]);
+            if (!is_null($item)) {
+                $shiftItemOrderIncomeMoney = $this->order->profit
+                    ->getClone()
+                    ->percentValue($this->orderProfitPercent);
 
-            app(UpdateItemTask::class)->run($dto);
+                $dto = new UpdateItemDto([
+                    ID => $item->id,
+                    Item::VALUE => $shiftItemOrderIncomeMoney->val()
+                ]);
+
+                app(UpdateItemTask::class)->run($dto);
+            }
+
+            $this->order->shift->calculate()->update();
         }
 
-        $this->order->shift->calculate()->update();
+        return null;
     }
 }

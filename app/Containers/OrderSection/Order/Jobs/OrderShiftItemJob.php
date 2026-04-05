@@ -17,6 +17,7 @@ namespace App\Containers\OrderSection\Order\Jobs;
 
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
+use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
 use App\Ship\Parents\Jobs\Job;
 
 abstract class OrderShiftItemJob extends Job
@@ -33,14 +34,16 @@ abstract class OrderShiftItemJob extends Job
         }
     }
 
-    public function __invoke(): void
+    public function __invoke(): ?ItemModel
     {
         if ($this->order->shift_id) {
             if ($this->orderProfitPercent > ZERO) {
-                $this->run();
+                return $this->run();
             }
         }
+
+        return null;
     }
 
-    abstract protected function run(): void;
+    abstract protected function run(): ?ItemModel;
 }

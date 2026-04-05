@@ -436,6 +436,10 @@ final class UpdateOrderTest extends ApiTestCase
             'order_id' => $order->getHashedKey()
         ], $unitInfinityFirstNote->params->get(SystemMessageModelNoteType::PARAM_KEY_MESSAGE_ARGS));
         /** Finish Test Unit infinity  */
+
+        $user->nowShift->refresh();
+
+        $this->assertCount(0, $user->nowShift->items);
     }
 
     public function testCalculateShiftMoney(): void
