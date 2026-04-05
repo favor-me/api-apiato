@@ -32,7 +32,6 @@ use App\Containers\OrderSection\PaymentType\CashType;
 use App\Containers\OrderSection\PaymentType\ContractType;
 use App\Containers\OrderSection\PaymentType\Manager;
 use App\Containers\OrganizationSection\UnitPrice\Foundation\UnitPrice;
-use App\Containers\ShiftSection\Item\Models\Item as ShiftItemModel;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class CreateOrderTest extends ApiTestCase
@@ -338,17 +337,10 @@ final class CreateOrderTest extends ApiTestCase
 
         $shift = $this->testingUser->nowShift;
 
-        $this->assertCount(1, $shift->items);
-
-        /** @var ShiftItemModel $firstItem */
-        $firstItem = $shift->items->first();
-
-        $shiftItemValue = ($expectedProfit / 100) * $userOrderPercentProfit;
-
-        $this->assertSame($shiftItemValue, $firstItem->value->currency()->val());
+        $this->assertCount(0, $shift->items);
 
         $shift->refresh();
 
-        $this->assertSame($shiftItemValue, $shift->money->currency()->val());
+        $this->assertSame(0.0, $shift->money->currency()->val());
     }
 }

@@ -24,6 +24,11 @@ use App\Ship\Parents\Events\Event;
 
 class OrderUpdatedEventHandler extends Event
 {
+    /**
+     * @param OrderModel $order
+     * @return void
+     * @throws UpdateResourceFailedException
+     */
     public function handle(OrderModel $order): void
     {
         if (!is_null($order->status_id)) {
@@ -36,6 +41,7 @@ class OrderUpdatedEventHandler extends Event
     /**
      * @param OrderModel $order
      * @return void
+     * @throws UpdateResourceFailedException
      */
     protected function orderItemsMinusBalance(OrderModel $order): void
     {
