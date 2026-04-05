@@ -60,20 +60,6 @@ class RegistrationOrganizationRequest extends CreateOrganizationRequest
             ];
     }
 
-    public function getOrganizationEmailValidationRules(): ValidationRules
-    {
-        return parent::getOrganizationEmailValidationRules()
-            ->add(
-                $this->getUserUniqueEmailValidationRule()
-            )
-            ->addRequired();
-    }
-
-    public function getOrganizationPhoneNumberValidationRules(): ValidationRules
-    {
-        return validation_rules();
-    }
-
     public function getUserPasswordValidationRules(): ValidationRules
     {
         return $this->baseUserPasswordValidationRules()
