@@ -99,7 +99,6 @@
             "@php artisan migrate:fresh",
             "@php artisan db:seed",
             "@php artisan apiato:permissions:toRole admin",
-            "@php artisan ship:permissions:toSpecialistRole",
             "@php artisan passport:install"
         ],
         "phpunit": "@php ./vendor/phpunit/phpunit/phpunit --configuration ./phpunit.xml",
