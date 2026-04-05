@@ -25,7 +25,7 @@ use App\Containers\AppSection\UserDevice\Foundation\UserDevice as BaseUserDevice
 use App\Containers\AppSection\UserDevice\Models\UserDevice;
 use App\Containers\CommunitySection\Organization\Models\Organization as OrganizationModel;
 use App\Containers\CommunitySection\OrganizationBranch\Models\OrganizationBranch as OrganizationBranchModel;
-use App\Containers\ShiftSection\Shift\Foundation\Shift;
+use App\Containers\ShiftSection\Shift\Data\Criterials\NowUserShiftCriteria;
 use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
 use App\Ship\Database\Casts\JSON;
 use App\Ship\Database\Eloquent\Collection;
@@ -149,13 +149,8 @@ class User extends UserModel implements HasResourceKey, CanResetPassword
 
     public function nowShift(): HasOne
     {
-        $now = Carbon::now();
         return $this->hasOne(ShiftModel::class, CREATED_BY, ID)
-            ->whereRaw(implode(' ', [
-                '\'' . $now->toDateTimeString() . '\' >= cast(' . Shift::START_AT . ' as datetime)',
-                'and',
-                '\'' . $now->toDateTimeString() . '\' <= cast(' . Shift::FINISH_AT . ' as datetime)'
-            ]));
+            ->whereRaw(NowUserShiftCriteria::whereRawDateTime());
     }
 
     public function getDefaultLogin(): string

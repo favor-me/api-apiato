@@ -13,23 +13,20 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  *
  * @apiGroup Shift
- * @apiName findByIdShift
- * @api {get} /v1/shifts/:id Найти по id
- * @apiDescription Найти по id.
+ * @apiName findUserNowShift
+ * @api {get} /v1/shifts/now Найти текущую смену
+ * @apiDescription Найти текущую смену пользователя
  *
  * @apiVersion 1.0.0
  * @apiPermission Аутентифицированный пользователь
- *
- * @apiParam {String} id Уникальный идентификатор.
  *
  * @apiUse ShiftSuccessSingleResponse
  */
 
 use App\Containers\ShiftSection\Shift\Facades\Container;
-use App\Containers\ShiftSection\Shift\UI\API\Controllers\FindShiftByIdController;
+use App\Containers\ShiftSection\Shift\UI\API\Controllers\FindUserNowShiftController;
 use Illuminate\Support\Facades\Route;
 
-Route::get(Container::getApiUri('{' . ID . '}'), FindShiftByIdController::class)
-    ->name('api_organization_shift_find_by_id_shift')
-    ->middleware(['auth:api'])
-    ->where(ID, '^(?!now$).*$');
+Route::get(Container::getApiUri('now'), FindUserNowShiftController::class)
+    ->name('api_organization_shift_find_user_now_shift')
+    ->middleware(['auth:api']);
