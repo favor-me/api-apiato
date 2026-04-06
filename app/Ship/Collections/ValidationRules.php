@@ -14,19 +14,31 @@
 
 namespace App\Ship\Collections;
 
+use App\Ship\Validation\Rule;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rules\Unique;
 
 class ValidationRules extends Collection
 {
-    public const REQUIRED = 'required';
-    public const UNIQUE = 'unique';
+    /**
+     * @deprecated use App\Ship\Validation\Rule::REQUIRED
+     */
+    public const string REQUIRED = 'required';
+
+    /**
+     * @deprecated use App\Ship\Validation\Rule::UNIQUE
+     */
+    public const string UNIQUE = 'unique';
 
     public function addIgnoreIdForUnique(int $id): self
     {
         return $this->map(function ($rule) use ($id) {
             if ($this->isUniqueRule($rule)) {
-                $rule = rtrim($rule, ',');
-                return $rule . ',' . $id;
+                if (is_string($rule)) {
+                    return rtrim($rule, ',') . ',' . $id;
+                } elseif ($rule instanceof Unique) {
+                    return $rule->ignore($id);
+                }
             }
 
             return $rule;
@@ -35,8 +47,8 @@ class ValidationRules extends Collection
 
     public function addRequired(): self
     {
-        if (!$this->contains(self::REQUIRED)) {
-            array_unshift($this->items, self::REQUIRED);
+        if (!$this->contains(Rule::REQUIRED)) {
+            array_unshift($this->items, Rule::REQUIRED);
         }
 
         return $this;
@@ -44,8 +56,12 @@ class ValidationRules extends Collection
 
     public function isUniqueRule(mixed $rule): false|int
     {
+        if ($rule instanceof Unique) {
+            return true;
+        }
+
         if (is_string($rule)) {
-            return preg_match('/^' . self::UNIQUE . ':/', $rule);
+            return preg_match('/^' . Rule::UNIQUE . ':/', $rule);
         }
 
         return false;
@@ -54,7 +70,7 @@ class ValidationRules extends Collection
     public function removeRequired(): self
     {
         return $this->filter(function ($rule) {
-            return $rule !== self::REQUIRED;
+            return $rule !== Rule::REQUIRED;
         });
     }
 
@@ -62,7 +78,7 @@ class ValidationRules extends Collection
     {
         return $this->filter(function ($rule) {
             if (is_string($rule)) {
-                return !preg_match('/^' . self::UNIQUE . '/', $rule);
+                return !preg_match('/^' . Rule::UNIQUE . '/', $rule);
             }
 
             return true;

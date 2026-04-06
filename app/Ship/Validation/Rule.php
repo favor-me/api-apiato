@@ -20,10 +20,15 @@ use App\Ship\Collections\ValidationRules;
 
 class Rule extends BaseRule
 {
+    public const string NULLABLE = 'nullable';
+    public const string BOOLEAN = 'boolean';
+    public const string REQUIRED = 'required';
+    public const string UNIQUE = 'unique';
+
     public static function boolean(): ValidationRules
     {
         return validation_rules([
-            'boolean'
+            self::BOOLEAN
         ]);
     }
 }
