@@ -15,7 +15,6 @@
 
 namespace App\Containers\OrderSection\Order\Jobs;
 
-use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\ShiftSection\Item\Dto\UpdateItemDto;
 use App\Containers\ShiftSection\Item\Foundation\Item;
 use App\Containers\ShiftSection\Item\Models\Item as ItemModel;
