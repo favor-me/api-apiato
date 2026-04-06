@@ -50,6 +50,8 @@ final class Manager extends AbstractManager
             return $this->get(OpenStatus::class);
         } elseif (!is_null($shift->confirmed_at) && is_null($shift->payment_at)) {
             return $this->get(ConfirmedStatus::class);
+        } elseif (!is_null($shift->confirmed_at) && !is_null($shift->payment_at)) {
+            return $this->get(PaidStatus::class);
         }
 
         return $this->get(UnknownStatus::class);
