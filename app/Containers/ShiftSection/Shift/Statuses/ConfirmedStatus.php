@@ -15,10 +15,10 @@
 
 namespace App\Containers\ShiftSection\Shift\Statuses;
 
-class CompletedStatus extends Status
+class ConfirmedStatus extends Status
 {
     public function getColor(): string
     {
-        return '#757575';
+        return '#64B5F6';
     }
 }

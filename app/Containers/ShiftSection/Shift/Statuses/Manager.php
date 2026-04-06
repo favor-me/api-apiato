@@ -44,10 +44,12 @@ final class Manager extends AbstractManager
     public function getShiftStatus(ShiftModel $shift): Status
     {
         $now = now()->utc();
-        if ($now->gt($shift->finish_at)) {
+        if ($now->gt($shift->finish_at) && is_null($shift->confirmed_at)) {
             return $this->get(CompletedStatus::class);
         } elseif ($now->gte($shift->start_at) && $now->lte($shift->finish_at)) {
             return $this->get(OpenStatus::class);
+        } elseif (!is_null($shift->confirmed_at) && is_null($shift->payment_at)) {
+            return $this->get(ConfirmedStatus::class);
         }
 
         return $this->get(UnknownStatus::class);
