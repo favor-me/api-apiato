@@ -1,15 +1,16 @@
 <?php
 
 /**
- * Beauty application system
+ * FavorMe system
  *
- * This file is part of the Beauty application system package.
+ * This file is part of the FavorMe system package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license     Proprietary
- * @copyright   Copyright (C) kalistratov.ru, All rights reserved.
- * @link        https://kalistratov.ru
+ * @license https://favor-me.ru/licenses/erp Proprietary license
+ * @copyright Copyright (C) kalistratov.ru, All rights reserved ©.
+ * @link https://kalistratov.ru
+ * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
 namespace App\Containers\AppSection\User\UI\API\Requests;
@@ -25,9 +26,10 @@ use App\Containers\AppSection\User\Traits\IsOrganizationOwner;
 use App\Containers\AppSection\User\Traits\IsOwnerTrait;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
-use App\Ship\Traits\Request\HasInputId;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Traits\Request\HasInputId;
+use App\Ship\Validation\Rule;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 /**
  * @method UserModel user($guard = null)
@@ -69,7 +71,7 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
     public function getUserOrganizationBranchIdValidationRules(): ValidationRules
     {
         return validation_rules([
-            'nullable',
+            Rule::NULLABLE,
             $this->getUserExistsInOrganizationBranchIdValidationRule(
                 $this->user()->organization_id
             )
@@ -85,9 +87,7 @@ class UpdateUserRequest extends UserApiRequest implements GettableDto
     public function getUserPhoneNumberValidationRules(): ValidationRules
     {
         return parent::getUserPhoneNumberValidationRules()
-            ->addIgnoreIdForUnique(
-                $this->getId()
-            );
+            ->addIgnoreIdForUnique($this->getId());
     }
 
     /**
