@@ -19,6 +19,7 @@ use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\ShiftSection\Shift\Facades\Container;
 use App\Containers\ShiftSection\Shift\Models\Shift as ShiftModel;
 use App\Containers\ShiftSection\Shift\Tests\Functional\ApiTestCase;
+use Illuminate\Support\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 final class ConfirmShiftsTest extends ApiTestCase
@@ -51,5 +52,9 @@ final class ConfirmShiftsTest extends ApiTestCase
                     ->where(MESSAGE, Container::transMultipleConfirmed(1))
                     ->etc()
             );
+
+        $shift->refresh();
+
+        $this->assertInstanceOf(Carbon::class, $shift->confirmed_at);
     }
 }
