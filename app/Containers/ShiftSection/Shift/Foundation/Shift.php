@@ -36,5 +36,14 @@ final class Shift extends SectionContainer
     public const string PAYMENT = 'payment';
     public const string STATUS = 'status';
 
+    protected string $gender = 'female';
     protected string $apiBaseUri = 'shifts';
+
+    public function transMultipleConfirmed(int $count): string
+    {
+        return trans_choice('action.confirmed_multiple', $count, [
+            'confirms' => $this->transLowerChoice('core.' . $this->gender . '_confirmed', $count),
+            'items' => $this->transLowerChoice($this->getTransMultipleItemsKey(), $count)
+        ]);
+    }
 }

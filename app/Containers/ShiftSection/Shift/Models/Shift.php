@@ -146,4 +146,11 @@ class Shift extends Model
     {
         return Attribute::get(fn () => Manager::getInstance()->getShiftStatus($this));
     }
+
+    public function confirm(): self
+    {
+        $this->setAttribute(BaseShift::CONFIRMED_AT, Carbon::now());
+        $this->update();
+        return $this->refresh();
+    }
 }

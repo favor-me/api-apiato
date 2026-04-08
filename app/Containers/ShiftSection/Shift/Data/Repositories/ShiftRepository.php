@@ -22,6 +22,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * @method ShiftModel getModel()
+ * @method ShiftModel find($id, $columns = ['*'])
  */
 final class ShiftRepository extends Repository
 {

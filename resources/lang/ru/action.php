@@ -13,6 +13,7 @@
  */
 
 return [
+    'confirmed_multiple' => 'Успешно :confirms :count :items.',
     'deleted_multiple' => 'Успешно :deletes :count :items.',
     'created_multiple' => 'Успешно :creates :count :items.',
     'restored_multiple' => 'Успешно :restores :count :items.',

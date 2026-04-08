@@ -36,4 +36,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::patch(Container::getApiUri('{' . ID . '}'), UpdateShiftController::class)
     ->name('api_organization_shift_update_shift')
-    ->middleware(['auth:api']);
+    ->middleware(['auth:api'])
+    ->where(ID, '^(?!confirm$).*$');

@@ -21,12 +21,12 @@ use Illuminate\Support\Str;
 
 abstract class SectionContainer
 {
-    public const SECTION_POSTFIX = 'Section';
-    public const VENDOR_SECTION = 'Vendor';
+    public const string SECTION_POSTFIX = 'Section';
+    public const string VENDOR_SECTION = 'Vendor';
 
-    protected const CONFIG_NAME_SEPARATOR = '-';
-    protected const TRANSLATOR_NAME_SEPARATOR = '@';
-    protected const TRANSLATOR_NS_SEPARATOR = '::';
+    protected const string CONFIG_NAME_SEPARATOR = '-';
+    protected const string TRANSLATOR_NAME_SEPARATOR = '@';
+    protected const string TRANSLATOR_NS_SEPARATOR = '::';
 
     protected string $apiBaseUri;
 
@@ -154,7 +154,7 @@ abstract class SectionContainer
         ]);
     }
 
-    private function transLowerChoice(string $key, int $count): string
+    protected function transLowerChoice(string $key, int $count): string
     {
         return Str::lower(trans_choice($key, $count));
     }
