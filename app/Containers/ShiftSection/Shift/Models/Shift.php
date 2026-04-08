@@ -153,4 +153,16 @@ class Shift extends Model
         $this->update();
         return $this->refresh();
     }
+
+    public function paid(): self
+    {
+        $now = Carbon::now();
+        if (is_null($this->confirmed_at)) {
+            $this->setAttribute(BaseShift::CONFIRMED_AT, $now);
+        }
+
+        $this->setAttribute(BaseShift::PAYMENT_AT, $now);
+        $this->update();
+        return $this->refresh();
+    }
 }

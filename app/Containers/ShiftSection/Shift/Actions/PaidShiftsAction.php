@@ -13,19 +13,15 @@
  * @author Sergey Kalistratov <sergey@kalistratov.ru>
  */
 
-namespace App\Containers\ShiftSection\Shift\Facades;
+namespace App\Containers\ShiftSection\Shift\Actions;
 
-use App\Containers\ShiftSection\Shift\Foundation\Shift;
-use App\Ship\Facades\SectionContainerFacade;
+use App\Containers\ShiftSection\Shift\Tasks\PaidShiftsTask;
+use App\Ship\Parents\Actions\Action;
 
-/**
- * @method static string transMultipleConfirmed(int $count)
- * @method static string transMultiplePaid(int $count)
- */
-final class Container extends SectionContainerFacade
+class PaidShiftsAction extends Action
 {
-    protected static function getFacadeAccessor(): string
+    public function run(array $ids): int
     {
-        return Shift::class;
+        return app(PaidShiftsTask::class)->run($ids);
     }
 }

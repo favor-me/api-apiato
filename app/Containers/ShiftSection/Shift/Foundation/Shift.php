@@ -46,4 +46,12 @@ final class Shift extends SectionContainer
             'items' => $this->transLowerChoice($this->getTransMultipleItemsKey(), $count)
         ]);
     }
+
+    public function transMultiplePaid(int $count): string
+    {
+        return trans_choice('action.paid_multiple', $count, [
+            'paid' => $this->transLowerChoice('core.' . $this->gender . '_paid', $count),
+            'items' => $this->transLowerChoice($this->getTransMultipleItemsKey(), $count)
+        ]);
+    }
 }

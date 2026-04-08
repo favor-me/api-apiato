@@ -13,6 +13,7 @@
  */
 
 return [
+    'paid_multiple' => 'Успешно :paid :count :items.',
     'confirmed_multiple' => 'Успешно :confirms :count :items.',
     'deleted_multiple' => 'Успешно :deletes :count :items.',
     'created_multiple' => 'Успешно :creates :count :items.',
