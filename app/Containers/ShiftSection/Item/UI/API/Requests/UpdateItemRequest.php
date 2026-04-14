@@ -33,10 +33,6 @@ class UpdateItemRequest extends CreateItemRequest
         ID
     ];
 
-    protected array $decode = [
-        ID
-    ];
-
     public function rules(): array
     {
         return array_merge(parent::rules(), [
@@ -83,5 +79,11 @@ class UpdateItemRequest extends CreateItemRequest
         }
 
         return $result;
+    }
+
+    protected function afterInitialize(): void
+    {
+        parent::afterInitialize();
+        $this->mergeDecode(ID);
     }
 }
