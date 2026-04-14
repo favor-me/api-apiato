@@ -22,6 +22,7 @@
  *
  * @apiParam {String} id Уникальный идентификатор
  *
+ * @apiBody {String} [organization_branch_id] Уникальный идентификатор отделения.
  * @apiBody {String} [start_at] Дата начала.
  * @apiBody {String} [finish_at] Дата завершения.
  * @apiBody {Int} [confirmed=1,0] Установить подтверждение смены (`created_at` установится автоматически).

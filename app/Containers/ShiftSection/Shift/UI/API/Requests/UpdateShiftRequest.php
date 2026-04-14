@@ -16,6 +16,7 @@
 namespace App\Containers\ShiftSection\Shift\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\ShiftSection\Shift\Dto\UpdateShiftDto;
 use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Ship\Collections\ValidationRules;
@@ -23,6 +24,7 @@ use App\Ship\Exceptions\ValidationFailedException;
 use App\Ship\Traits\Request\HasInputId;
 use App\Ship\Validation\Rule;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\Rules\Exists;
 
 /**
  * @method UpdateShiftDto getDto()
@@ -49,7 +51,8 @@ class UpdateShiftRequest extends CreateShiftRequest
     public function rules(): array
     {
         $rules = array_merge(parent::rules(), [
-            ID => $this->getShiftIdValidationRules()
+            ID => $this->getShiftIdValidationRules(),
+            Shift::ORGANIZATION_BRANCH_ID => $this->getOrganizationBranchIdValidationRules()
         ]);
 
         if ($this->user()->is_organization_owner) {
@@ -58,6 +61,12 @@ class UpdateShiftRequest extends CreateShiftRequest
         }
 
         return $rules;
+    }
+
+    public function getOrganizationBranchIdExistsValidationRule(string $column = 'NULL'): Exists
+    {
+        return parent::getOrganizationBranchIdExistsValidationRule($column)
+            ->where(OrganizationBranch::ORGANIZATION_ID, $this->organization_id);
     }
 
     public function getShiftIdValidationRules(): ValidationRules
@@ -74,6 +83,10 @@ class UpdateShiftRequest extends CreateShiftRequest
     protected function commonDtoData(): array
     {
         $data = parent::commonDtoData();
+
+        if ($this->has(Shift::ORGANIZATION_BRANCH_ID)) {
+            unset($data[Shift::ORGANIZATION_BRANCH_ID]);
+        }
 
         if ($this->user()->is_organization_owner) {
             $this->organizationOwnerDtoData($data);

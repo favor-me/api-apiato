@@ -56,10 +56,15 @@ abstract class ShiftApiRequest extends ApiRequest implements GettableTransformer
 
     protected function prepareData(): array
     {
-        return [
+        $data = [
             CREATED_BY => $this->user()->getHashedKey(),
-            Shift::ORGANIZATION_ID => $this->user()->getHashedKey(User::ORGANIZATION_ID),
-            Shift::ORGANIZATION_BRANCH_ID => $this->user()->getHashedKey(User::ORGANIZATION_BRANCH_ID)
+            Shift::ORGANIZATION_ID => $this->user()->getHashedKey(User::ORGANIZATION_ID)
         ];
+
+        if (!$this->has(Shift::ORGANIZATION_BRANCH_ID)) {
+            $data[Shift::ORGANIZATION_BRANCH_ID] = $this->user()->getHashedKey(User::ORGANIZATION_BRANCH_ID);
+        }
+
+        return $data;
     }
 }
