@@ -18,6 +18,7 @@ namespace App\Containers\ShiftSection\Shift\UI\API\Requests;
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
 use App\Containers\ShiftSection\Shift\Dto\CreateShiftDto;
 use App\Containers\ShiftSection\Shift\Exceptions\NowShiftExistsException;
+use App\Containers\ShiftSection\Shift\Facades\Container;
 use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Containers\ShiftSection\Shift\Requests\ShiftApiRequest;
 use App\Ship\Collections\ValidationRules;
@@ -71,6 +72,13 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
     public function newDto(array $data = []): CreateShiftDto
     {
         return new CreateShiftDto($data);
+    }
+
+    public function messages(): array
+    {
+        return [
+            Shift::FINISH_AT . '.after' => Container::trans('container.validation.finish_at.after')
+        ];
     }
 
     /**
