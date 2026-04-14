@@ -17,4 +17,8 @@ namespace App\Containers\ShiftSection\ItemType;
 
 class AwardType extends Type
 {
+    public function getColor(): string
+    {
+        return '#0288D1';
+    }
 }

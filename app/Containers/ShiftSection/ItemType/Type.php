@@ -30,4 +30,17 @@ abstract class Type extends AbstractItem
     {
         $shiftValue->add($itemValue);
     }
+
+    public function getColor(): string
+    {
+        return '#757575';
+    }
+
+    public function toArray(): array
+    {
+        return parent::toArray() +
+            [
+                'color' => $this->getColor()
+            ];
+    }
 }

@@ -19,6 +19,11 @@ use App\Ship\SimpleTypes\Type\Money;
 
 class FineType extends Type
 {
+    public function getColor(): string
+    {
+        return '#E64A19';
+    }
+
     public function calculateShiftValue(Money &$shiftValue, Money $itemValue): void
     {
         $shiftValue->add($itemValue->negative());

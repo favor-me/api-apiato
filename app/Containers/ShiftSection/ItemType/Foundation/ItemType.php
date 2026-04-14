@@ -19,5 +19,5 @@ use App\Ship\Foundation\SectionContainer;
 
 final class ItemType extends SectionContainer
 {
-    protected string $apiBaseUri = 'shifts/item-types';
+    protected string $apiBaseUri = 'shift/item-types';
 }

@@ -17,4 +17,8 @@ namespace App\Containers\ShiftSection\ItemType;
 
 class IncomeType extends Type
 {
+    public function getColor(): string
+    {
+        return '#388E3C';
+    }
 }
