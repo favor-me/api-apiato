@@ -25,6 +25,7 @@ return [
         ],
         Item::VALUE => [
             'numeric',
+            'min:1',
             'max:' . UnitPrice::PRICE_MAX_LENGTH
         ],
         Item::DESCRIPTION => [

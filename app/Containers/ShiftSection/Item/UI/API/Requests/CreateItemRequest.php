@@ -50,6 +50,12 @@ class CreateItemRequest extends ItemApiRequest implements GettableDto
         ];
     }
 
+    public function getItemValueValidationRules(): ValidationRules
+    {
+        return parent::getItemValueValidationRules()
+            ->addRequired();
+    }
+
     public function getItemTypeValidationRules(): ValidationRules
     {
         return parent::getItemTypeValidationRules()
