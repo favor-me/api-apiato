@@ -29,5 +29,7 @@ final class Item extends SectionContainer
     public const string SYSTEM_NOTE = 'system_note';
     public const string VALUE = 'value';
 
+    protected string $gender = 'female';
+
     protected string $apiBaseUri = 'shift/items';
 }
