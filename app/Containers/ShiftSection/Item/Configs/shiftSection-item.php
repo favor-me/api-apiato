@@ -29,6 +29,7 @@ return [
             'max:' . UnitPrice::PRICE_MAX_LENGTH
         ],
         Item::DESCRIPTION => [
+            'nullable',
             'string'
         ]
     ]
