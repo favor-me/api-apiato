@@ -32,6 +32,7 @@ use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
 use App\Ship\SimpleTypes\Type\Money;
 use App\Ship\Traits\Request\CanPrepareMoney;
+use App\Ship\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
@@ -110,6 +111,12 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
         }
 
         return $rules;
+    }
+
+    public function getOrganizationBranchIdValidationRules(): ValidationRules
+    {
+        return parent::getOrganizationBranchIdValidationRules()
+            ->add(Rule::NULLABLE);
     }
 
     public function getOrganizationBranchIdExistsValidationRule(string $column = ID): Exists
