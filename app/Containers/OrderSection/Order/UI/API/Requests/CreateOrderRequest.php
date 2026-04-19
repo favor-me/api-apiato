@@ -16,6 +16,7 @@
 namespace App\Containers\OrderSection\Order\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\Validation\Rules\UserHasNowShiftRule;
 use App\Containers\CommunitySection\OrganizationBranch\Foundation\OrganizationBranch;
 use App\Containers\CommunitySection\OrganizationUnit\Foundation\OrganizationUnit;
@@ -88,9 +89,15 @@ class CreateOrderRequest extends OrderApiRequest implements GettableDto
 
     public function getShiftIdValidationRules(): ValidationRules
     {
-        return validation_rules([
+        $rules = validation_rules([
             new UserHasNowShiftRule($this->user())
-        ])->addRequired();
+        ]);
+
+        if ($this->user()->shift_params->get(User::SHIFT_PARAMS_IS_REQUIRED)) {
+            $rules->addRequired();
+        }
+
+        return $rules;
     }
 
     public function getOrderTotalValidationRules(): ValidationRules
