@@ -34,10 +34,10 @@ class Status extends Model
 {
     use IsNumbered;
 
-    public const COMPLETED = 'completed';
-    public const CANCELED = 'canceled';
-    public const TABLE = 'order_statuses';
-    public const RESOURCE_KEY = 'Status';
+    public const string COMPLETED = 'completed';
+    public const string CANCELED = 'canceled';
+    public const string TABLE = 'order_statuses';
+    public const string RESOURCE_KEY = 'Status';
 
     public $timestamps = false;
 
