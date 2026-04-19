@@ -41,6 +41,7 @@ final class User extends SectionContainer
     public const string SHIFT_PARAMS_SCHEMA = 'shift_params_schema';
     public const string SHIFT_PARAMS = 'shift_params';
     public const string SHIFT_PARAMS_FIX_RATE = 'fix_rate';
+    public const string SHIFT_PARAMS_IS_REQUIRED = 'is_required';
     public const string SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT = 'percent_from_order_profit';
     public const string ORGANIZATION_ID = 'organization_id';
     public const string ORGANIZATION_BRANCH_ID = 'organization_branch_id';

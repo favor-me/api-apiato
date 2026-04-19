@@ -17,6 +17,7 @@ namespace App\Containers\AppSection\User\ShiftParams;
 
 use App\Containers\AppSection\User\Foundation\User;
 use App\Containers\AppSection\User\ShiftParams\Elements\FixRateParamElement;
+use App\Containers\AppSection\User\ShiftParams\Elements\IsRequiredParamElement;
 use App\Containers\AppSection\User\ShiftParams\Elements\PercentFromOrderProfitParamElement;
 use App\Ship\Params\Schema as ShipSchema;
 
@@ -25,6 +26,9 @@ class Schema extends ShipSchema
     public function build(): void
     {
         $this->elements
+            ->add(
+                (new IsRequiredParamElement($this->model))->get()
+            )
             ->add(
                 (new FixRateParamElement($this->model))->get()
             )
@@ -36,10 +40,12 @@ class Schema extends ShipSchema
     public static function getElementsValidationRules(): array
     {
         $fixRateKey = User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_FIX_RATE;
+        $isRequiredKey = User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_IS_REQUIRED;
         $percentOrderProfitKey = User::SHIFT_PARAMS . '.' . User::SHIFT_PARAMS_PERCENT_FROM_ORDER_PROFIT;
 
         return [
             $fixRateKey => FixRateParamElement::getValidationRules(),
+            $isRequiredKey => IsRequiredParamElement::getValidationRules(),
             $percentOrderProfitKey => PercentFromOrderProfitParamElement::getValidationRules()
         ];
     }
