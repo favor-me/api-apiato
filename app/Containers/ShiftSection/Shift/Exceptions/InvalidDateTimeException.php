@@ -18,8 +18,8 @@ namespace App\Containers\ShiftSection\Shift\Exceptions;
 use App\Ship\Parents\Exceptions\Exception;
 use Symfony\Component\HttpFoundation\Response;
 
-class NowShiftExistsException extends Exception
+class InvalidDateTimeException extends Exception
 {
     protected $code = Response::HTTP_BAD_REQUEST;
-    protected $message = 'shiftSection@shift::container.now_shift_exists';
+    protected $message = 'shiftSection@shift::container.invalid_shift_date_time';
 }

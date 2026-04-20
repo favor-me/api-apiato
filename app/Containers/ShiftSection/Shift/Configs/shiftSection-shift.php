@@ -19,11 +19,13 @@ return [
 
     'rules' => [
         Shift::START_AT => [
-            'date_format:' . DATE_TIME_FORMAT
+            'date_format:' . DATE_TIME_FORMAT,
+            'before_or_equal:tomorrow'
         ],
         Shift::FINISH_AT => [
             'date_format:' . DATE_TIME_FORMAT,
-            'after:' . Shift::START_AT
+            'after:' . Shift::START_AT,
+            'before_or_equal:tomorrow'
         ]
     ]
 

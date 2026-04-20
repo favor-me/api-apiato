@@ -103,6 +103,140 @@ final class CreateShiftTest extends ApiTestCase
             );
     }
 
+    public function testCantCreateShiftNowShiftExists(): void
+    {
+        $this->getTestingOrganizationOwnerUser();
+
+        $nowStartAt = Carbon::now()->utc();
+        $nowFinishAt = Carbon::now()->utc()->addHours(4);
+
+        $nowShift = ShiftModel::factory()
+            ->create([
+                Shift::START_AT => $nowStartAt->format(DATE_TIME_FORMAT),
+                Shift::FINISH_AT => $nowFinishAt->format(DATE_TIME_FORMAT)
+            ]);
+
+        $this->assertSame($this->testingUser->nowShift->id, $nowShift->id);
+
+        $startAt = Carbon::now()->utc()->subHours(2);
+        $finishAt = Carbon::now()->utc()->addHours(4);
+
+        $data = [
+            Shift::START_AT => $startAt->format(DATE_TIME_FORMAT),
+            Shift::FINISH_AT => $finishAt->format(DATE_TIME_FORMAT),
+            Shift::EXCLUDE_ORGANIZATION_BRANCH => 1
+        ];
+
+        $this->makeCall($data);
+
+        $this->response
+            ->assertBadRequest()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('message')
+                    ->where('message', Container::trans('container.invalid_shift_date_time'))
+                    ->etc()
+            );
+    }
+
+    public function testCantCreateFutureShiftNowShiftExists(): void
+    {
+        $this->getTestingOrganizationOwnerUser();
+
+        $nowStartAt = Carbon::now()->utc();
+        $nowFinishAt = Carbon::now()->utc()->addHours(4);
+
+        $nowShift = ShiftModel::factory()
+            ->create([
+                Shift::START_AT => $nowStartAt->format(DATE_TIME_FORMAT),
+                Shift::FINISH_AT => $nowFinishAt->format(DATE_TIME_FORMAT)
+            ]);
+
+        $this->assertSame($this->testingUser->nowShift->id, $nowShift->id);
+
+        $startAt = Carbon::tomorrow()->utc();
+        $finishAt = Carbon::tomorrow()->utc()->addHours(4);
+
+        $data = [
+            Shift::START_AT => $startAt->format(DATE_TIME_FORMAT),
+            Shift::FINISH_AT => $finishAt->format(DATE_TIME_FORMAT),
+            Shift::EXCLUDE_ORGANIZATION_BRANCH => 1
+        ];
+
+        $this->makeCall($data);
+
+        $this->response
+            ->assertBadRequest()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('message')
+                    ->where('message', Container::trans('container.invalid_shift_date_time'))
+                    ->etc()
+            );
+    }
+
+    public function testCanCreatePastShiftNowShiftExists(): void
+    {
+        $this->getTestingOrganizationOwnerUser();
+
+        $nowStartAt = Carbon::now()->utc();
+        $nowFinishAt = Carbon::now()->utc()->addHours(4);
+
+        $nowShift = ShiftModel::factory()
+            ->create([
+                Shift::START_AT => $nowStartAt->format(DATE_TIME_FORMAT),
+                Shift::FINISH_AT => $nowFinishAt->format(DATE_TIME_FORMAT)
+            ]);
+
+        $this->assertSame($this->testingUser->nowShift->id, $nowShift->id);
+
+        $startAt = Carbon::yesterday()->utc()->subHours(2);
+        $finishAt = Carbon::yesterday()->utc()->addHours(4);
+
+        $data = [
+            Shift::START_AT => $startAt->format(DATE_TIME_FORMAT),
+            Shift::FINISH_AT => $finishAt->format(DATE_TIME_FORMAT),
+            Shift::EXCLUDE_ORGANIZATION_BRANCH => 1
+        ];
+
+        $this->makeCall($data);
+
+        $this->response->assertCreated();
+    }
+
+    public function testCantCreateFuture(): void
+    {
+        $this->getTestingOrganizationOwnerUser();
+
+        $startAt = Carbon::tomorrow()
+            ->utc()
+            ->addDay()
+            ->subHours(2);
+
+        $finishAt = Carbon::tomorrow()
+            ->utc()
+            ->addDay()
+            ->addHours(4);
+
+        $data = [
+            Shift::START_AT => $startAt->format(DATE_TIME_FORMAT),
+            Shift::FINISH_AT => $finishAt->format(DATE_TIME_FORMAT),
+            Shift::EXCLUDE_ORGANIZATION_BRANCH => 1
+        ];
+
+        $this->makeCall($data);
+
+        $this
+            ->assertGivenDataIsInvalid()
+            ->assertJson(
+                fn(AssertableJson $json): AssertableJson => $json
+                    ->has('errors', 2)
+                    ->has('errors.' . Shift::START_AT)
+                    ->has('errors.' . Shift::FINISH_AT)
+                    ->etc()
+            );
+    }
+
     public function testSuccessWithNullOrganizationBranchId(): void
     {
         $startAt = Carbon::now();

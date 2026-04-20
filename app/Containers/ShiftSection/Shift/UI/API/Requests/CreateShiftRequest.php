@@ -16,13 +16,17 @@
 namespace App\Containers\ShiftSection\Shift\UI\API\Requests;
 
 use App\Containers\AppSection\Authorization\Models\Role as RoleModel;
+use App\Containers\AppSection\User\Tasks\FindUserByIdTask;
 use App\Containers\ShiftSection\Shift\Dto\CreateShiftDto;
-use App\Containers\ShiftSection\Shift\Exceptions\NowShiftExistsException;
+use App\Containers\ShiftSection\Shift\Exceptions\InvalidDateTimeException;
 use App\Containers\ShiftSection\Shift\Facades\Container;
 use App\Containers\ShiftSection\Shift\Foundation\Shift;
 use App\Containers\ShiftSection\Shift\Requests\ShiftApiRequest;
 use App\Ship\Collections\ValidationRules;
 use App\Ship\Contracts\GettableDto;
+use App\Ship\Exceptions\InvalidSystemDateFormatException;
+use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Support\Carbon as ShiftCarbon;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class CreateShiftRequest extends ShiftApiRequest implements GettableDto
@@ -76,14 +80,17 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
 
     public function messages(): array
     {
-        return [
-            Shift::FINISH_AT . '.after' => Container::trans('container.validation.finish_at.after')
-        ];
+        return parent::messages() +
+            [
+                Shift::FINISH_AT . '.after' => Container::trans('container.validation.finish_at.after')
+            ];
     }
 
     /**
      * @return void
-     * @throws NowShiftExistsException
+     * @throws InvalidDateTimeException
+     * @throws InvalidSystemDateFormatException
+     * @throws NotFoundException
      */
     protected function prepareForValidation(): void
     {
@@ -93,12 +100,30 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
 
     /**
      * @return void
-     * @throws NowShiftExistsException
+     * @throws InvalidDateTimeException
+     * @throws InvalidSystemDateFormatException
+     * @throws NotFoundException
      */
     protected function checkNowShift(): void
     {
-        if ($this->user()->nowShift) {
-            throw new NowShiftExistsException();
+        $user = app(FindUserByIdTask::class)->run($this->created_by);
+        $nowShift = $user->nowShift;
+
+        if ($nowShift) {
+            $startAt = $this->get(Shift::START_AT);
+            $finishAt = $this->get(Shift::FINISH_AT);
+
+            $nowStartAt = $nowShift->start_at->getTimestamp();
+            $nowFinishAt = $nowShift->finish_at->getTimestamp();
+
+            $startAt = $this->systemDateTimeToTimestamp($startAt);
+            $finishAt = $this->systemDateTimeToTimestamp($finishAt);
+
+            $canDo = $startAt < $nowStartAt && $finishAt < $nowFinishAt;
+
+            if (!$canDo) {
+                throw new InvalidDateTimeException();
+            }
         }
     }
 
@@ -115,5 +140,15 @@ class CreateShiftRequest extends ShiftApiRequest implements GettableDto
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $dateTime
+     * @return int
+     * @throws InvalidSystemDateFormatException
+     */
+    protected function systemDateTimeToTimestamp(string $dateTime): int
+    {
+        return ShiftCarbon::createFromSystemDateTime($dateTime)->getTimestamp();
     }
 }
