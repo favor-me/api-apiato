@@ -16,15 +16,18 @@ namespace App\Ship\Support;
 
 use App\Ship\Exceptions\InvalidSystemDateFormatException;
 use App\Ship\Parents\Support\Carbon as ParentCarbon;
-use App\Ship\Parents\Transformers\Transformer;
 use DateTimeZone;
 
 class Carbon extends ParentCarbon
 {
-    public const FIRST_MONTH_DAY = 1;
+    protected const string PATTERN_SYS_DATE = '/^(0[1-9]|[1-2][0-9]|3[0-1])\.(0[1-9]|1[0-2])\.[0-9]{4}$/';
+
+    // @codingStandardsIgnoreStart
+    protected const string PATTERN_SYS_DATE_TIME = '/^(0[1-9]|[1-2][0-9]|3[0-1])\.(0[1-9]|1[0-2])\.[0-9]{4} (0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/';
+    // @codingStandardsIgnoreEnd
 
     /**
-     * @param string $date System date format. See const TIMETABLE_RESERVATION_DATE_AT_FORMAT
+     * @param string $date System date format. See const DATE_FORMAT.
      * @param DateTimeZone|string|null $tz
      * @return Carbon
      * @throws InvalidSystemDateFormatException
@@ -37,6 +40,32 @@ class Carbon extends ParentCarbon
 
         list ($day, $month, $year) = explode('.', $date);
         return self::createFromDate($year, $month, $day, $tz);
+    }
+
+    /**
+     * @param string $dateTime System date format. See const DATE_TIME_FORMAT.
+     * @param DateTimeZone|string|null $tz
+     * @return Carbon
+     * @throws InvalidSystemDateFormatException
+     */
+    public static function createFromSystemDateTime(string $dateTime, DateTimeZone|string $tz = null): self
+    {
+        if (!self::isSystemDateTimeFormat($dateTime)) {
+            throw new InvalidSystemDateFormatException();
+        }
+
+        list($date, $time) = explode(' ', $dateTime);
+        list($hours, $minutes) = explode(':', $time);
+        list($day, $month, $year) = explode('.', $date);
+
+        $carbon = self::createFromDate($year, $month, $day, $tz);
+
+        $carbon
+            ->hour($hours)
+            ->minutes($minutes)
+            ->seconds(0);
+
+        return $carbon;
     }
 
     /**
@@ -56,7 +85,12 @@ class Carbon extends ParentCarbon
 
     public static function isSystemDateFormat(string $date): bool
     {
-        return preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])\.(0[1-9]|1[0-2])\.[0-9]{4}$/', $date);
+        return preg_match(self::PATTERN_SYS_DATE, $date);
+    }
+
+    public static function isSystemDateTimeFormat(string $date): bool
+    {
+        return preg_match(self::PATTERN_SYS_DATE_TIME, $date);
     }
 
     public static function withLeadingZero(int $number): string
@@ -82,6 +116,6 @@ class Carbon extends ParentCarbon
 
     public function toSystemDateString(): string
     {
-        return $this->format(Transformer::HUMAN_DATE_FORMAT);
+        return $this->format(DATE_FORMAT);
     }
 }
