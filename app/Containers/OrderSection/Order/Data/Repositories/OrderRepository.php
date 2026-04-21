@@ -18,6 +18,7 @@ namespace App\Containers\OrderSection\Order\Data\Repositories;
 use App\Containers\OrderSection\Order\Foundation\Order;
 use App\Containers\OrderSection\Order\Models\Order as OrderModel;
 use App\Ship\Parents\Repositories\Repository;
+use App\Ship\Search\DateTimeRangeSearch;
 
 /**
  * @method OrderModel getModel()
@@ -30,7 +31,8 @@ final class OrderRepository extends Repository
         Order::PAYMENT_TYPE => '=',
         Order::CLIENT_ID => '=',
         Order::STATUS_ID => '=',
-        Order::CLIENT => '='
+        Order::CLIENT => '=',
+        CREATED_AT => DateTimeRangeSearch::class
     ];
 
     public function model(): string
