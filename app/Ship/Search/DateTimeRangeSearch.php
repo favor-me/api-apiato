@@ -35,7 +35,9 @@ class DateTimeRangeSearch
         $this->value = $value;
 
         $this->whereMode = Str::lower($whereMode);
-        $this->parsedValue = explode('|', $value);
+
+        $separator = str_contains($value, '-') ? '-' : '|';
+        $this->parsedValue = explode($separator, $value);
     }
 
     /**
