@@ -16,6 +16,7 @@ namespace App\Containers\OrderSection\PaymentType\Casts;
 
 use App\Containers\OrderSection\PaymentType\Manager;
 use App\Containers\OrderSection\PaymentType\Type;
+use App\Containers\OrderSection\PaymentType\UnpaidType;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Database\Eloquent\SerializesCastableAttributes;
 
@@ -26,6 +27,10 @@ class PaymentType implements CastsAttributes, SerializesCastableAttributes
      */
     public function get($model, string $key, $value, array $attributes)
     {
+        if (empty($value)) {
+            $value = (new UnpaidType())->getName();
+        }
+
         return Manager::getInstance()->get($value);
     }
 
